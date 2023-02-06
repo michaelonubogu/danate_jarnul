@@ -1,4 +1,4 @@
-package net.carboncodes.initialapp
+package com.aapbd.dante
 
 import io.flutter.embedding.android.FlutterActivity
 

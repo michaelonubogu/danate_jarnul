@@ -1,4 +1,4 @@
-import 'package:BloodBox/Presentation/AllScreen/Home/HomeScreen.dart';
+import 'package:dante/Presentation/AllScreen/Home/HomeScreen.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_navigation/src/routes/transitions_type.dart';
 

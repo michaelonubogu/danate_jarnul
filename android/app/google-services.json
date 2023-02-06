@@ -1,33 +1,33 @@
 {
   "project_info": {
-    "project_number": "928469945765",
-    "project_id": "bloodbox-49c5c",
-    "storage_bucket": "bloodbox-49c5c.appspot.com"
+    "project_number": "836935885728",
+    "project_id": "dante---digital-dating-journal",
+    "storage_bucket": "dante---digital-dating-journal.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:928469945765:android:abfe08695d85357f1c6c4c",
+        "mobilesdk_app_id": "1:836935885728:android:67a4543d9d5a73bd907ac5",
         "android_client_info": {
-          "package_name": "net.carboncodes.bloodbox"
+          "package_name": "com.aapbd.dante"
         }
       },
       "oauth_client": [
         {
-          "client_id": "928469945765-p0hqaai73196gddkkq5ajgfjro85bt17.apps.googleusercontent.com",
+          "client_id": "836935885728-hfia0thdp3kj4ghce97n5cri7qctu6pg.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBjnkB5ENqf80dlncBK9yzP3_tNTdKFynM"
+          "current_key": "AIzaSyDJJYjKfpIgx9R9ZK4uhzsk9ryT9lKOrsk"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "928469945765-p0hqaai73196gddkkq5ajgfjro85bt17.apps.googleusercontent.com",
+              "client_id": "836935885728-hfia0thdp3kj4ghce97n5cri7qctu6pg.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

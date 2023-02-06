@@ -99,7 +99,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'BloodBox',
+      title: 'dante',
       theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)),
       initialRoute: AppRoutes.HOMESCREEN,
