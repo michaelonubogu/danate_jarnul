@@ -10,6 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  TextEditingController emailController = TextEditingController();
   @override
   Widget build(BuildContext context) {
 
@@ -27,6 +28,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Container(
                 width: 280.0,
                 child: TextFormField(
+                  controller: emailController,
+                  keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: "Email",
                     border: OutlineInputBorder(),
@@ -39,7 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
                 color: Colors.red,
                 child: TextButton(
                   onPressed: () {
-                    // Get.toNamed(AppRoutes.home);
+                    if(emailController.text.isEmpty){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red, content: Text("Please enter email", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),),));
+                    }
+                    else if (!emailController.text.contains("@")){
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(backgroundColor: Colors.red, content: Text("Please enter valid email", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),),));
+                    }
+                    else{
+                      Get.toNamed(AppRoutes.OTPSCREEN, arguments: "1234");
+                    }
                   },
                   child: Text("Go", style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),),
                 ),
