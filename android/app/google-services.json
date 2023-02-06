@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "928469945765",
+    "project_id": "bloodbox-49c5c",
+    "storage_bucket": "bloodbox-49c5c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:928469945765:android:abfe08695d85357f1c6c4c",
+        "android_client_info": {
+          "package_name": "net.carboncodes.bloodbox"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "928469945765-p0hqaai73196gddkkq5ajgfjro85bt17.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjnkB5ENqf80dlncBK9yzP3_tNTdKFynM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "928469945765-p0hqaai73196gddkkq5ajgfjro85bt17.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
