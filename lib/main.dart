@@ -1,3 +1,4 @@
+import 'package:dante/view/flash/flas_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
+
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
@@ -96,15 +98,16 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'dante',
       theme: ThemeData(
           colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
-      initialRoute: AppRoutes.LOGINSCREEN,
-      getPages: AppRoutes.routes,
       debugShowCheckedModeBanner: false,
+      home: FlashScreen(),
     );
   }
 }
