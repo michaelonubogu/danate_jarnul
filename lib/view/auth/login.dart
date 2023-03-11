@@ -1,6 +1,7 @@
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utility/app_button.dart';
 import 'verify_email.dart';
@@ -24,10 +25,10 @@ class _LoginState extends State<Login> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 300, width: size.width,
+              SizedBox(height: 30.h, width: size.width,
                 child: Image.asset("assets/images/confirm_email_icon.png"),
               ),
-              SizedBox(height: 30,),
+              SizedBox(height: 3.h,),
               Text("Confirm Your E-mail Address",
                 style: TextStyle(
                   fontWeight: FontWeight.w500,
@@ -46,14 +47,14 @@ class _LoginState extends State<Login> {
                   ),
                 ),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
               Text("E-mail",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     fontSize: 18, color: AppColors.textColor
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 2.h,),
               TextFormField(
                 decoration: InputDecoration(
                   filled: true,
@@ -65,7 +66,7 @@ class _LoginState extends State<Login> {
                   )
                 ),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
 
               AppButton(
                 onClick: ()=>Get.to(EmailVerify(), transition: Transition.rightToLeft), //rout the next login pages

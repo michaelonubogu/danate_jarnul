@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:sizer/sizer.dart';
 import 'Core/AppRoutes.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -102,12 +103,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      title: 'dante',
-      theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
-      debugShowCheckedModeBanner: false,
-      home: FlashScreen(),
+    return Sizer(
+        builder: (context, orientation, deviceType) {
+        return GetMaterialApp(
+          title: 'dante',
+          theme: ThemeData(
+              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
+          debugShowCheckedModeBanner: false,
+          home: FlashScreen(),
+        );
+      }
     );
   }
 }

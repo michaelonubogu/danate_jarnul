@@ -1,6 +1,7 @@
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../utility/app_button.dart';
 import 'niceto_meet.dart';
@@ -27,11 +28,11 @@ class _GetNameState extends State<GetName> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 300, width: size.width,
+                height: 30.h, width: size.width,
                 child: Image.asset("assets/images/qusition.png", fit: BoxFit.contain,),
               ),
 
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
               Text("Hey!",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
@@ -47,7 +48,7 @@ class _GetNameState extends State<GetName> {
                     fontSize: 16,
                   )
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text("This Dating Journal belongs to...?",
@@ -70,7 +71,7 @@ class _GetNameState extends State<GetName> {
                     )
                 ),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
 
               AppButton(
                 onClick: ()=>Get.to(NiceToMeet(), transition: Transition.rightToLeft), //rout the next login pages

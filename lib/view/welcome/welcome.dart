@@ -1,6 +1,7 @@
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utility/app_button.dart';
 import '../auth/login.dart';
@@ -33,7 +34,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     color: AppColors.textColor
                   ),
                 ),
-                SizedBox(height: 10,),
+                SizedBox(height: 2.h,),
                 SizedBox(
                   width: 280,
                   child: Text("Where every date is a new chapter in your love story. Document your journey to finding your person, one date at a time.!",
@@ -47,14 +48,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
 
 
-                SizedBox(height: 40,),
+                SizedBox(height: 10.h,),
                 SizedBox(
                   width: size.width,
-                  height: 300,
+                  height: 30.h,
                   child: Image.asset("assets/images/welcome_icon.png", fit: BoxFit.cover,),
                 ),
-                SizedBox(height: 80,),
-
+                SizedBox(height: 10.h,),
                 AppButton(
                   onClick: ()=>Get.to(Login(), transition: Transition.rightToLeft), //rout the next login pages
                     size: size,

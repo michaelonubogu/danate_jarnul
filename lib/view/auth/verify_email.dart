@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_field.dart';
 import 'package:otp_text_field/style.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utility/app_button.dart';
 
@@ -26,10 +27,10 @@ class _EmailVerifyState extends State<EmailVerify> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: 300, width: size.width,
+              SizedBox(height: 30.h, width: size.width,
                 child: Image.asset("assets/images/otp_icon.png"),
               ),
-              SizedBox(height: 30,),
+              SizedBox(height: 3.h,),
               Text("Enter Verification Code",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -48,7 +49,7 @@ class _EmailVerifyState extends State<EmailVerify> {
                   ),
                 ),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
               OTPTextField(
                 length: 5,
                 width: MediaQuery.of(context).size.width,
@@ -81,7 +82,7 @@ class _EmailVerifyState extends State<EmailVerify> {
                   ]
                 )),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
 
               AppButton(
                 onClick: ()=>Get.to(VerifySuccess(), transition: Transition.rightToLeft), //rout the next login pages

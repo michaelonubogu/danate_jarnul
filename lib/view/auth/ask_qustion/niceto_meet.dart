@@ -2,6 +2,7 @@ import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/auth/ask_qustion/question.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../utility/app_button.dart';
 import 'get_name.dart';
@@ -39,7 +40,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
                     )
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 2.h,),
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40),
                 child: Text("We’re excited to embark on this awesome journey with you!",
@@ -52,13 +53,13 @@ class _NiceToMeetState extends State<NiceToMeet> {
                   ),
                 ),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 2.h,),
               SizedBox(
                 height: 300, width: size.width,
                 child: Image.asset("assets/images/qus2_icon.png", fit: BoxFit.contain,),
               ),
 
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40),
                 child: Text("Next we’ll ask you a couple of questions to help you with your goals for dating.",
@@ -71,7 +72,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
                   ),
                 ),
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
 
               AppButton(
                 onClick: ()=>Get.to(Question(), transition: Transition.rightToLeft), //rout the next login pages

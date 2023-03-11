@@ -1,6 +1,7 @@
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../utility/app_button.dart';
 import 'ask_qustion/get_name.dart';
@@ -26,11 +27,11 @@ class _VerifySuccessState extends State<VerifySuccess> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
-                height: 300, width: size.width,
+                height: 30.h, width: size.width,
                 child: Image.asset("assets/images/email_verified.png", fit: BoxFit.cover,),
               ),
 
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
               Text("Email Verified!",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
@@ -38,7 +39,7 @@ class _VerifySuccessState extends State<VerifySuccess> {
                   fontSize: 30,
                 )
               ),
-              SizedBox(height: 60,),
+              SizedBox(height: 6.h,),
 
               AppButton(
                 onClick: ()=>Get.to(GetName(), transition: Transition.rightToLeft), //rout the next login pages

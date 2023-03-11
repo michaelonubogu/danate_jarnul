@@ -2,9 +2,11 @@ import 'package:dante/view/auth/ask_qustion/get_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
+import 'package:sizer/sizer.dart';
 
 import '../../../utility/app_button.dart';
 import '../../../utility/app_colors.dart';
+import '../../home/home.dart';
 import 'niceto_meet.dart';
 
 class Question extends StatefulWidget {
@@ -30,7 +32,7 @@ class _QuestionState extends State<Question> {
 
               Container(
                 width: size.width,
-                height: 200,
+                height: 20.h,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -38,7 +40,7 @@ class _QuestionState extends State<Question> {
                       width: size.width*.40,
                       child: Column(
                         children: [
-                          SizedBox(height: 30,),
+                          SizedBox(height: 3.h,),
                           Text("Is this your first time dating?",
                             style: TextStyle(
                                 wordSpacing: 0.9,
@@ -47,7 +49,7 @@ class _QuestionState extends State<Question> {
                                 color: AppColors.textColor
                             ),
                           ),
-                          SizedBox(height: 30,),
+                          SizedBox(height: 3.h,),
                           Row(
                             children: [
                               Text("No",
@@ -93,7 +95,7 @@ class _QuestionState extends State<Question> {
                   ],
                 ),
               ) ,
-              SizedBox(height: 30,),
+              SizedBox(height: 3.h,),
               Text("Why did your last relationship end?",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -114,7 +116,7 @@ class _QuestionState extends State<Question> {
                 ),
               ),
 
-              SizedBox(height: 30,),
+              SizedBox(height: 3.h,),
               Text("What type of partner are you looking for?",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -135,7 +137,7 @@ class _QuestionState extends State<Question> {
                 ),
               ),
 
-              SizedBox(height: 30,),
+              SizedBox(height: 3.h,),
               Text("What things would you contribute to your next relationship?",
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
@@ -155,9 +157,9 @@ class _QuestionState extends State<Question> {
                     )
                 ),
               ),
-              SizedBox(height: 50,),
+              SizedBox(height: 5.h,),
               AppButton(
-                onClick: ()=>Get.to(NiceToMeet(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()=>Get.to(Home(), transition: Transition.rightToLeft), //rout the next login pages
                 size: size,
                 child: Text("Next",
                   style: TextStyle(
