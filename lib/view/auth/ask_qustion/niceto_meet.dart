@@ -1,5 +1,5 @@
-import 'package:dante/utility/app_colors.dart';
-import 'package:dante/view/auth/ask_qustion/question.dart';
+import '../../../utility/app_colors.dart';
+import '/view/auth/ask_qustion/question.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';

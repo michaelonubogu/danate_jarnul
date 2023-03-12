@@ -1,5 +1,5 @@
-import 'package:dante/utility/app_colors.dart';
-import 'package:dante/view/auth/verify_success.dart';
+import '../../utility/app_colors.dart';
+import '../../view/auth/verify_success.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_field.dart';

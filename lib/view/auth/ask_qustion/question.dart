@@ -1,4 +1,4 @@
-import 'package:dante/view/auth/ask_qustion/get_name.dart';
+import '/view/auth/ask_qustion/get_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
