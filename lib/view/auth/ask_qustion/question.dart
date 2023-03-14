@@ -1,3 +1,4 @@
+import '../../index.dart';
 import '/view/auth/ask_qustion/get_name.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -159,7 +160,7 @@ class _QuestionState extends State<Question> {
               ),
               SizedBox(height: 5.h,),
               AppButton(
-                onClick: ()=>Get.to(Home(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()=>Get.to(Index(), transition: Transition.rightToLeft), //rout the next login pages
                 size: size,
                 child: Text("Next",
                   style: TextStyle(
