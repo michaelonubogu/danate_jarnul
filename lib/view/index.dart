@@ -36,7 +36,7 @@ class _IndexState extends State<Index> {
       body: pages[_selectedIndex],
       bottomNavigationBar: Container(
         height: 70,
-        margin: EdgeInsets.all(20),
+        margin: EdgeInsets.only(left: 20, right: 20, bottom: 20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(100)

@@ -6,6 +6,7 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../utility/app_button.dart';
 
@@ -21,6 +22,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   //image picker global variable
   final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
   //it help use to take images
+
+  double _value = 30.0;
 
   String dropdownValue = 'One';
   final List<String> items = [
@@ -213,6 +216,48 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
 
+            SizedBox(height: 30,),
+            Row(
+              children: [
+                Icon(Icons.favorite, color: Colors.grey.shade400,),
+                Container(
+                  width: size.width*.70,
+                  child: SfSlider(
+                    min: 0,
+                    max: 75,
+                    showLabels: true,
+                    thumbIcon: Icon(Icons.favorite, color: AppColors.mainColor,),
+                    showDividers: true,
+                    interval: 25,
+                    value: _value,
+                    labelPlacement: LabelPlacement.onTicks,
+                    labelFormatterCallback:
+                        (dynamic actualValue, String formattedText) {
+                      switch (actualValue) {
+                        case 0:
+                          return 'Meh';
+                        case 25:
+                          return 'Ok';
+                        case 50:
+                          return 'Cute';
+                        case 75:
+                          return 'Sexy';
+
+                      }
+                      return actualValue.toString();
+                    },
+                    onChanged: (dynamic newValue) {
+                      setState(
+                            () {
+                          _value = newValue;
+                        },
+                      );
+                    },
+                  ),
+                ),
+                Icon(Icons.favorite, color: AppColors.mainColor,),
+              ],
+            ),
             SizedBox(height: 30,),
 
             Text("Description",

@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.17"
+  alphabet_scroll_view:
+    dependency: "direct main"
+    description:
+      name: alphabet_scroll_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.2"
   archive:
     dependency: transitive
     description:
@@ -753,6 +760,13 @@ packages:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_signaturepad
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "20.4.53"
+  syncfusion_flutter_sliders:
+    dependency: "direct main"
+    description:
+      name: syncfusion_flutter_sliders
       url: "https://pub.dartlang.org"
     source: hosted
     version: "20.4.53"
