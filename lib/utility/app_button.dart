@@ -4,12 +4,13 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   const AppButton({
     Key? key,
-    required this.size, required this.child, required this.onClick,
+    required this.size, required this.child, required this.onClick, this.bg = AppColors.mainColor
   }) : super(key: key);
 
   final Widget child;
   final Size size;
   final VoidCallback onClick;
+  final Color? bg;
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +18,9 @@ class AppButton extends StatelessWidget {
       onTap: onClick,
       child: Container(
         width: size.width,
-        height: 55,
+        height: 50,
         decoration: BoxDecoration(
-          color: AppColors.mainColor,
+          color: bg,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Center(

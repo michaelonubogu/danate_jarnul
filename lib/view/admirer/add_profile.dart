@@ -1,9 +1,13 @@
 import 'dart:io';
 
 import 'package:dante/utility/app_colors.dart';
+import 'package:dob_input_field/dob_input_field.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+
+import '../../utility/app_button.dart';
 
 class AddAdmirerProfile extends StatefulWidget {
   const AddAdmirerProfile({Key? key}) : super(key: key);
@@ -18,11 +22,21 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
   //it help use to take images
 
+  String dropdownValue = 'One';
+  final List<String> items = [
+    'Facebook',
+    'Instagram',
+    'YouTube',
+    'Linkd In',
+  ];
+  String? selectedValue;
+
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: AppColors.bgColor,
       appBar: AppBar(
         elevation: 0,
         backgroundColor: AppColors.bgColor,
@@ -55,10 +69,10 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
         )
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.all(30),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Container(
             //   width: size.width,
@@ -114,7 +128,228 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                   ),
 
                 ),
-            )
+            ),
+            SizedBox(height: 20,),
+            Center(
+              child: Text("Add Profile Picture",
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            SizedBox(height: 30,),
+            Align(
+              alignment: Alignment.center,
+              child: Container(
+                height: 100,
+                width: 160,
+                //padding: EdgeInsets.all(40),
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade300,
+                    borderRadius: BorderRadius.circular(10)
+                ),
+                child:  InkWell(
+                  onTap: ()=>openBottomSheet(),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: profileImage != null
+                          ? Image.file(profileImage, height: 130, width: 130, fit: BoxFit.cover,)
+                          :  Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add),
+                              Text("Feature Photo",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+                            ],
+                          )
+                  ),
+                ),
+
+              ),
+            ),
+
+            SizedBox(height: 50,),
+
+            Text("Date of Birth",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            SizedBox(height: 15,),
+            DOBInputField(
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+              showLabel: true,
+              dateFormatType: DateFormatType.DDMMYYYY,
+              autovalidateMode: AutovalidateMode.always,
+            ),
+
+            SizedBox(height: 30,),
+
+            Text("Zodiac Sign",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextFormField(
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Choose Sign",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+
+            SizedBox(height: 30,),
+
+            Text("Description",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextFormField(
+              maxLines: 4,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Enter bio about the person...",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+
+            SizedBox(height: 30,),
+
+            Text("My Likes",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextFormField(
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Enter text here",
+
+                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                  prefixIcon: Container(
+                    margin: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: AppColors.mainColor.withOpacity(0.6),
+                    ),
+                    child: Icon(Icons.add),
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+
+            SizedBox(height: 30,),
+            Text("My Dislikes",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextFormField(
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Enter text here",
+
+                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                  prefixIcon: Container(
+                    margin: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: AppColors.blue.withOpacity(0.6),
+                    ),
+                    child: Icon(Icons.add),
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+
+            SizedBox(height: 30,),
+
+            Text("Social Media",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            Container(
+              width: size.width,
+              height: 100,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.grey.shade300
+              ),
+              child: Center(child: Text("Add social media link",style: TextStyle(color: AppColors.textColor),),),
+            ),
+
+            SizedBox(height: 30,),
+            InkWell(
+              onTap: ()=>_addSocialMedia(size),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(100),
+                          color: AppColors.mainColor
+                      ),
+                      child: Icon(Icons.add, color: Colors.white,)),
+                  SizedBox(width: 10,),
+                  Text("Add Account",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: AppColors.textColor),
+                  )
+                ],
+              ),
+            ),
+
+            SizedBox(height: 30,),
+
+            AppButton(
+              onClick: (){},//rout the next login pages
+              size: size,
+              child: Text("Save Admirer",
+                style: TextStyle(
+                    fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500
+                ),
+              ),
+            ),
+            SizedBox(height: 30,),
+
+
+
 
 
           ],
@@ -167,6 +402,152 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
       profileImageStr = image;
     });
     Navigator.pop(context); //when image taken, it will be close bottom sheets.
+  }
+
+
+
+  //this method show the popup for add social media
+  Future _addSocialMedia(size) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              ),
+              titlePadding: EdgeInsets.zero,
+              iconPadding: EdgeInsets.zero,
+              buttonPadding: EdgeInsets.zero,
+              insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+
+              actionsPadding: EdgeInsets.zero,
+             // contentPadding: EdgeInsets.all(10),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children:  <Widget>[
+
+                    Text('Choose media',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 17,
+                        color: AppColors.blue
+                      ),
+                    ),
+                    SizedBox(height: 15,),
+                    Container(
+                      padding: EdgeInsets.all(5),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5),
+                        border: Border.all(color: AppColors.blue, width: 1)
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton2(
+                          hint: Text(
+                            'Select Item',
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Theme.of(context).hintColor,
+                            ),
+                          ),
+                          items: items
+                              .map((item) => DropdownMenuItem<String>(
+                            value: item,
+                            child: Text(
+                              item,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ))
+                              .toList(),
+                          value: selectedValue,
+                          onChanged: (value) {
+                            setState(() {
+                              selectedValue = value as String;
+                            });
+                          },
+                          buttonStyleData: const ButtonStyleData(
+                            height: 40,
+                            width: 140,
+                          ),
+                          menuItemStyleData: const MenuItemStyleData(
+                            height: 40,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 30,),
+                    Text('Profifile link',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                          color: AppColors.blue
+                      ),
+                    ),
+                    SizedBox(height: 15,),
+                    TextFormField(
+                      decoration: InputDecoration(
+                          filled: true,
+                          contentPadding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+                          fillColor: Colors.white,
+                          hintText: "Choose Sign",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0),
+                              borderSide: BorderSide(
+                                  color: AppColors.blue)),
+                        focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(color:
+                            AppColors.blue)),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide:  BorderSide(color:
+                          AppColors.blue),
+                        ),
+                      ),
+                    ),
+
+
+                    SizedBox(height: 20,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        AppButton(
+                          onClick: ()=>{}, //rout the next login pages
+                          size: size*.25,
+                          bg: Colors.grey.shade300,
+                          child: Text("Cancel",
+                            style: TextStyle(
+                                fontSize: 15, color:AppColors.textColor, fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        ),
+                        AppButton(
+                          onClick: ()=>{}, //rout the next login pages
+                          size: size*.25,
+                          child: Text("Save",
+                            style: TextStyle(
+                                fontSize: 15, color:AppColors.white, fontWeight: FontWeight.w500
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    SizedBox(height: 10,),
+
+                  ],
+                ),
+              ),
+
+            );
+          }
+        );
+      },
+    );
   }
 
 
