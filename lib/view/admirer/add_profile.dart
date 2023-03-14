@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddAdmirerProfile extends StatefulWidget {
   const AddAdmirerProfile({Key? key}) : super(key: key);
@@ -10,6 +13,12 @@ class AddAdmirerProfile extends StatefulWidget {
 }
 
 class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
+
+  //image picker global variable
+  final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
+  //it help use to take images
+
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -48,6 +57,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Container(
             //   width: size.width,
@@ -77,9 +88,86 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             //     ],
             //   ),
             // )
+
+            //Upload profile image section
+            Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 130,
+                   width: 130,
+                  //padding: EdgeInsets.all(40),
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(100)
+                  ),
+                  child:  InkWell(
+                    onTap: ()=>openBottomSheet(),
+                    child: ClipRRect(
+                       borderRadius: BorderRadius.circular(100),
+                        child: profileImage != null
+                            ? Image.file(profileImage, height: 130, width: 130, fit: BoxFit.cover,)
+                            :  Padding(
+                                padding: EdgeInsets.all(40),
+                                child: Image.asset("assets/icons/upload_images.png", height: 40, width: 40, )
+                            )
+                    ),
+                  ),
+
+                ),
+            )
+
+
           ],
         ),
       ),
     );
   }
+
+
+
+
+  //Open bottomsheet for select the method to upload images.
+  Future openBottomSheet(){
+   return showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: new Icon(Icons.photo),
+                title: new Text('Gallery'),
+                onTap: () {
+                  uploadProfile(ImageSource.gallery); //it will take one parameter
+                },
+              ),
+
+              ListTile(
+                leading: new Icon(Icons.camera_alt_outlined),
+                title: new Text('Camera'),
+                onTap: () {
+                  uploadProfile(ImageSource.camera); //it will take one parameter
+                },
+              ),
+            ],
+          );
+        });
+  }
+  //Like Camera or Gallery
+
+
+  // this is profile image store variable
+  var profileImage, profileImageStr;
+  //this method going take images and save local variable
+
+  void uploadProfile(type) async{ // its take one parameter
+    var image = await _picker.pickImage(source: type);
+    setState(() {
+      profileImage = File(image!.path); // store the image path in this local variable
+      profileImageStr = image;
+    });
+    Navigator.pop(context); //when image taken, it will be close bottom sheets.
+  }
+
+
 }

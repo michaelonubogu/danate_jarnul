@@ -107,7 +107,9 @@ class _MyAppState extends State<MyApp> {
         return GetMaterialApp(
           title: 'dante',
           theme: ThemeData(
-              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red)),
+              colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
+              fontFamily: "themeFont",
+          ),
           debugShowCheckedModeBanner: false,
           home: FlashScreen(),
         );
