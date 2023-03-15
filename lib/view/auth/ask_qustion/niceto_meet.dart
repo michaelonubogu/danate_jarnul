@@ -23,7 +23,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
     return SafeArea(
       child: Scaffold(
         backgroundColor:AppColors.bgColor,
-        body: Padding(
+        body: SingleChildScrollView(
           padding: EdgeInsets.all(30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -36,7 +36,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
                       color: AppColors.blue,
-                      fontSize: 30,
+                      fontSize: 25,
                     )
                 ),
               ),
@@ -47,7 +47,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       wordSpacing: 0.9,
-                      fontSize: 17,
+                      fontSize: 15,
                       fontWeight: FontWeight.w400,
                       color: AppColors.textColor
                   ),
@@ -55,24 +55,24 @@ class _NiceToMeetState extends State<NiceToMeet> {
               ),
               SizedBox(height: 2.h,),
               SizedBox(
-                height: 300, width: size.width,
+                height: 250, width: size.width,
                 child: Image.asset("assets/images/qus2_icon.png", fit: BoxFit.contain,),
               ),
 
-              SizedBox(height: 6.h,),
+              SizedBox(height: 4.h,),
               Padding(
                 padding: const EdgeInsets.only(left: 40, right: 40),
                 child: Text("Next we’ll ask you a couple of questions to help you with your goals for dating.",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       wordSpacing: 0.9,
-                      fontSize: 17,
+                      fontSize: 15,
                       fontWeight: FontWeight.w400,
                       color: AppColors.normalTxtColor
                   ),
                 ),
               ),
-              SizedBox(height: 6.h,),
+              SizedBox(height: 5.h,),
 
               AppButton(
                 onClick: ()=>Get.to(Question(), transition: Transition.rightToLeft), //rout the next login pages
