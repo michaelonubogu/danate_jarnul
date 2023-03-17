@@ -16,7 +16,8 @@ import '../../utility/app_button.dart';
 
 class EmailVerify extends StatefulWidget {
   final EmailOTP myauth;
-  const EmailVerify({Key? key, required this.myauth}) : super(key: key);
+  final String email;
+  const EmailVerify({Key? key, required this.myauth, required this.email}) : super(key: key);
 
   @override
   State<EmailVerify> createState() => _EmailVerifyState();
@@ -130,7 +131,10 @@ class _EmailVerifyState extends State<EmailVerify> {
               SizedBox(height: 6.h,),
 
               AppButton(
-                onClick: ()=>SendOtp.checkOTP(context: context, otp: otp, myauth: widget.myauth), //rout the next login pages
+                onClick: (){
+                  SendOtp.checkOTP(context: context, otp: otp, myauth: widget.myauth, email: widget.email);
+                  //rout the next login pages
+                },
                 size: size,
                 child: Text("Confirm",
                   style: TextStyle(

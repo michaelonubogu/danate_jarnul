@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:dante/config/app_config.dart';
+import 'package:dante/controller/auth_controller/auth_controller.dart';
+import 'package:dante/model/auth_model/email_verify_model.dart';
 import 'package:dante/view/auth/verify_email.dart';
 import 'package:dante/view/auth/verify_success.dart';
 import 'package:email_otp/email_otp.dart';
@@ -32,7 +36,7 @@ class SendOtp{
       ));
       Navigator.pop(context);
       //redirect otp verification page
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailVerify(myauth: myauth,)));
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailVerify(myauth: myauth, email: email,)));
     }else{ //if otp not sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
@@ -47,7 +51,8 @@ class SendOtp{
 
   //check otp
   // now we can use this method anywhere in our project. its take 2 parameters.
-  static Future checkOTP({required BuildContext context,  required String otp,  required EmailOTP myauth})async{
+  static Future checkOTP({required BuildContext context,  required String otp,  required EmailOTP myauth, required String email})async{
+
     AppLoading.appLoading(context: context);
     var res =await myauth.verifyOTP(otp: otp);
     print("otp send response ===== ${myauth.sendOTP}");
@@ -57,8 +62,16 @@ class SendOtp{
         duration: Duration(milliseconds: 3000),
         content: Text('Email Verified.'),
       ));
-      //redirect otp verification page
-      Get.to(VerifySuccess(), transition: Transition.leftToRight);
+
+      var id = new Random().nextInt(1000);
+      var data = {
+        "id" : id,
+        "email" : email,
+        "isVerified" : true,
+        "data" : "${DateTime.now()}"
+      };
+      //if success, then store data
+      AuthController.emailVerify(data);
 
     }else{ //if otp not sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

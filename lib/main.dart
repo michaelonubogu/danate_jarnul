@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:path_provider/path_provider.dart';
 import 'package:dante/view/flash/flas_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -6,7 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:hive/hive.dart';
 import 'package:sizer/sizer.dart';
+
+import 'controller/auth_controller/auth_controller.dart';
+import 'model/auth_model/email_verify_model.dart';
+import 'model/auth_model/initialData_model.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', //id
@@ -27,8 +34,16 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage) async {
 void main() async {
   // WidgetsBinding.instance?.ensureVisualUpdate();
   WidgetsFlutterBinding.ensureInitialized();
+  Directory appDocDir = await getApplicationDocumentsDirectory();
+
+ await Hive
+    ..init(appDocDir.path)
+    ..registerAdapter(InitialDataModelAdapter())
+    ..registerAdapter(EmailVerifyModelAdapter());
+
   await Firebase.initializeApp();
   MobileAds.instance.initialize();
+
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
   await flutterLocalNotificationsPlugin
@@ -41,6 +56,8 @@ void main() async {
     badge: true,
     sound: true,
   );
+
+
   runApp(MyApp());
 }
 

@@ -10,13 +10,15 @@ import 'get_name.dart';
 
 
 class NiceToMeet extends StatefulWidget {
-  const NiceToMeet({Key? key}) : super(key: key);
+  final String name;
+  const NiceToMeet({Key? key, required this.name}) : super(key: key);
 
   @override
   State<NiceToMeet> createState() => _NiceToMeetState();
 }
 
 class _NiceToMeetState extends State<NiceToMeet> {
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -31,7 +33,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Text("Nice to meet you Nayon!",
+                child: Text("Nice to meet you ${widget.name}!",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.w600,
@@ -75,7 +77,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
               SizedBox(height: 5.h,),
 
               AppButton(
-                onClick: ()=>Get.to(Question(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()=>Get.to(Question(name: widget.name,), transition: Transition.rightToLeft), //rout the next login pages
                 size: size,
                 child: Text("Let's go",
                   style: TextStyle(

@@ -1,3 +1,6 @@
+import 'package:dante/controller/auth_controller/auth_controller.dart';
+import 'package:dante/view/index.dart';
+
 import '../../utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,8 +22,20 @@ class _FlashScreenState extends State<FlashScreen> {
     super.initState();
     Future.delayed(Duration(milliseconds: 2000), () {
       // 5s over, navigate to a new page
+      getUserRedirect();
       Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
     });
+  }
+
+  var id;
+  var take_info;
+  getUserRedirect()async{
+    var res = await AuthController.showInitData();
+    setState(() {
+      id = res["id"];
+      take_info = "take_info";
+    });
+
   }
 
   @override
