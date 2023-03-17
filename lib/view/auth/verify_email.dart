@@ -1,3 +1,9 @@
+import 'dart:async';
+import 'dart:math';
+
+import 'package:dante/controller/auth_controller/sent_opt.dart';
+import 'package:email_otp/email_otp.dart';
+
 import '../../utility/app_colors.dart';
 import '../../view/auth/verify_success.dart';
 import 'package:flutter/material.dart';
@@ -9,14 +15,50 @@ import 'package:sizer/sizer.dart';
 import '../../utility/app_button.dart';
 
 class EmailVerify extends StatefulWidget {
-  const EmailVerify({Key? key}) : super(key: key);
+  final EmailOTP myauth;
+  const EmailVerify({Key? key, required this.myauth}) : super(key: key);
 
   @override
   State<EmailVerify> createState() => _EmailVerifyState();
 }
 
 class _EmailVerifyState extends State<EmailVerify> {
+
+  //this variable take the user otp
+  var otp;
+
+  //this is for timer count down
+  late Timer _timer;
+  int _timeLeft = 60; // it will be start form "60 Sec"
+
   @override
+  void initState() {
+    super.initState();
+    _startTimer(); // initial the method, it means, when the page is loaded the method was called.
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel(); // after complete the process. this _timer object is cancel form our livery
+    super.dispose();
+  }
+
+  //this method for start timing.
+  void _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (_) {
+      setState(() {
+        if (_timeLeft > 0) {
+          _timeLeft--;
+        } else {
+          _timer.cancel();
+        }
+      });
+    });
+  }
+
+
+
+@override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return SafeArea(
@@ -60,6 +102,9 @@ class _EmailVerifyState extends State<EmailVerify> {
                 textFieldAlignment: MainAxisAlignment.spaceAround,
                 fieldStyle: FieldStyle.box,
                 onCompleted: (pin) {
+                  setState(() {
+                    otp = pin.toString();
+                  });
                   print("Completed: " + pin);
                 },
               ),
@@ -73,7 +118,7 @@ class _EmailVerifyState extends State<EmailVerify> {
                         fontSize: 15, fontWeight: FontWeight.w500, color: AppColors.textColor
                       )
                     ),  TextSpan(
-                        text: "51 s",
+                        text: "$_timeLeft s",
                         style: TextStyle(
                             fontSize: 15, fontWeight: FontWeight.w500, color: AppColors.blue
                         )
@@ -85,7 +130,7 @@ class _EmailVerifyState extends State<EmailVerify> {
               SizedBox(height: 6.h,),
 
               AppButton(
-                onClick: ()=>Get.to(VerifySuccess(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()=>SendOtp.checkOTP(context: context, otp: otp, myauth: widget.myauth), //rout the next login pages
                 size: size,
                 child: Text("Confirm",
                   style: TextStyle(

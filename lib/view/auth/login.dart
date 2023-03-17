@@ -1,3 +1,5 @@
+import 'package:dante/controller/auth_controller/sent_opt.dart';
+
 import '../../utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,6 +16,10 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+
+  //text editing controller
+  final email = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size; 
@@ -56,6 +62,7 @@ class _LoginState extends State<Login> {
               ),
               SizedBox(height: 2.h,),
               TextFormField(
+                controller: email,
                 decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -69,7 +76,7 @@ class _LoginState extends State<Login> {
               SizedBox(height: 6.h,),
 
               AppButton(
-                onClick: ()=>Get.to(EmailVerify(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()=>SendOtp.sendOTP(context: context, email: email.text), //rout the next login pages
                 size: size,
                 child: Text("Next",
                   style: TextStyle(
