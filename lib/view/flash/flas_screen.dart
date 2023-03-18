@@ -24,7 +24,6 @@ class _FlashScreenState extends State<FlashScreen> {
     Future.delayed(Duration(milliseconds: 2000), () {
       // 5s over, navigate to a new page
       getUserRedirect();
-      Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
     });
   }
 
@@ -39,9 +38,9 @@ class _FlashScreenState extends State<FlashScreen> {
       take_info = initalData["take_info"];
       isVerify = emailVerify["isVerify"];
     });
-    if(initalData["take_info"] == true){
+    if(take_info){
      return Get.to(Index(), transition: Transition.rightToLeft);
-    }else if(emailVerify["isVerify"]){
+    }else if(isVerify){
       return Get.to(GetName(), transition: Transition.rightToLeft);
     }else{
       return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);

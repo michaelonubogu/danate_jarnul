@@ -1,6 +1,7 @@
 import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/admirer/admirers.dart';
 import 'package:dante/view/home/home.dart';
+import 'package:dante/view/profile/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 
@@ -19,7 +20,7 @@ class _IndexState extends State<Index> {
     Home(),
     Admirers(),
     Admirers(),
-    Admirers(),
+    Profile(),
   ];
 
   //on tap method
