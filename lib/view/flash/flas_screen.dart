@@ -1,4 +1,5 @@
 import 'package:dante/controller/auth_controller/auth_controller.dart';
+import 'package:dante/view/auth/ask_qustion/get_name.dart';
 import 'package:dante/view/index.dart';
 
 import '../../utility/app_colors.dart';
@@ -29,12 +30,23 @@ class _FlashScreenState extends State<FlashScreen> {
 
   var id;
   var take_info;
+  var isVerify;
   getUserRedirect()async{
-    var res = await AuthController.showInitData();
+    var initalData = await AuthController.showInitData();
+    var emailVerify = await AuthController.showEmailVerify();
     setState(() {
-      id = res["id"];
-      take_info = "take_info";
+      id = initalData["id"];
+      take_info = initalData["take_info"];
+      isVerify = emailVerify["isVerify"];
     });
+    if(initalData["take_info"] == true){
+     return Get.to(Index(), transition: Transition.rightToLeft);
+    }else if(emailVerify["isVerify"]){
+      return Get.to(GetName(), transition: Transition.rightToLeft);
+    }else{
+      return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
+    }
+    print("this is inital value ${initalData["take_info"]}");
 
   }
 
