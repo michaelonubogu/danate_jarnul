@@ -1,5 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:dante/controller/admirers_controller/admirers_controllers.dart';
+import 'package:dante/model/admirers_model/admirers_model.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dob_input_field/dob_input_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -33,6 +36,16 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     'Linkd In',
   ];
   String? selectedValue;
+
+  //text editing controller
+  final dob = TextEditingController();
+  final zodiac_sign = TextEditingController();
+  final description = TextEditingController();
+  final my_likes = TextEditingController();
+  final my_dislikes = TextEditingController();
+  //store variables
+  var choose, profile;
+  List feature_images = [];
 
 
   @override
@@ -383,7 +396,24 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             SizedBox(height: 30,),
 
             AppButton(
-              onClick: (){},//rout the next login pages
+              onClick: (){
+                var data = AdmirerModel(
+                    id: 1,
+                    userId: "userId",
+                    profile: "profile",
+                    featureImages: [FeatureImage(image: "image")],
+                    dob: "dob",
+                    zodiacSign: "zodiacSign",
+                    rate: "rate",
+                    description: "description",
+                    myLikes: "myLikes",
+                    myDislikes: "myDislikes",
+                    socialMedia: SocialMedia(name: "name", link: "link")
+                );
+               // final jsonData = json.decode(data);
+               // print("dasfds === $jsonData");
+                AdmirersController.saveListOfObjects(data);
+              },//rout the next login pages
               size: size,
               child: Text("Save Admirer",
                 style: TextStyle(
@@ -392,11 +422,6 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
             SizedBox(height: 30,),
-
-
-
-
-
           ],
         ),
       ),

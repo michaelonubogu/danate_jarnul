@@ -19,6 +19,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   bool status = false;
 
+  Future? showProfileFuture;
   //EMAIL
   Future showProfile()async{
     var res = await AuthController.showProfile();
@@ -30,7 +31,7 @@ class _ProfileState extends State<Profile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    showProfile();
+    showProfileFuture = showProfile();
   }
 
   @override
@@ -73,7 +74,7 @@ class _ProfileState extends State<Profile> {
           children: [
             //profile image section
             FutureBuilder(
-              future: showProfile(),
+              future: showProfileFuture,
               builder: (context,AsyncSnapshot<dynamic> snapshot) {
                if(snapshot.connectionState == ConnectionState.waiting){
                  return Container(
@@ -105,7 +106,7 @@ class _ProfileState extends State<Profile> {
                      children: [
                        ClipRRect(
                          borderRadius: BorderRadius.circular(10),
-                         child: Image.memory(Uint8List.fromList(snapshot.data["profile"]), height: 120, width: 120,),
+                         child: Image.memory(Uint8List.fromList(snapshot.data["profile"]), height: 120, width: 120, fit: BoxFit.cover),
                        ),
                        SizedBox(height: 20,),
                        Text("${snapshot.data["f_name"]} ${snapshot.data["l_name"]}",

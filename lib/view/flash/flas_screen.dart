@@ -33,19 +33,13 @@ class _FlashScreenState extends State<FlashScreen> {
   getUserRedirect()async{
     var initalData = await AuthController.showInitData();
     var emailVerify = await AuthController.showEmailVerify();
-    setState(() {
-      id = initalData["id"];
-      take_info = initalData["take_info"];
-      isVerify = emailVerify["isVerify"];
-    });
-    if(take_info){
+    if(initalData["take_info"] !=null && initalData["take_info"]){
      return Get.to(Index(), transition: Transition.rightToLeft);
-    }else if(isVerify){
+    }else if(emailVerify["isVerify"] != null && emailVerify["isVerify"]){
       return Get.to(GetName(), transition: Transition.rightToLeft);
     }else{
       return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
     }
-    print("this is inital value ${initalData["take_info"]}");
 
   }
 
