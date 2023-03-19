@@ -1,3 +1,7 @@
+import 'dart:math';
+
+import '../../../controller/auth_controller/auth_controller.dart';
+import '../../../database/local_database.dart';
 import '../../index.dart';
 import '/view/auth/ask_qustion/get_name.dart';
 import 'package:flutter/material.dart';
@@ -11,13 +15,18 @@ import '../../home/home.dart';
 import 'niceto_meet.dart';
 
 class Question extends StatefulWidget {
-  const Question({Key? key}) : super(key: key);
+  final String name;
+  const Question({Key? key, required this.name}) : super(key: key);
 
   @override
   State<Question> createState() => _QuestionState();
 }
 
 class _QuestionState extends State<Question> {
+  final lRelation = TextEditingController();
+  final nRelation = TextEditingController();
+  final lookingPartnet = TextEditingController();
+
   bool status = false;
   @override
   Widget build(BuildContext context) {
@@ -105,6 +114,7 @@ class _QuestionState extends State<Question> {
               ),
               SizedBox(height: 15,),
               TextFormField(
+                controller: lRelation,
                 maxLines: 3,
                 decoration: InputDecoration(
                     filled: true,
@@ -126,6 +136,7 @@ class _QuestionState extends State<Question> {
               ),
               SizedBox(height: 15,),
               TextFormField(
+                controller: lookingPartnet,
                 maxLines: 3,
                 decoration: InputDecoration(
                     filled: true,
@@ -147,6 +158,7 @@ class _QuestionState extends State<Question> {
               ),
               SizedBox(height: 15,),
               TextFormField(
+                controller: nRelation,
                 maxLines: 3,
                 decoration: InputDecoration(
                     filled: true,
@@ -160,7 +172,24 @@ class _QuestionState extends State<Question> {
               ),
               SizedBox(height: 5.h,),
               AppButton(
-                onClick: ()=>Get.to(Index(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()async{
+                  var id = new Random().nextInt(1000);
+                  var data = {
+                    "id": id,
+                    "name": widget.name,
+                    "first_dating": status,
+                    "last_relationship": lRelation.text,
+                    "looking_partner": lookingPartnet.text,
+                    "next_relationship": nRelation.text,
+                    "take_info": true,
+                  };
+                  AuthController.initData(data);
+                  Get.to(Index(), transition: Transition.leftToRight);
+
+                  //reDirect Next Page
+                  //Get.to(NiceToMeet(), transition: Transition.leftToRight);
+
+                }, //rout the next login pages
                 size: size,
                 child: Text("Next",
                   style: TextStyle(

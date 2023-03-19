@@ -1,3 +1,7 @@
+import 'package:dante/controller/auth_controller/auth_controller.dart';
+import 'package:dante/view/auth/ask_qustion/get_name.dart';
+import 'package:dante/view/index.dart';
+
 import '../../utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -19,8 +23,30 @@ class _FlashScreenState extends State<FlashScreen> {
     super.initState();
     Future.delayed(Duration(milliseconds: 2000), () {
       // 5s over, navigate to a new page
-      Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
+      getUserRedirect();
     });
+  }
+
+  var id;
+  var take_info;
+  var isVerify;
+  getUserRedirect()async{
+    var initalData = await AuthController.showInitData();
+    var emailVerify = await AuthController.showEmailVerify();
+    setState(() {
+      id = initalData["id"];
+      take_info = initalData["take_info"];
+      isVerify = emailVerify["isVerify"];
+    });
+    if(take_info){
+     return Get.to(Index(), transition: Transition.rightToLeft);
+    }else if(isVerify){
+      return Get.to(GetName(), transition: Transition.rightToLeft);
+    }else{
+      return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
+    }
+    print("this is inital value ${initalData["take_info"]}");
+
   }
 
   @override

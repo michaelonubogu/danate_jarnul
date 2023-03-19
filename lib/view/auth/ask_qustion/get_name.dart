@@ -1,8 +1,8 @@
+import 'dart:math';
 import '../../../utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sizer/sizer.dart';
-
 import '../../../utility/app_button.dart';
 import 'niceto_meet.dart';
 
@@ -15,6 +15,10 @@ class GetName extends StatefulWidget {
 }
 
 class _GetNameState extends State<GetName> {
+
+
+  final name = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -61,6 +65,7 @@ class _GetNameState extends State<GetName> {
               ),
               SizedBox(height: 15,),
               TextFormField(
+                controller: name,
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
@@ -74,7 +79,11 @@ class _GetNameState extends State<GetName> {
               SizedBox(height: 6.h,),
 
               AppButton(
-                onClick: ()=>Get.to(NiceToMeet(), transition: Transition.rightToLeft), //rout the next login pages
+                onClick: ()async{
+
+                  //reDirect Next Page
+                 Get.to(NiceToMeet(name: name.text,), transition: Transition.leftToRight);
+                },
                 size: size,
                 child: Text("Next",
                   style: TextStyle(
