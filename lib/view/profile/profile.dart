@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../controller/auth_controller/auth_controller.dart';
 import '../../utility/app_colors.dart';
+import 'edit_profile.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -14,6 +18,20 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   bool status = false;
+
+  //EMAIL
+  Future showProfile()async{
+    var res = await AuthController.showProfile();
+    print("this is profile === $res");
+    return res;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    showProfile();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +59,7 @@ class _ProfileState extends State<Profile> {
               borderRadius: BorderRadius.circular(10)
             ),
             child: IconButton(
-              onPressed: (){},
+              onPressed: ()=>Get.to(EditProfile(), transition: Transition.rightToLeft),
               icon: Icon(IconlyLight.edit,),
             ),
           )
@@ -54,46 +72,111 @@ class _ProfileState extends State<Profile> {
         child: Column(
           children: [
             //profile image section
-            Container(
-              width: size.width,
-              padding: EdgeInsets.all(30),
-              height: 30.h,
-              decoration: BoxDecoration(
-                color: AppColors.white
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 120, width: 120,),
-                  ),
-                  SizedBox(height: 20,),
-                  Text("Nayon Talukder",
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: AppColors.textColor,
-                      fontWeight: FontWeight.w600
-                    ),
-                  ),
-                  SizedBox(height: 10,),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.date_range, color: AppColors.mainColor,),
-                      SizedBox(width: 10,),
-                      Text("January 15",
-                        style: TextStyle(
-                            fontSize: 13,
-                            color: AppColors.textColor,
-                            fontWeight: FontWeight.w400
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
+            FutureBuilder(
+              future: showProfile(),
+              builder: (context,AsyncSnapshot<dynamic> snapshot) {
+               if(snapshot.connectionState == ConnectionState.waiting){
+                 return Container(
+                   width: size.width,
+                   padding: EdgeInsets.all(30),
+                   height: 30.h,
+                   decoration: BoxDecoration(
+                       color: AppColors.white
+                   ),
+                   child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                     children: [
+                      CircularProgressIndicator(color: AppColors.mainColor, strokeWidth: 4,)
+                     ],
+                   ),
+                 );
+               }else if(snapshot.hasData){
+                 return Container(
+                   width: size.width,
+                   padding: EdgeInsets.all(30),
+                   height: 30.h,
+                   decoration: BoxDecoration(
+                       color: AppColors.white
+                   ),
+                   child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                     children: [
+                       ClipRRect(
+                         borderRadius: BorderRadius.circular(10),
+                         child: Image.memory(Uint8List.fromList(snapshot.data["profile"]), height: 120, width: 120,),
+                       ),
+                       SizedBox(height: 20,),
+                       Text("${snapshot.data["f_name"]} ${snapshot.data["l_name"]}",
+                         style: TextStyle(
+                             fontSize: 15,
+                             color: AppColors.textColor,
+                             fontWeight: FontWeight.w600
+                         ),
+                       ),
+                       SizedBox(height: 10,),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         children: [
+                           Icon(Icons.date_range, color: AppColors.mainColor,),
+                           SizedBox(width: 10,),
+                           Text("January 15",
+                             style: TextStyle(
+                                 fontSize: 13,
+                                 color: AppColors.textColor,
+                                 fontWeight: FontWeight.w400
+                             ),
+                           ),
+                         ],
+                       )
+                     ],
+                   ),
+                 );
+               }else{
+                 return Container(
+                   width: size.width,
+                   padding: EdgeInsets.all(30),
+                   height: 30.h,
+                   decoration: BoxDecoration(
+                       color: AppColors.white
+                   ),
+                   child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     crossAxisAlignment: CrossAxisAlignment.center,
+                     children: [
+                       ClipRRect(
+                         borderRadius: BorderRadius.circular(10),
+                         child: Image.memory(Uint8List.fromList(snapshot.data["profile"]), height: 120, width: 120,),
+                       ),
+                       SizedBox(height: 20,),
+                       Text("${snapshot.data["f_name"]} ${snapshot.data["l_name"]}",
+                         style: TextStyle(
+                             fontSize: 15,
+                             color: AppColors.textColor,
+                             fontWeight: FontWeight.w600
+                         ),
+                       ),
+                       SizedBox(height: 10,),
+                       Row(
+                         mainAxisAlignment: MainAxisAlignment.center,
+                         children: [
+                           Icon(Icons.date_range, color: AppColors.mainColor,),
+                           SizedBox(width: 10,),
+                           Text("January 15",
+                             style: TextStyle(
+                                 fontSize: 13,
+                                 color: AppColors.textColor,
+                                 fontWeight: FontWeight.w400
+                             ),
+                           ),
+                         ],
+                       )
+                     ],
+                   ),
+                 );
+               }
+              }
             ),
 
             Padding(
@@ -183,4 +266,6 @@ class _ProfileState extends State<Profile> {
                   ),
                 );
   }
+
+
 }

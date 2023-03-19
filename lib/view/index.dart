@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 
 class Index extends StatefulWidget {
-  const Index({Key? key}) : super(key: key);
+  final int? index;
+  const Index({Key? key,  this.index = 0}) : super(key: key);
 
   @override
   State<Index> createState() => _IndexState();
@@ -28,6 +29,13 @@ class _IndexState extends State<Index> {
     setState(() {
       _selectedIndex = value;
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _selectedIndex = widget.index!;
   }
 
   @override
