@@ -19,15 +19,17 @@ class AdmirerModelAdapter extends TypeAdapter<AdmirerModel> {
     return AdmirerModel(
       id: fields[0] as int,
       userId: fields[1] as String,
-      profile: fields[2] as String,
-      featureImages: (fields[3] as List).cast<FeatureImage>(),
+      profile: fields[2] as dynamic,
+      featureImages: (fields[3] as List).cast<Uint8List>(),
       dob: fields[4] as String,
       zodiacSign: fields[5] as String,
-      rate: fields[6] as String,
+      rate: fields[6] as double,
       description: fields[7] as String,
       myLikes: fields[8] as String,
       myDislikes: fields[9] as String,
-      socialMedia: fields[10] as SocialMedia,
+      socialMedia: (fields[10] as List)
+          .map((dynamic e) => (e as Map).cast<dynamic, dynamic>())
+          .toList(),
     );
   }
 
@@ -66,77 +68,6 @@ class AdmirerModelAdapter extends TypeAdapter<AdmirerModel> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is AdmirerModelAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class FeatureImageAdapter extends TypeAdapter<FeatureImage> {
-  @override
-  final int typeId = 3;
-
-  @override
-  FeatureImage read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return FeatureImage(
-      image: fields[0] as String,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, FeatureImage obj) {
-    writer
-      ..writeByte(1)
-      ..writeByte(0)
-      ..write(obj.image);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FeatureImageAdapter &&
-          runtimeType == other.runtimeType &&
-          typeId == other.typeId;
-}
-
-class SocialMediaAdapter extends TypeAdapter<SocialMedia> {
-  @override
-  final int typeId = 4;
-
-  @override
-  SocialMedia read(BinaryReader reader) {
-    final numOfFields = reader.readByte();
-    final fields = <int, dynamic>{
-      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
-    };
-    return SocialMedia(
-      name: fields[0] as String,
-      link: fields[1] as String,
-    );
-  }
-
-  @override
-  void write(BinaryWriter writer, SocialMedia obj) {
-    writer
-      ..writeByte(2)
-      ..writeByte(0)
-      ..write(obj.name)
-      ..writeByte(1)
-      ..write(obj.link);
-  }
-
-  @override
-  int get hashCode => typeId.hashCode;
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is SocialMediaAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

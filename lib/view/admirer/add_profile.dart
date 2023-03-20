@@ -8,10 +8,14 @@ import 'package:dante/controller/admirers_controller/admirers_controllers.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/model/admirers_model/admirers_model.dart';
 import 'package:dante/utility/app_colors.dart';
+import 'package:dante/view/admirer/admirers.dart';
 import 'package:dob_input_field/dob_input_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
+import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
@@ -26,6 +30,12 @@ class AddAdmirerProfile extends StatefulWidget {
 }
 
 class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
+  List socialImage = [
+    "assets/icons/fb.png",
+    "assets/icons/insta.png",
+    "assets/icons/twitter.png",
+    "assets/icons/twitter.png",
+  ];
 
   //image picker global variable
   final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
@@ -37,8 +47,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   final List<String> items = [
     'Facebook',
     'Instagram',
-    'YouTube',
-    'Linkd In',
+    'Twitter',
+    'Google',
   ];
   String? selectedValue;
 
@@ -48,9 +58,11 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   final description = TextEditingController();
   final my_likes = TextEditingController();
   final my_dislikes = TextEditingController();
+  final socialLink = TextEditingController();
   //store variables
   var choose, profile;
   List feature_images = [];
+  List<Map> socialMediaList = [];
 
 
   @override
@@ -159,7 +171,51 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 ),
               ),
             ),
-            SizedBox(height: 30,),
+            SizedBox(height: 20,),
+            feature_images.length != 0
+                ? SizedBox(
+              height: 100,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+              itemCount: feature_images.length,
+              itemBuilder: (_, index){
+                  return Container(
+                      margin: EdgeInsets.only(right: 10),
+                      width: 100, height: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Stack(
+                        clipBehavior: Clip.hardEdge,
+                        children: [
+                          Positioned(bottom: 0,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                   child: Image.file(feature_images[index],width: 100, height: 95, fit: BoxFit.cover,))),
+                          Positioned(
+                              right: 0, top: -0,
+                              child: InkWell(
+                                onTap: (){
+                                  //remove index from list
+                                  feature_images.removeAt(index);
+                                  setState(() {});
+                                },
+                                child: Container(
+                                    padding: EdgeInsets.all(3),
+                                    //transform: Matrix4.translationValues(0.0, -0.0, 0.0),
+                                    decoration: BoxDecoration(
+                                      color: AppColors.white,
+                                      borderRadius: BorderRadius.circular(100),
+                                    ),
+                                    child: Icon(IconlyLight.delete, color: Colors.red, size: 15,)),
+                              )),
+                        ],
+                      ));
+              },
+            ),
+                ) : SizedBox(),
+            SizedBox(height: 10,),
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -171,12 +227,10 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     borderRadius: BorderRadius.circular(10)
                 ),
                 child:  InkWell(
-                  onTap: ()=>openBottomSheet(),
+                  onTap: ()=>uploadFeatureImage(),
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
-                      child: profileImage != null
-                          ? Image.file(profileImage, height: 130, width: 130, fit: BoxFit.cover,)
-                          :  Column(
+                      child:   Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -211,6 +265,16 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               showLabel: true,
               dateFormatType: DateFormatType.DDMMYYYY,
               autovalidateMode: AutovalidateMode.always,
+              onDateSaved: (d){
+                setState(() {
+                  dob.text = d.toString();
+                });
+              },
+              onDateSubmitted: (d){
+                setState(() {
+                  dob.text = d.toString();
+                });
+              },
             ),
 
             SizedBox(height: 30,),
@@ -223,6 +287,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             ),
             SizedBox(height: 15,),
             TextFormField(
+              controller: zodiac_sign,
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -268,6 +333,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                       setState(
                             () {
                           _value = newValue;
+                          print("this value === $_value");
                         },
                       );
                     },
@@ -286,6 +352,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             ),
             SizedBox(height: 15,),
             TextFormField(
+              controller: description,
               maxLines: 4,
               decoration: InputDecoration(
                   filled: true,
@@ -308,6 +375,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             ),
             SizedBox(height: 15,),
             TextFormField(
+              controller: my_likes,
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -338,6 +406,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             ),
             SizedBox(height: 15,),
             TextFormField(
+              controller: my_dislikes,
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
@@ -375,7 +444,47 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.grey.shade300
               ),
-              child: Center(child: Text("Add social media link",style: TextStyle(color: AppColors.textColor),),),
+              child:socialMediaList.length != 0
+                  ? SizedBox(height: 50,
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 30, right: 30),
+                        child:  ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: socialMediaList.length,
+                          itemBuilder: (_, index){
+                            return InkWell(
+                              onTap: (){
+                                socialMediaList.removeAt(index);
+                                setState(() {});
+                              },
+                              child: Container(
+                                    height: 40,
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Image.asset(
+                                        socialMediaList[index]["name"].contains("Facebook")
+                                             ? "assets/icons/fb.png"
+                                             :  socialMediaList[index]["name"].contains("Instagram")
+                                             ? "assets/icons/insta.png"
+                                             : socialMediaList[index]["name"].contains("Twitter")
+                                             ? "assets/icons/twitter.png"
+                                             : socialMediaList[index]["name"].contains("Google")
+                                             ? "assets/icons/fb.png"
+                                              : "assets/icons/fb.png" ,
+                                        height: 40, width: 40,),
+                                      Icon(Icons.remove, color: Colors.red, size: 12,),
+                                    ],
+                                  )
+                                ),
+                            );
+                          },
+                        ),
+                      )
+                   )
+                  :Center(child: Text("Add social media link",style: TextStyle(color: AppColors.textColor),),),
             ),
 
             SizedBox(height: 30,),
@@ -408,26 +517,45 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 //id
                 var id = new Random().nextInt(1000);
                 //image convert
-                Uint8List _image = await profileImage.readAsBytes();
+                Uint8List _profileImage = await profileImage.readAsBytes();
+                List<Uint8List> _featureImage =  [];
+
+                Future<Uint8List> fileToUint8List(File file) async {
+                  Uint8List bytes = await file.readAsBytes();
+                   _featureImage.add(bytes);
+                  return bytes;
+                }
+                for (var i in feature_images) {
+                  fileToUint8List(i);
+                 // _featureImage.add(i!.path.readAsBytes());
+                }
+
                 var data = AdmirerModel(
                     id: id,
                     userId: "$userId",
-                    profile: "",
-                    featureImages: [FeatureImage(image: "image")],
-                    dob: "dob",
-                    zodiacSign: "zodiacSign",
-                    rate: "rate",
-                    description: "description",
-                    myLikes: "myLikes",
-                    myDislikes: "myDislikes",
-                    socialMedia: SocialMedia(name: "name", link: "link")
+                    profile: _profileImage,
+                    featureImages: _featureImage ,
+                    dob: dob.text,
+                    zodiacSign: zodiac_sign.text,
+                    rate: _value,
+                    description: description.text,
+                    myLikes: my_likes.text,
+                    myDislikes: my_dislikes.text,
+                    socialMedia: socialMediaList
                 );
-               // final jsonData = json.decode(data);
-               // print("dasfds === $jsonData");
-                //AdmirersController.saveListOfObjects(data);
-                final admirersDB = await LocalDatabases.ADMIRER_PROFILE;
-               final admirersBox = Boxes.getAdmirers;
-               admirersDB.add(data);
+               var box = await Boxes.getAdmirers;
+               box.add(data);
+               Get.to(Admirers(), transition: Transition.rightToLeft);
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text("New Admirers Profile Added!"),
+                  backgroundColor: Colors.green,
+                  duration: Duration(milliseconds: 3000),
+                ));
+                if(kDebugMode){
+                  print("admirer added");
+                }
+
+
 
               },//rout the next login pages
               size: size,
@@ -479,7 +607,6 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
   // this is profile image store variable
   var profileImage, profileImageStr;
-  final List<File> featureImage = [];
   //this method going take images and save local variable
 
   void uploadProfile(type) async{ // its take one parameter
@@ -492,10 +619,11 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   }
   void uploadFeatureImage() async{ // its take one parameter
     var image = await _picker.pickMultiImage();
-    setState(() {
-
-    });
-    Navigator.pop(context); //when image taken, it will be close bottom sheets.
+    for(var i in image){
+      feature_images.add(File(i.path));
+    }
+    setState(() {});
+    //Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
 
 
@@ -522,7 +650,6 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               content: SingleChildScrollView(
                 child: ListBody(
                   children:  <Widget>[
-
                     Text('Choose media',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
@@ -562,6 +689,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                           onChanged: (value) {
                             setState(() {
                               selectedValue = value as String;
+
                             });
                           },
                           buttonStyleData: const ButtonStyleData(
@@ -575,7 +703,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                       ),
                     ),
                     SizedBox(height: 30,),
-                    Text('Profifile link',
+                    Text('Profile link',
                       style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
@@ -584,6 +712,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     ),
                     SizedBox(height: 15,),
                     TextFormField(
+                      controller: socialLink,
                       decoration: InputDecoration(
                           filled: true,
                           contentPadding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
@@ -610,7 +739,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         AppButton(
-                          onClick: ()=>{}, //rout the next login pages
+                          onClick: ()=>Navigator.pop(context), //rout the next login pages
                           size: size*.25,
                           bg: Colors.grey.shade300,
                           child: Text("Cancel",
@@ -620,7 +749,19 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                           ),
                         ),
                         AppButton(
-                          onClick: ()=>{}, //rout the next login pages
+                          onClick: (){
+                            socialMediaList.add(
+                              {
+                                "name" : selectedValue,
+                                "link" : socialLink.text,
+                              },
+                            );
+                            setState((){
+
+                            });
+                            socialLink.clear();
+                            Navigator.pop(context);
+                          }, //rout the next login pages
                           size: size*.25,
                           child: Text("Save",
                             style: TextStyle(

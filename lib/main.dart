@@ -42,12 +42,13 @@ void main() async {
     ..init(appDocDir.path)
     ..registerAdapter(InitialDataModelAdapter())
     ..registerAdapter(AdmirerModelAdapter())
-    ..registerAdapter(FeatureImageAdapter())
-    ..registerAdapter(SocialMediaAdapter())
     ..registerAdapter(EmailVerifyModelAdapter());
 
     //initial amdirers profile
-    LocalDatabases.ADMIRER_PROFILE;
+    await Hive.openBox<Map>('initial_Data');
+    await Hive.openBox<Map>('email_verify_bd');
+    await Hive.openBox<Map>('profile');
+    await Hive.openBox<AdmirerModel>("admirers");
 
   await Firebase.initializeApp();
   MobileAds.instance.initialize();

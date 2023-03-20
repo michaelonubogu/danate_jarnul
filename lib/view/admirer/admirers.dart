@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dante/database/local_database.dart';
 import 'package:dante/json/admirors_json.dart';
 import 'package:dante/utility/app_colors.dart';
@@ -23,7 +25,6 @@ class _AdmirersState extends State<Admirers> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    LocalDatabases.ADMIRER_PROFILE; //init database
   }
   @override
   Widget build(BuildContext context) {
@@ -51,9 +52,12 @@ class _AdmirersState extends State<Admirers> {
                 valueListenable: Boxes.getAdmirers.listenable(),
                 builder: (context, box, _) {
                   var data = box.values.toList().cast<AdmirerModel>();
-                  print("this is admirer === ${data[0].userId}");
-                  return AlphabetScrollView(
-                    list: AdmirersListJson.admirersList.map((e) => AlphaModel(e["name"])).toList(),
+                  // print("this is admirer === ${data[0].zodiacSign}");
+                  // print("this is admirer === ${box.values.length}");
+                  return box.values.length != 0
+                      ? AlphabetScrollView(
+                   // list: AdmirersListJson.admirersList.map((e) => AlphaModel(e["name"])).toList(),
+                    list: data.map((e) => AlphaModel(e.zodiacSign)).toList(),
                     itemExtent: 150,
                     itemBuilder: (_, k, id) {
                       return Container(
@@ -62,41 +66,53 @@ class _AdmirersState extends State<Admirers> {
                           //contentPadding: EdgeInsets.only(bottom: 20),
                           leading: ClipRRect(
                               borderRadius: BorderRadius.circular(100),
-                              child: Image.network("${AdmirersListJson.admirersList[k]["profile"]}" , height: 50, width: 50, fit: BoxFit.cover,)),
+                              child: Image.memory(Uint8List.fromList(data[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
 
-                          title: Text("${AdmirersListJson.admirersList[k]["name"]}",
+                          title: Text("${data[k].zodiacSign}",
                             style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500
+                              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
                             ),
                           ),
                           subtitle: Row(
                             children: [
                               Row(
                                 children: [
-                                  AdmirersListJson.admirersList[k]["rate"] == 3
+                                  data[k].rate > 80.00
                                   ? Row(
                                     children: [
                                       Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                     ],
                                   )
-                                      : AdmirersListJson.admirersList[k]["rate"] == 2
+                                      : data[k].rate > 60.00
                                       ? Row(
                                     children: [
+                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
                                     ],
-                                  ) :  AdmirersListJson.admirersList[k]["rate"] == 1
+                                  ) :  data[k].rate > 40.00
                                       ? Row(
                                     children: [
+                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
                                     ],
-                                  ) : Row(
+                                  ) : data[k].rate > 20.00
+                                      ? Row(
                                     children: [
+                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                    ],
+                                  ): Row(
+                                    children: [
+                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
                                       Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
@@ -109,7 +125,7 @@ class _AdmirersState extends State<Admirers> {
                                 children: [
                                   Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
                                   SizedBox(width: 5,),
-                                  Text("${AdmirersListJson.admirersList[k]["admirer"]}",
+                                  Text("${(data[k].rate/10).toStringAsFixed(0)}",
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: AppColors.blue
@@ -124,7 +140,8 @@ class _AdmirersState extends State<Admirers> {
                     },
                     selectedTextStyle: TextStyle(color: AppColors.blue, fontSize: 15,),
                     unselectedTextStyle: TextStyle(color: AppColors.blue.withOpacity(0.7), fontSize: 12),
-                  );
+                  )
+                      : Center(child: Text("No Data Found!"),);
                 }
               ),
             ),

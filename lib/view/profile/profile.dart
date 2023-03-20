@@ -24,7 +24,12 @@ class _ProfileState extends State<Profile> {
    showProfile()async{
     var res = await AuthController.showProfile();
     print("this is profile === $res");
-    return res;
+    if(res != null){
+      return res;
+    }else{
+      return Get.to(EditProfile(), transition: Transition.leftToRight);
+    }
+
   }
 
   @override
@@ -148,10 +153,10 @@ class _ProfileState extends State<Profile> {
                      children: [
                        ClipRRect(
                          borderRadius: BorderRadius.circular(10),
-                         child: Image.memory(Uint8List.fromList(snapshot.data["profile"]), height: 120, width: 120,),
+                         child: Image.asset("assets/images/profile.jpeg", height: 120, width: 120,),
                        ),
                        SizedBox(height: 20,),
-                       Text("${snapshot.data["f_name"]} ${snapshot.data["l_name"]}",
+                       Text("Edit Your Profile",
                          style: TextStyle(
                              fontSize: 15,
                              color: AppColors.textColor,
