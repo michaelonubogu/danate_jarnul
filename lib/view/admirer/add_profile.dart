@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
+import 'dart:typed_data';
 
+import 'package:dante/boxs/boxs.dart';
 import 'package:dante/controller/admirers_controller/admirers_controllers.dart';
+import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/model/admirers_model/admirers_model.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dob_input_field/dob_input_field.dart';
@@ -11,6 +15,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
+import '../../database/local_database.dart';
 import '../../utility/app_button.dart';
 
 class AddAdmirerProfile extends StatefulWidget {
@@ -396,11 +401,18 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             SizedBox(height: 30,),
 
             AppButton(
-              onClick: (){
+              onClick: ()async{
+                //get user id
+                var res = await AuthController.showEmailVerify();
+                var userId = res["id"];
+                //id
+                var id = new Random().nextInt(1000);
+                //image convert
+                Uint8List _image = await profileImage.readAsBytes();
                 var data = AdmirerModel(
-                    id: 1,
-                    userId: "userId",
-                    profile: "profile",
+                    id: id,
+                    userId: "$userId",
+                    profile: "",
                     featureImages: [FeatureImage(image: "image")],
                     dob: "dob",
                     zodiacSign: "zodiacSign",
@@ -412,7 +424,11 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 );
                // final jsonData = json.decode(data);
                // print("dasfds === $jsonData");
-                AdmirersController.saveListOfObjects(data);
+                //AdmirersController.saveListOfObjects(data);
+                final admirersDB = await LocalDatabases.ADMIRER_PROFILE;
+               final admirersBox = Boxes.getAdmirers;
+               admirersDB.add(data);
+
               },//rout the next login pages
               size: size,
               child: Text("Save Admirer",
@@ -463,6 +479,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
   // this is profile image store variable
   var profileImage, profileImageStr;
+  final List<File> featureImage = [];
   //this method going take images and save local variable
 
   void uploadProfile(type) async{ // its take one parameter
@@ -470,6 +487,13 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     setState(() {
       profileImage = File(image!.path); // store the image path in this local variable
       profileImageStr = image;
+    });
+    Navigator.pop(context); //when image taken, it will be close bottom sheets.
+  }
+  void uploadFeatureImage() async{ // its take one parameter
+    var image = await _picker.pickMultiImage();
+    setState(() {
+
     });
     Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }

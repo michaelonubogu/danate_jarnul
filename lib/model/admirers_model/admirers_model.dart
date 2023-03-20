@@ -1,19 +1,14 @@
 import 'dart:convert';
 import 'package:hive/hive.dart';
+part 'admirers_model.g.dart';
 
-// Define your object class
-// To parse this JSON data, do
-//
-//     final admirerModel = admirerModelFromJson(jsonString);
-
-import 'package:meta/meta.dart';
-import 'dart:convert';
 
 List<AdmirerModel> admirerModelFromJson(String str) => List<AdmirerModel>.from(json.decode(str).map((x) => AdmirerModel.fromJson(x)));
 
 String admirerModelToJson(List<AdmirerModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class AdmirerModel {
+@HiveType(typeId: 2)
+class AdmirerModel extends HiveObject{
   AdmirerModel({
     required this.id,
     required this.userId,
@@ -28,16 +23,27 @@ class AdmirerModel {
     required this.socialMedia,
   });
 
+  @HiveField(0)
   final int id;
+  @HiveField(1)
   final String userId;
+  @HiveField(2)
   final String profile;
+  @HiveField(3)
   final List<FeatureImage> featureImages;
+  @HiveField(4)
   final String dob;
+  @HiveField(5)
   final String zodiacSign;
+  @HiveField(6)
   final String rate;
+  @HiveField(7)
   final String description;
+  @HiveField(8)
   final String myLikes;
+  @HiveField(9)
   final String myDislikes;
+  @HiveField(10)
   final SocialMedia socialMedia;
 
   factory AdmirerModel.fromJson(Map<String, dynamic> json) => AdmirerModel(
@@ -69,11 +75,13 @@ class AdmirerModel {
   };
 }
 
+@HiveType(typeId: 3)
 class FeatureImage {
   FeatureImage({
+
     required this.image,
   });
-
+  @HiveField(0)
   final String image;
 
   factory FeatureImage.fromJson(Map<String, dynamic> json) => FeatureImage(
@@ -85,13 +93,16 @@ class FeatureImage {
   };
 }
 
+@HiveType(typeId: 4)
 class SocialMedia {
   SocialMedia({
     required this.name,
     required this.link,
   });
 
+  @HiveField(0)
   final String name;
+  @HiveField(1)
   final String link;
 
   factory SocialMedia.fromJson(Map<String, dynamic> json) => SocialMedia(

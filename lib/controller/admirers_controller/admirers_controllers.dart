@@ -5,18 +5,14 @@ import 'package:hive/hive.dart';
 
 class AdmirersController{
   // Storing a list of objects in Hive
-  static Future saveListOfObjects(admirerProfile) async {
+  static Future saveListOfObjects( admirerProfile) async {
     final admirersDB = await LocalDatabases.ADMIRER_PROFILE;
-    final jsonList = admirerProfile.map((e) => e.toJson()).toList();
-    admirersDB.put('admirers', jsonList);
+    admirersDB.add(admirerProfile);
     getListOfObjects();
   }
 
   // Retrieving a list of objects from Hive
-  static Future<List<AdmirerModel>> getListOfObjects() async {
+  static Future getListOfObjects() async {
     final admirersDB = await LocalDatabases.ADMIRER_PROFILE;
-    final jsonList = admirersDB.get('admirers', defaultValue: []) as List<String>;
-    print("this is admirer ==== $jsonList");
-    return jsonList.map((e) => AdmirerModel.fromJson(e as Map<String, dynamic>)).toList();
   }
 }

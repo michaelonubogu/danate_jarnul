@@ -21,7 +21,7 @@ class _ProfileState extends State<Profile> {
 
   Future? showProfileFuture;
   //EMAIL
-  Future showProfile()async{
+   showProfile()async{
     var res = await AuthController.showProfile();
     print("this is profile === $res");
     return res;
