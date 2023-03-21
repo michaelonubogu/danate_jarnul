@@ -260,6 +260,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
             SizedBox(height: 15,),
             DOBInputField(
+
               firstDate: DateTime(1900),
               lastDate: DateTime.now(),
               showLabel: true,
@@ -269,8 +270,11 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 setState(() {
                   dob.text = d.toString();
                 });
+
+                print("one save d.toString() ${d.toString()}");
               },
               onDateSubmitted: (d){
+                print("one submit d.toString() ${d.toString()}");
                 setState(() {
                   dob.text = d.toString();
                 });
@@ -444,7 +448,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.grey.shade300
               ),
-              child:socialMediaList.length != 0
+              child: socialMediaList.length != 0
                   ? SizedBox(height: 50,
                       child: Padding(
                         padding: EdgeInsets.only(left: 30, right: 30),

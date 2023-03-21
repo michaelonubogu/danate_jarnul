@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dante/database/local_database.dart';
 import 'package:dante/json/admirors_json.dart';
 import 'package:dante/utility/app_colors.dart';
+import 'package:dante/view/admirer/single_admirers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
@@ -60,80 +61,83 @@ class _AdmirersState extends State<Admirers> {
                     list: data.map((e) => AlphaModel(e.zodiacSign)).toList(),
                     itemExtent: 150,
                     itemBuilder: (_, k, id) {
-                      return Container(
-                        margin: EdgeInsets.only(bottom: 20),
-                        child: ListTile(
-                          //contentPadding: EdgeInsets.only(bottom: 20),
-                          leading: ClipRRect(
-                              borderRadius: BorderRadius.circular(100),
-                              child: Image.memory(Uint8List.fromList(data[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
+                      return InkWell(
+                        onTap: ()=>Get.to(SingleAdmirers(admirers: data[k]), transition: Transition.rightToLeft),
+                        child: Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          child: ListTile(
+                            //contentPadding: EdgeInsets.only(bottom: 20),
+                            leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(100),
+                                child: Image.memory(Uint8List.fromList(data[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
 
-                          title: Text("${data[k].zodiacSign}",
-                            style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
-                            ),
-                          ),
-                          subtitle: Row(
-                            children: [
-                              Row(
-                                children: [
-                                  data[k].rate > 80.00
-                                  ? Row(
-                                    children: [
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                    ],
-                                  )
-                                      : data[k].rate > 60.00
-                                      ? Row(
-                                    children: [
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                    ],
-                                  ) :  data[k].rate > 40.00
-                                      ? Row(
-                                    children: [
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                    ],
-                                  ) : data[k].rate > 20.00
-                                      ? Row(
-                                    children: [
-                                      Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                    ],
-                                  ): Row(
-                                    children: [
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                      Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                    ],
-                                  )
-                                ],
+                            title: Text("${data[k].zodiacSign}",
+                              style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
                               ),
-                              SizedBox(width: 20,),
-                              Row(
-                                children: [
-                                  Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
-                                  SizedBox(width: 5,),
-                                  Text("${(data[k].rate/10).toStringAsFixed(0)}",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: AppColors.blue
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
+                            ),
+                            subtitle: Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    data[k].rate > 80.00
+                                    ? Row(
+                                      children: [
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                      ],
+                                    )
+                                        : data[k].rate > 60.00
+                                        ? Row(
+                                      children: [
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                      ],
+                                    ) :  data[k].rate > 40.00
+                                        ? Row(
+                                      children: [
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                      ],
+                                    ) : data[k].rate > 20.00
+                                        ? Row(
+                                      children: [
+                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                      ],
+                                    ): Row(
+                                      children: [
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                      ],
+                                    )
+                                  ],
+                                ),
+                                SizedBox(width: 20,),
+                                Row(
+                                  children: [
+                                    Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
+                                    SizedBox(width: 5,),
+                                    Text("${(data[k].rate/10).toStringAsFixed(0)}",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.blue
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       );
