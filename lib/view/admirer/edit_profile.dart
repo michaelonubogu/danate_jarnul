@@ -22,14 +22,15 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import '../../database/local_database.dart';
 import '../../utility/app_button.dart';
 
-class AddAdmirerProfile extends StatefulWidget {
-  const AddAdmirerProfile({Key? key}) : super(key: key);
+class EditAdmirerProfile extends StatefulWidget {
+  final AdmirerModel admirers;
+  const EditAdmirerProfile({Key? key, required this.admirers}) : super(key: key);
 
   @override
-  State<AddAdmirerProfile> createState() => _AddAdmirerProfileState();
+  State<EditAdmirerProfile> createState() => _EditAdmirerProfileState();
 }
 
-class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
+class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
   List socialImage = [
     "assets/icons/fb.png",
     "assets/icons/insta.png",
@@ -70,6 +71,37 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   List feature_images = [];
   List<Map> socialMediaList = [];
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    initExitingData();
+  }
+
+ late Uint8List convertProfile;
+  initExitingData()async{
+    convertProfile = widget.admirers.profile;
+    dob.text = widget.admirers.dob;
+    zodiac_sign.text = widget.admirers.zodiacSign;
+    description.text = widget.admirers.description;
+    _value = widget.admirers.rate;
+
+    //existing data initial social media list
+    for(var i=0; i < widget.admirers.socialMedia.length; i++){
+      socialMediaList.add(widget.admirers.socialMedia[i]);
+    }
+    for(var i=0; i < widget.admirers.featureImages.length; i++){
+      _featureImage.add(widget.admirers.featureImages[i]);
+    }
+    for(var i=0; i < widget.admirers.myLikes.length; i++){
+      myLikes.add(widget.admirers.myLikes[i]);
+    }
+    for(var i=0; i < widget.admirers.myDislikes.length; i++){
+      myDisLikes.add(widget.admirers.myDislikes[i]);
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -77,35 +109,35 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: AppColors.bgColor,
-        centerTitle: true,
-        leading: Container(
-          margin: EdgeInsets.only(left: 12, top: 8, bottom: 8, right: 2),
-          decoration: BoxDecoration(
-            color: Colors.grey.shade200,
-            borderRadius: BorderRadius.circular(5),
+          elevation: 0,
+          backgroundColor: AppColors.bgColor,
+          centerTitle: true,
+          leading: Container(
+            margin: EdgeInsets.only(left: 12, top: 8, bottom: 8, right: 2),
+            decoration: BoxDecoration(
+              color: Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: IconButton(
+              onPressed: ()=>Get.back(),
+              icon: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.textColor,),
+            ),
           ),
-          child: IconButton(
-            onPressed: ()=>Get.back(),
-            icon: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.textColor,),
-          ),
-        ),
-        // leading: Container(
-        //   width: 40, height: 40,
-        //   margin: EdgeInsets.only(left: 10, top: 5, bottom: 5),
-        //   decoration: BoxDecoration(
-        //     color: Colors.grey.shade200,
-        //     borderRadius: BorderRadius.circular(5),
-        //   ),
-        //   child: Center(child: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.textColor,)),
-        // ),
-        title: Text("Add Profile",
-          style: TextStyle(
-            fontSize: 18,
-            color: AppColors.textColor
-          ),
-        )
+          // leading: Container(
+          //   width: 40, height: 40,
+          //   margin: EdgeInsets.only(left: 10, top: 5, bottom: 5),
+          //   decoration: BoxDecoration(
+          //     color: Colors.grey.shade200,
+          //     borderRadius: BorderRadius.circular(5),
+          //   ),
+          //   child: Center(child: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.textColor,)),
+          // ),
+          title: Text("Edit Profile",
+            style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textColor
+            ),
+          )
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(30),
@@ -144,29 +176,31 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
             //Upload profile image section
             Align(
-                alignment: Alignment.center,
-                child: Container(
-                  height: 130,
-                   width: 130,
-                  //padding: EdgeInsets.all(40),
-                  decoration: BoxDecoration(
+              alignment: Alignment.center,
+              child: Container(
+                height: 130,
+                width: 130,
+                //padding: EdgeInsets.all(40),
+                decoration: BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(100)
-                  ),
-                  child:  InkWell(
-                    onTap: ()=>openBottomSheet(),
-                    child: ClipRRect(
-                       borderRadius: BorderRadius.circular(100),
-                        child: profileImage != null
-                            ? Image.file(profileImage, height: 130, width: 130, fit: BoxFit.cover,)
-                            :  Padding(
-                                padding: EdgeInsets.all(40),
-                                child: Image.asset("assets/icons/upload_images.png", height: 40, width: 40, )
-                            )
-                    ),
-                  ),
-
                 ),
+                child:  InkWell(
+                  onTap: ()=>openBottomSheet(),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child:  profileImage != null
+                          ? Image.file(profileImage, height: 130, width: 130, fit: BoxFit.cover,)
+                          : widget.admirers.profile != null
+                          ? Image.memory(widget.admirers.profile, height: 130, width: 130, fit: BoxFit.cover,)
+                          :  Padding(
+                          padding: EdgeInsets.all(40),
+                          child: Image.asset("assets/icons/upload_images.png", height: 40, width: 40, )
+                      )
+                  ),
+                ),
+
+              ),
             ),
             SizedBox(height: 20,),
             Center(
@@ -178,14 +212,14 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
             SizedBox(height: 20,),
-            feature_images.length != 0
+            _featureImage.length != 0
                 ? SizedBox(
               height: 100,
-                  child: ListView.builder(
-                    shrinkWrap: true,
+              child: ListView.builder(
+                shrinkWrap: true,
                 scrollDirection: Axis.horizontal,
-              itemCount: feature_images.length,
-              itemBuilder: (_, index){
+                itemCount: _featureImage.length,
+                itemBuilder: (_, index){
                   return Container(
                       margin: EdgeInsets.only(right: 10),
                       width: 100, height: 100,
@@ -198,16 +232,16 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                           Positioned(bottom: 0,
                               child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                   child: Image.file(feature_images[index],width: 100, height: 95, fit: BoxFit.cover,))),
+                                  child: Image.memory(_featureImage[index],width: 100, height: 95, fit: BoxFit.cover,))),
                           Positioned(
                               right: 0, top: -0,
                               child: InkWell(
                                 onTap: (){
                                   //remove index from list
-                                  feature_images.removeAt(index);
+                                  _featureImage.removeAt(index);
                                   setState(() {});
                                 },
-                                child: Container(
+                                child: isLoading ? CircularProgressIndicator(color: AppColors.mainColor,) : Container(
                                     padding: EdgeInsets.all(3),
                                     //transform: Matrix4.translationValues(0.0, -0.0, 0.0),
                                     decoration: BoxDecoration(
@@ -218,15 +252,15 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                               )),
                         ],
                       ));
-              },
-            ),
-                ) : SizedBox(),
-            SizedBox(height: 10,),
+                },
+              ),
+            ) : SizedBox(),
+            SizedBox(height: 20,),
             Align(
               alignment: Alignment.center,
               child: Container(
                 height: 100,
-                width: 160,
+                width: 120,
                 //padding: EdgeInsets.all(40),
                 decoration: BoxDecoration(
                     color: Colors.grey.shade300,
@@ -237,18 +271,18 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child:   Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(Icons.add),
-                              Text("Feature Photo",
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ),
-                            ],
-                          )
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(Icons.add),
+                          Text("Add Photo",
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                        ],
+                      )
                   ),
                 ),
 
@@ -265,11 +299,39 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             ),
 
             SizedBox(height: 15,),
+            // DOBInputField(
+            //   inputDecoration: InputDecoration(
+            //       labelText: "${widget.admirers.dob}",
+            //     filled: true,
+            //     fillColor: Colors.white,
+            //     border: OutlineInputBorder(
+            //       borderSide: BorderSide.none
+            //     )
+            //   ),
+            //   firstDate: DateTime(1900),
+            //   lastDate: DateTime.now(),
+            //   showLabel: true,
+            //   dateFormatType: DateFormatType.DDMMYYYY,
+            //   autovalidateMode: AutovalidateMode.always,
+            //   onDateSaved: (d){
+            //     setState(() {
+            //       dob.text = d.toString();
+            //     });
+            //
+            //     print("one save d.toString() ${d.toString()}");
+            //   },
+            //   onDateSubmitted: (d){
+            //     print("one submit d.toString() ${d.toString()}");
+            //     setState(() {
+            //       dob.text = d.toString();
+            //     });
+            //   },
+            // ),
             DateFormatField(
                 type: DateFormatType.type4,
                 addCalendar: false,
                 decoration: InputDecoration(
-                    hintText: "DD-MM-YYYY",
+                    labelText: "${widget.admirers.dob}",
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -372,53 +434,56 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
 
-            SizedBox(height: 30,),
 
+            SizedBox(height: 30,),
             Text("My Likes",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
+                color: AppColors.textColor,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 10,),
+            SizedBox(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: myLikes.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: size.width,
+                      height: 50,
+                      margin: EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 43,
+                            height: 43,
+                            margin: EdgeInsets.only(left: 3),
+                            decoration: BoxDecoration(
+                              color: AppColors.mainColor.withOpacity(0.6),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(child: Icon(IconlyLight.delete, color: Colors.grey,),),
+                          ),
+                          SizedBox(width: 10,),
+                          Text("${myLikes[index]}"),
+                        ],
+                      ),
+                    );
+                  }
+              ),
+            ),
             TextFormField(
-              controller: my_likes,
-
+              controller: my_likes, 
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   hintText: "Enter text here",
-                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
-                  prefixIcon: Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.mainColor.withOpacity(0.6),
-                    ),
-                    child: Icon(Icons.add),
-                  ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
-              ),
-            ),
-
-            SizedBox(height: 30,),
-            Text("My Dislikes",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            SizedBox(height: 15,),
-            TextFormField(
-              controller: my_dislikes,
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Enter text here",
-
                   contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
                   prefixIcon: Container(
                     margin: EdgeInsets.all(3),
@@ -436,61 +501,127 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             ),
 
             SizedBox(height: 30,),
-
-            Text("Social Media",
+            Text("My Dislikes",
               style: TextStyle(
-                fontSize: 16,
+                fontSize: 18,
+                color: AppColors.textColor,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 10,),
+            SizedBox(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: myDisLikes.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: size.width,
+                      height: 50,
+                      margin: EdgeInsets.only(bottom: 10),
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 43,
+                            height: 43,
+                            margin: EdgeInsets.only(left: 3),
+                            decoration: BoxDecoration(
+                              color: AppColors.blue.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(child: Icon(IconlyLight.delete, color: Colors.grey,),),
+                          ),
+                          SizedBox(width: 10,),
+                          Text("${myDisLikes[index]}"),
+                        ],
+                      ),
+                    );
+                  }
+              ),
+            ),
+            TextFormField(
+              controller: my_dislikes,
+
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Enter text here",
+                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                  prefixIcon: Container(
+                    margin: EdgeInsets.all(3),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(5),
+                      color: AppColors.blue.withOpacity(0.6),
+                    ),
+                    child: Icon(Icons.add),
+                  ),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+
+            SizedBox(height: 30,),
+            Text("Social Media",
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 10,),
             Container(
               width: size.width,
               height: 100,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: Colors.grey.shade300
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.grey.shade300
               ),
               child: socialMediaList.length != 0
                   ? SizedBox(height: 50,
-                      child: Padding(
-                        padding: EdgeInsets.only(left: 30, right: 30),
-                        child:  ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: socialMediaList.length,
-                          itemBuilder: (_, index){
-                            return InkWell(
-                              onTap: (){
-                                socialMediaList.removeAt(index);
-                                setState(() {});
-                              },
-                              child: Container(
-                                    height: 40,
-                                  margin: EdgeInsets.only(right: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.center,
-                                    children: [
-                                      Image.asset(
-                                        socialMediaList[index]["name"].contains("Facebook")
-                                             ? "assets/icons/fb.png"
-                                             :  socialMediaList[index]["name"].contains("Instagram")
-                                             ? "assets/icons/insta.png"
-                                             : socialMediaList[index]["name"].contains("Twitter")
-                                             ? "assets/icons/twitter.png"
-                                             : socialMediaList[index]["name"].contains("Google")
-                                             ? "assets/icons/fb.png"
-                                              : "assets/icons/fb.png" ,
-                                        height: 40, width: 40,),
-                                      Icon(Icons.remove, color: Colors.red, size: 12,),
-                                    ],
-                                  )
-                                ),
-                            );
+                  child: Padding(
+                    padding: EdgeInsets.only(left: 30, right: 30),
+                    child:  ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: socialMediaList.length,
+                      itemBuilder: (_, index){
+                        return InkWell(
+                          onTap: (){
+                            socialMediaList.removeAt(index);
+                            setState(() {});
                           },
-                        ),
-                      )
-                   )
+                          child: Container(
+                              height: 40,
+                              margin: EdgeInsets.only(right: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Image.asset(
+                                    socialMediaList[index]["name"].contains("Facebook")
+                                        ? "assets/icons/fb.png"
+                                        :  socialMediaList[index]["name"].contains("Instagram")
+                                        ? "assets/icons/insta.png"
+                                        : socialMediaList[index]["name"].contains("Twitter")
+                                        ? "assets/icons/twitter.png"
+                                        : socialMediaList[index]["name"].contains("Google")
+                                        ? "assets/icons/google.png"
+                                        : "assets/icons/google.png" ,
+                                    height: 40, width: 40,),
+                                  Icon(Icons.remove, color: Colors.red, size: 12,),
+                                ],
+                              )
+                          ),
+                        );
+                      },
+                    ),
+                  )
+              )
                   :Center(child: Text("Add social media link",style: TextStyle(color: AppColors.textColor),),),
             ),
 
@@ -522,17 +653,16 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 var res = await AuthController.showEmailVerify();
                 var userId = res["id"];
                 //id
-                var id = new Random().nextInt(1000);
                 //image convert
-                Uint8List _profileImage = await profileImage.readAsBytes();
 
                 myLikes.add(my_likes.text);
                 myDisLikes.add(my_dislikes.text);
 
+
                 var data = AdmirerModel(
-                    id: id,
-                    userId: "$userId",
-                    profile: _profileImage,
+                    id: widget.admirers.id,
+                    userId: "${widget.admirers.userId}",
+                    profile: convertProfile,
                     featureImages: _featureImage ,
                     dob: dob.text,
                     zodiacSign: zodiac_sign.text,
@@ -542,16 +672,16 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     myDislikes: myDisLikes,
                     socialMedia: socialMediaList
                 );
-               var box = await Boxes.getAdmirers;
-               box.add(data);
-               Get.to(Admirers(), transition: Transition.rightToLeft);
+                var box = await Boxes.getAdmirers;
+                box.put("${widget.admirers.id}", data);
+                Get.to(Admirers(), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text("New Admirers Profile Added!"),
+                  content: Text("New Admirers Profile Updated!"),
                   backgroundColor: Colors.green,
                   duration: Duration(milliseconds: 3000),
                 ));
                 if(kDebugMode){
-                  print("admirer added");
+                  print("admirer updated");
                 }
 
 
@@ -576,7 +706,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
   //Open bottomsheet for select the method to upload images.
   Future openBottomSheet(){
-   return showModalBottomSheet(
+    return showModalBottomSheet(
         context: context,
         builder: (context) {
           return Column(
@@ -614,11 +744,21 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
       profileImage = File(image!.path); // store the image path in this local variable
       profileImageStr = image;
     });
+    if(profileImage != null){
+      convertProfile = profileImage.readAsBytes();
+    }else{
+      convertProfile = widget.admirers.profile;
+    }
+
     Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
   List<Uint8List> _featureImage =  [];
 
+  bool isLoading = false;
   void uploadFeatureImage() async{ // its take one parameter
+    setState(() {
+      isLoading = true;
+    });
     var image = await _picker.pickMultiImage();
     for(var i in image){
       feature_images.add(File(i.path));
@@ -627,12 +767,19 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
       Uint8List bytes = await file.readAsBytes();
       _featureImage.add(bytes);
       print("Feature Images == $_featureImage");
+      setState(() {
+        isLoading = false;
+      });
       return bytes;
     }
     for (var i in feature_images) {
       fileToUint8List(i);
       // _featureImage.add(i!.path.readAsBytes());
     }
+
+    setState(() {
+      isLoading = false;
+    });
 
 
 
@@ -650,151 +797,150 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-              titlePadding: EdgeInsets.zero,
-              iconPadding: EdgeInsets.zero,
-              buttonPadding: EdgeInsets.zero,
-              insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+            builder: (context, setState) {
+              return AlertDialog(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                titlePadding: EdgeInsets.zero,
+                iconPadding: EdgeInsets.zero,
+                buttonPadding: EdgeInsets.zero,
+                insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
 
-              actionsPadding: EdgeInsets.zero,
-             // contentPadding: EdgeInsets.all(10),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children:  <Widget>[
-                    Text('Choose media',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: AppColors.blue
+                actionsPadding: EdgeInsets.zero,
+                // contentPadding: EdgeInsets.all(10),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children:  <Widget>[
+                      Text('Choose media',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            color: AppColors.blue
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 15,),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: AppColors.blue, width: 1)
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          hint: Text(
-                            'Select Item',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).hintColor,
-                            ),
-                          ),
-                          items: items
-                              .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: const TextStyle(
+                      SizedBox(height: 15,),
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(color: AppColors.blue, width: 1)
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            hint: Text(
+                              'Select Item',
+                              style: TextStyle(
                                 fontSize: 14,
+                                color: Theme.of(context).hintColor,
                               ),
                             ),
-                          ))
-                              .toList(),
-                          value: selectedValue,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value as String;
+                            items: items
+                                .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ))
+                                .toList(),
+                            value: selectedValue,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValue = value as String;
 
-                            });
-                          },
-                          buttonStyleData: const ButtonStyleData(
-                            height: 40,
-                            width: 140,
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
+                              });
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              height: 40,
+                              width: 140,
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    SizedBox(height: 30,),
-                    Text('Profile link',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 17,
-                          color: AppColors.blue
+                      SizedBox(height: 30,),
+                      Text('Profile link',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            color: AppColors.blue
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 15,),
-                    TextFormField(
-                      controller: socialLink,
-                      decoration: InputDecoration(
+                      SizedBox(height: 15,),
+                      TextFormField(
+                        controller: socialLink,
+                        decoration: InputDecoration(
                           filled: true,
                           contentPadding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
                           fillColor: Colors.white,
                           hintText: "Choose Sign",
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0),
+                              borderRadius: BorderRadius.circular(0),
                               borderSide: BorderSide(
                                   color: AppColors.blue)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color:
-                            AppColors.blue)),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:  BorderSide(color:
-                          AppColors.blue),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color:
+                              AppColors.blue)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:  BorderSide(color:
+                            AppColors.blue),
+                          ),
                         ),
                       ),
-                    ),
 
 
-                    SizedBox(height: 20,),
+                      SizedBox(height: 20,),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppButton(
-                          onClick: ()=>Navigator.pop(context), //rout the next login pages
-                          size: size*.25,
-                          bg: Colors.grey.shade300,
-                          child: Text("Cancel",
-                            style: TextStyle(
-                                fontSize: 15, color:AppColors.textColor, fontWeight: FontWeight.w500
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppButton(
+                            onClick: ()=>Navigator.pop(context), //rout the next login pages
+                            size: size*.25,
+                            bg: Colors.grey.shade300,
+                            child: Text("Cancel",
+                              style: TextStyle(
+                                  fontSize: 15, color:AppColors.textColor, fontWeight: FontWeight.w500
+                              ),
                             ),
                           ),
-                        ),
-                        AppButton(
-                          onClick: (){
-                            socialMediaList.add(
-                              {
-                                "name" : selectedValue,
-                                "link" : socialLink.text,
-                              },
-                            );
-                            setState((){
-
-                            });
-                            socialLink.clear();
-                            Navigator.pop(context);
-                          }, //rout the next login pages
-                          size: size*.25,
-                          child: Text("Save",
-                            style: TextStyle(
-                                fontSize: 15, color:AppColors.white, fontWeight: FontWeight.w500
+                          AppButton(
+                            onClick: (){
+                              socialMediaList.add(
+                                {
+                                  "name" : selectedValue,
+                                  "link" : socialLink.text,
+                                },
+                              );
+                              setState((){});
+                              socialLink.clear();
+                              Navigator.pop(context);
+                              setState((){});
+                            }, //rout the next login pages
+                            size: size*.25,
+                            child: Text("Save",
+                              style: TextStyle(
+                                  fontSize: 15, color:AppColors.white, fontWeight: FontWeight.w500
+                              ),
                             ),
-                          ),
-                        )
-                      ],
-                    ),
+                          )
+                        ],
+                      ),
 
-                    SizedBox(height: 10,),
+                      SizedBox(height: 10,),
 
-                  ],
+                    ],
+                  ),
                 ),
-              ),
 
-            );
-          }
+              );
+            }
         );
       },
     );

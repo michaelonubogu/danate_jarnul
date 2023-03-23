@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import '../../model/admirers_model/admirers_model.dart';
+import 'edit_profile.dart';
 
 class SingleAdmirers extends StatefulWidget {
   final AdmirerModel admirers;
@@ -33,7 +34,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
             icon: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.textColor,),
           ),
         ),
-        title: Text("Adam Smith",
+        title: Text("${widget.admirers.zodiacSign}",
           style: TextStyle(
             fontSize: 18,
             color: AppColors.textColor
@@ -48,7 +49,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                 borderRadius: BorderRadius.circular(10)
             ),
             child: IconButton(
-              onPressed: (){},
+              onPressed: ()=>Get.to(EditAdmirerProfile(admirers: widget.admirers,)),
               icon: Icon(IconlyLight.edit,),
             ),
           )
@@ -88,7 +89,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                       ),),
                     ),
                     SizedBox(height: 30,),
-                    Text("Adam Smith",
+                    Text("${widget.admirers.zodiacSign}",
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
                         fontSize: 20,
@@ -192,6 +193,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                   return Container(
                     width: size.width,
                     height: 50,
+                    margin: EdgeInsets.only(bottom: 10),
                     decoration: BoxDecoration(
                       color: AppColors.white,
                       borderRadius: BorderRadius.circular(5),
@@ -234,6 +236,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                     return Container(
                       width: size.width,
                       height: 50,
+                      margin: EdgeInsets.only(bottom: 10),
                       decoration: BoxDecoration(
                         color: AppColors.white,
                         borderRadius: BorderRadius.circular(5),
