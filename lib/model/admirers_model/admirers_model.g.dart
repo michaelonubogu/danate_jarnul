@@ -25,8 +25,8 @@ class AdmirerModelAdapter extends TypeAdapter<AdmirerModel> {
       zodiacSign: fields[5] as String,
       rate: fields[6] as double,
       description: fields[7] as String,
-      myLikes: fields[8] as String,
-      myDislikes: fields[9] as String,
+      myLikes: (fields[8] as List).cast<dynamic>(),
+      myDislikes: (fields[9] as List).cast<dynamic>(),
       socialMedia: (fields[10] as List)
           .map((dynamic e) => (e as Map).cast<dynamic, dynamic>())
           .toList(),

@@ -36,9 +36,9 @@ class AdmirerModel extends HiveObject{
   @HiveField(7)
   final String description;
   @HiveField(8)
-  final String myLikes;
+  final List myLikes;
   @HiveField(9)
-  final String myDislikes;
+  final List myDislikes;
   @HiveField(10)
   final List<Map> socialMedia;
 

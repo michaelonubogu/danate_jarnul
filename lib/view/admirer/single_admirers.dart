@@ -60,8 +60,9 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
       body: SingleChildScrollView(
         padding: EdgeInsets.all(30),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             //profile
             Row(
               children: [
@@ -132,8 +133,167 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
 
 
               ],
-            )
+            ),
 
+            SizedBox(height: 30,),
+
+            //feature images
+            Container(
+              width: size.width,
+              height: 200,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: widget.admirers.featureImages.length,
+                itemBuilder: (_, index){
+                  return Container(
+                    width: 140,
+                    margin: EdgeInsets.only(right: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.memory(widget.admirers.featureImages[index], width: 140, height: 200, fit: BoxFit.cover,),
+                    ),
+                  );
+                },
+              ),
+            ),
+
+            SizedBox(height: 30,),
+            Text("Admirer’s Description",
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 10,),
+            Text("${widget.admirers.description}",
+              style: TextStyle(
+                fontSize: 14,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+
+            SizedBox(height: 30,),
+            Text("My Likes",
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 10,),
+            SizedBox(
+              child: ListView.builder(
+                shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                itemCount: widget.admirers.myLikes.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: AppColors.mainColor,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: Center(child: Icon(IconlyLight.heart, color: AppColors.white,),),
+                        ),
+                        SizedBox(width: 10,),
+                       Text("${widget.admirers.myLikes[index]}"),
+                      ],
+                    ),
+                  );
+                }
+              ),
+            ),
+
+            SizedBox(height: 30,),
+            Text("My Dislikes",
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 10,),
+            SizedBox(
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: widget.admirers.myDislikes.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: size.width,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: AppColors.blue,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(child: Icon(Icons.thumb_down_alt_outlined, color: AppColors.white,),),
+                          ),
+                          SizedBox(width: 10,),
+                          Text("${widget.admirers.myDislikes[index]}"),
+                        ],
+                      ),
+                    );
+                  }
+              ),
+            ),
+
+            SizedBox(height: 30,),
+            Text("Social Media",
+              style: TextStyle(
+                fontSize: 18,
+                color: AppColors.textColor,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 10,),
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                  shrinkWrap: true,
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.admirers.socialMedia.length,
+                  itemBuilder: (context, index) {
+                    var socialMediaList = widget.admirers.socialMedia;
+                    print("this is object === ${socialMediaList[index]}");
+                    return Container(
+                      margin: EdgeInsets.only(right: 10),
+                      child: Image.asset(
+                          socialMediaList[index]["name"].contains("Facebook")
+                              ? "assets/icons/fb.png"
+                              :  socialMediaList[index]["name"].contains("Instagram")
+                              ? "assets/icons/insta.png"
+                              : socialMediaList[index]["name"].contains("Twitter")
+                              ? "assets/icons/twitter.png"
+                              : socialMediaList[index]["name"].contains("Google")
+                              ? "assets/icons/fb.png"
+                              : "assets/icons/fb.png" ,
+
+                          height: 40, width: 40,),
+                    );
+                  }
+              ),
+            )
           ],
         ),
       ),

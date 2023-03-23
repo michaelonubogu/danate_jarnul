@@ -37,6 +37,12 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     "assets/icons/twitter.png",
   ];
 
+  List myLikes = [];
+  List myDisLikes = [];
+  int myLikesCount = 1;
+  int myDisLikesCount = 1;
+
+
   //image picker global variable
   final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
   //it help use to take images
@@ -380,11 +386,11 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             SizedBox(height: 15,),
             TextFormField(
               controller: my_likes,
+
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
                   hintText: "Enter text here",
-
                   contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
                   prefixIcon: Container(
                     margin: EdgeInsets.all(3),
@@ -522,17 +528,9 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 var id = new Random().nextInt(1000);
                 //image convert
                 Uint8List _profileImage = await profileImage.readAsBytes();
-                List<Uint8List> _featureImage =  [];
 
-                Future<Uint8List> fileToUint8List(File file) async {
-                  Uint8List bytes = await file.readAsBytes();
-                   _featureImage.add(bytes);
-                  return bytes;
-                }
-                for (var i in feature_images) {
-                  fileToUint8List(i);
-                 // _featureImage.add(i!.path.readAsBytes());
-                }
+                myLikes.add(my_likes.text);
+                myDisLikes.add(my_dislikes.text);
 
                 var data = AdmirerModel(
                     id: id,
@@ -543,8 +541,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     zodiacSign: zodiac_sign.text,
                     rate: _value,
                     description: description.text,
-                    myLikes: my_likes.text,
-                    myDislikes: my_dislikes.text,
+                    myLikes: myLikes,
+                    myDislikes: myDisLikes,
                     socialMedia: socialMediaList
                 );
                var box = await Boxes.getAdmirers;
@@ -621,11 +619,27 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     });
     Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
+  List<Uint8List> _featureImage =  [];
+
   void uploadFeatureImage() async{ // its take one parameter
     var image = await _picker.pickMultiImage();
     for(var i in image){
       feature_images.add(File(i.path));
     }
+    Future<Uint8List> fileToUint8List(File file) async {
+      Uint8List bytes = await file.readAsBytes();
+      _featureImage.add(bytes);
+      print("Feature Images == $_featureImage");
+      return bytes;
+    }
+    for (var i in feature_images) {
+      fileToUint8List(i);
+      // _featureImage.add(i!.path.readAsBytes());
+    }
+
+
+
+
     setState(() {});
     //Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
