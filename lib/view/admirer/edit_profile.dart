@@ -9,6 +9,7 @@ import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/model/admirers_model/admirers_model.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/admirer/admirers.dart';
+import 'package:dante/view/index.dart';
 import 'package:date_format_field/date_format_field.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
@@ -79,9 +80,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
     initExitingData();
   }
 
- late Uint8List convertProfile;
   initExitingData()async{
-    convertProfile = widget.admirers.profile;
     dob.text = widget.admirers.dob;
     zodiac_sign.text = widget.admirers.zodiacSign;
     description.text = widget.admirers.description;
@@ -100,6 +99,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
     for(var i=0; i < widget.admirers.myDislikes.length; i++){
       myDisLikes.add(widget.admirers.myDislikes[i]);
     }
+
   }
 
 
@@ -659,10 +659,12 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 myDisLikes.add(my_dislikes.text);
 
 
+
+
                 var data = AdmirerModel(
                     id: widget.admirers.id,
                     userId: "${widget.admirers.userId}",
-                    profile: convertProfile,
+                    profile: converProfile != null ? converProfile : widget.admirers.profile,
                     featureImages: _featureImage ,
                     dob: dob.text,
                     zodiacSign: zodiac_sign.text,
@@ -674,7 +676,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 );
                 var box = await Boxes.getAdmirers;
                 box.put("${widget.admirers.id}", data);
-                Get.to(Admirers(), transition: Transition.rightToLeft);
+                Get.to(Index(index: 2,), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Updated!"),
                   backgroundColor: Colors.green,
@@ -744,14 +746,22 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
       profileImage = File(image!.path); // store the image path in this local variable
       profileImageStr = image;
     });
-    if(profileImage != null){
-      convertProfile = profileImage.readAsBytes();
-    }else{
-      convertProfile = widget.admirers.profile;
-    }
+    fileToUint8List(profileImage);
 
     Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
+
+  var converProfile;
+  Future<Uint8List> fileToUint8List(File file) async {
+    Uint8List bytes = await file.readAsBytes();
+    converProfile = bytes;
+    print("Feature Images == $_featureImage");
+    setState(() {
+      isLoading = false;
+    });
+    return bytes;
+  }
+
   List<Uint8List> _featureImage =  [];
 
   bool isLoading = false;
@@ -780,11 +790,6 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
     setState(() {
       isLoading = false;
     });
-
-
-
-
-    setState(() {});
     //Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
 
