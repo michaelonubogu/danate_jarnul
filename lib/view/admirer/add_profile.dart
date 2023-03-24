@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:intl/intl.dart';
 import 'package:dante/boxs/boxs.dart';
 import 'package:dante/controller/admirers_controller/admirers_controllers.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
@@ -21,6 +21,7 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../database/local_database.dart';
 import '../../utility/app_button.dart';
+import '../index.dart';
 
 class AddAdmirerProfile extends StatefulWidget {
   const AddAdmirerProfile({Key? key}) : super(key: key);
@@ -60,6 +61,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
   //text editing controller
   final dob = TextEditingController();
+  final admirerName = TextEditingController();
   final zodiac_sign = TextEditingController();
   final description = TextEditingController();
   final my_likes = TextEditingController();
@@ -257,6 +259,26 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
             SizedBox(height: 50,),
 
+            Text("Name",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextFormField(
+              controller: admirerName,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Name",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+            SizedBox(height: 30,),
             Text("Date of Birth",
               style: TextStyle(
                 fontSize: 16,
@@ -278,7 +300,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 ),
                 onComplete: (date){
                   setState(() {
-                    dob.text = date.toString();
+                    dob.text = DateFormat("dd-MM-yyyy").format(date!);
                   });
                   print("this date of birth ${dob.text}");
                 }
@@ -531,6 +553,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
                 var data = AdmirerModel(
                     id: id,
+                    admirerName: admirerName.text,
                     userId: "$userId",
                     profile: _profileImage,
                     featureImages: _featureImage ,
@@ -544,7 +567,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 );
                var box = await Boxes.getAdmirers;
                box.add(data);
-               Get.to(Admirers(), transition: Transition.rightToLeft);
+               Get.to(Index(index: 2,), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Added!"),
                   backgroundColor: Colors.green,

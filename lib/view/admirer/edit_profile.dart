@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:intl/intl.dart';
 import 'package:dante/boxs/boxs.dart';
 import 'package:dante/controller/admirers_controller/admirers_controllers.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
@@ -62,6 +62,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
 
   //text editing controller
   final dob = TextEditingController();
+  final admirerName = TextEditingController();
   final zodiac_sign = TextEditingController();
   final description = TextEditingController();
   final my_likes = TextEditingController();
@@ -82,6 +83,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
 
   initExitingData()async{
     dob.text = widget.admirers.dob;
+    admirerName.text = widget.admirers.admirerName;
     zodiac_sign.text = widget.admirers.zodiacSign;
     description.text = widget.admirers.description;
     _value = widget.admirers.rate;
@@ -291,6 +293,26 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
 
             SizedBox(height: 50,),
 
+            Text("Name",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextFormField(
+              controller: admirerName,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "Name",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
+            ),
+            SizedBox(height: 30,),
             Text("Date of Birth",
               style: TextStyle(
                 fontSize: 16,
@@ -331,7 +353,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 type: DateFormatType.type4,
                 addCalendar: false,
                 decoration: InputDecoration(
-                    labelText: "${widget.admirers.dob}",
+                    hintText: "${widget.admirers.dob}",
                     filled: true,
                     fillColor: Colors.white,
                     border: OutlineInputBorder(
@@ -340,7 +362,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 ),
                 onComplete: (date){
                   setState(() {
-                    dob.text = date.toString();
+                    dob.text = DateFormat("dd-MM-yyyy").format(date!);
                   });
                   print("this date of birth ${dob.text}");
                 }
@@ -655,14 +677,20 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 //id
                 //image convert
 
-                myLikes.add(my_likes.text);
-                myDisLikes.add(my_dislikes.text);
+                if(my_likes.text.isNotEmpty){
+                  myLikes.add(my_likes.text);
+                }
+                if(my_dislikes.text.isNotEmpty){
+                  myDisLikes.add(my_dislikes.text);
+                }
+
 
 
 
 
                 var data = AdmirerModel(
                     id: widget.admirers.id,
+                    admirerName: admirerName.text,
                     userId: "${widget.admirers.userId}",
                     profile: converProfile != null ? converProfile : widget.admirers.profile,
                     featureImages: _featureImage ,

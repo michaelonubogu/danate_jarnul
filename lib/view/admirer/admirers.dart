@@ -58,7 +58,7 @@ class _AdmirersState extends State<Admirers> {
                   return box.values.length != 0
                       ? AlphabetScrollView(
                    // list: AdmirersListJson.admirersList.map((e) => AlphaModel(e["name"])).toList(),
-                    list: data.map((e) => AlphaModel(e.zodiacSign)).toList(),
+                    list: data.map((e) => AlphaModel(e.admirerName)).toList(),
                     itemExtent: 150,
                     itemBuilder: (_, k, id) {
                       return InkWell(
@@ -71,7 +71,7 @@ class _AdmirersState extends State<Admirers> {
                                 borderRadius: BorderRadius.circular(100),
                                 child: Image.memory(Uint8List.fromList(data[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
 
-                            title: Text("${data[k].zodiacSign}",
+                            title: Text("${data[k].admirerName}",
                               style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
                               ),

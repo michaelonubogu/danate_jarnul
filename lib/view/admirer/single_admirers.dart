@@ -14,6 +14,14 @@ class SingleAdmirers extends StatefulWidget {
 }
 
 class _SingleAdmirersState extends State<SingleAdmirers> {
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    print("widget.admirers.rate ${widget.admirers.rate}");
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -34,7 +42,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
             icon: Icon(Icons.arrow_back_ios, size: 20, color: AppColors.textColor,),
           ),
         ),
-        title: Text("${widget.admirers.zodiacSign}",
+        title: Text("${widget.admirers.admirerName}",
           style: TextStyle(
             fontSize: 18,
             color: AppColors.textColor
@@ -83,16 +91,17 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                       ),
                       child: Center(child: Text("See Journal",
                         style: TextStyle(
-                          fontSize: 18,
+                          fontSize: 16,
                           fontWeight: FontWeight.w500,
                         ),
                       ),),
                     ),
                     SizedBox(height: 30,),
-                    Text("${widget.admirers.zodiacSign}",
+                    Text("${widget.admirers.admirerName}",
+                      overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                        fontSize: 16,
                         color: Colors.black
                       ),
                     ),
@@ -118,12 +127,12 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                           children: [
                             Icon(Icons.favorite_border, color: AppColors.blue, size: 18,),
                             SizedBox(width: 3,),
-                            widget.admirers.rate <= 0.00 && widget.admirers.rate >= 24.00
+                            widget.admirers.rate < 0.00 && widget.admirers.rate > 24.00
                                 ? Text("Meh")
-                                : widget.admirers.rate <= 25.00 && widget.admirers.rate >= 49.00
+                                : widget.admirers.rate < 25.00 && widget.admirers.rate > 49.00
                                 ? Text("Ok")
-                                : widget.admirers.rate <= 5.00 && widget.admirers.rate >= 74.00
-                                ? Text("Cute")
+                                : widget.admirers.rate < 50.00 && widget.admirers.rate > 74.00
+                                ? Text("Cute") 
                                 : Text("Sexy")
                           ],
                         )
