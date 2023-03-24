@@ -7,6 +7,7 @@ part 'admirers_model.g.dart';
 class AdmirerModel extends HiveObject{
   AdmirerModel({
     required this.id,
+    required this.admirerName,
     required this.userId,
     required this.profile,
     required this.featureImages,
@@ -22,24 +23,26 @@ class AdmirerModel extends HiveObject{
   @HiveField(0)
   final int id;
   @HiveField(1)
-  final String userId;
+  final String admirerName;
   @HiveField(2)
-  final dynamic profile;
+  final String userId;
   @HiveField(3)
-  final List<Uint8List> featureImages;
+  final dynamic profile;
   @HiveField(4)
-  final String dob;
+  final List<Uint8List> featureImages;
   @HiveField(5)
-  final String zodiacSign;
+  final String dob;
   @HiveField(6)
-  final double rate;
+  final String zodiacSign;
   @HiveField(7)
-  final String description;
+  final double rate;
   @HiveField(8)
-  final List myLikes;
+  final String description;
   @HiveField(9)
-  final List myDislikes;
+  final List myLikes;
   @HiveField(10)
+  final List myDislikes;
+  @HiveField(11)
   final List<Map> socialMedia;
 
 }
