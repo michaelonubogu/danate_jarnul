@@ -349,23 +349,37 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
             //     });
             //   },
             // ),
-            DateFormatField(
-                type: DateFormatType.type4,
-                addCalendar: false,
-                decoration: InputDecoration(
-                    hintText: "${widget.admirers.dob}",
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                        borderSide: BorderSide.none
-                    )
-                ),
-                onComplete: (date){
-                  setState(() {
-                    dob.text = DateFormat("dd-MM-yyyy").format(date!);
-                  });
-                  print("this date of birth ${dob.text}");
-                }
+            // DateFormatField(
+            //     type: DateFormatType.type4,
+            //     addCalendar: false,
+            //     decoration: InputDecoration(
+            //         hintText: "${widget.admirers.dob}",
+            //         filled: true,
+            //         fillColor: Colors.white,
+            //         border: OutlineInputBorder(
+            //             borderSide: BorderSide.none
+            //         )
+            //     ),
+            //     onComplete: (date){
+            //       setState(() {
+            //         dob.text = DateFormat("dd-MM-yyyy").format(date!);
+            //       });
+            //       print("this date of birth ${dob.text}");
+            //     }
+            // ),
+            TextFormField(
+              onTap: ()=>selectDate(),
+              readOnly: true,
+              controller: dob,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "YYYY-MM-DD",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
             ),
 
             SizedBox(height: 30,),
@@ -977,6 +991,20 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
         );
       },
     );
+  }
+
+  var selectedDate;
+  Future selectDate() async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1920, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        dob.text = "${selectedDate.toLocal()}".split(' ')[0];
+      });
   }
 
 
