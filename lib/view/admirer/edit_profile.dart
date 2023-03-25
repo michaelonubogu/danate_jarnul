@@ -701,6 +701,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
 
 
 
+                print("Date of birth ==== ${dob.text}");
 
                 var data = AdmirerModel(
                     id: widget.admirers.id,
@@ -718,7 +719,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 );
                 var box = await Boxes.getAdmirers;
                 box.put("${widget.admirers.id}", data);
-                Get.to(Index(index: 2,), transition: Transition.rightToLeft);
+               Get.to(Index(index: 2,), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Updated!"),
                   backgroundColor: Colors.green,
@@ -1003,7 +1004,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        dob.text = "${selectedDate.toLocal()}".split(' ')[0];
+        dob.text = "${picked.toLocal()}".split(' ')[0];
       });
   }
 

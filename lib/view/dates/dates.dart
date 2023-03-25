@@ -1,9 +1,12 @@
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+import 'add_dates.dart';
 class DatesList extends StatefulWidget {
   const DatesList({Key? key}) : super(key: key);
 
@@ -202,13 +205,12 @@ class _DatesListState extends State<DatesList> {
                 ],
               ),
             )
-
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          //Get.to(AddAdmirerProfile(), transition: Transition.rightToLeft);
+          Get.to(AddDates(), transition: Transition.rightToLeft);
           // Add your onPressed code here!
         },
         label: const Text('Add Date'),
