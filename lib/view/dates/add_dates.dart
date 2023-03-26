@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'view_controller/show_admirer_popup.dart';
 import '../../utility/app_colors.dart';
 
 
@@ -12,8 +12,16 @@ class AddDates extends StatefulWidget {
 }
 
 class _AddDatesState extends State<AddDates> {
+  final title = TextEditingController();
+  final dec = TextEditingController();
+  final date = TextEditingController();
+  final time = TextEditingController();
+  final location = TextEditingController();
+  final addDateFormKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context);
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -41,12 +49,65 @@ class _AddDatesState extends State<AddDates> {
 
       body: SingleChildScrollView(
         padding: EdgeInsets.all(30),
-        child: Column(
-          children: [
+        child: Form(
+          key: addDateFormKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
-          ],
+              Text("Date Title",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 15,),
+              TextFormField(
+                controller: title,
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: "Choose Sign",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none
+                    )
+                ),
+              ),
+              SizedBox(height: 30,),
+              Text("Admirers",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 15,),
+              TextFormField(
+                readOnly: true,
+                onTap: ()=>ShowAdmirerPopup.showAdmirerPopup(size, context),
+                controller: title,
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: "Choose Sign",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none
+                    )
+                ),
+              ),
+              SizedBox(height: 30,),
+
+
+
+            ],
+          ),
         ),
       ),
     );
   }
+
+  //this select addmirer profile popup
+
 }
