@@ -27,6 +27,7 @@ class AuthController{
   static Future showInitData()async{
    var userDB = await LocalDatabases.INITIAL_DATA;
    final retrievedData = await userDB.get('initial_Data');
+   print("this is initial data === $retrievedData");
    return retrievedData;
   }
 

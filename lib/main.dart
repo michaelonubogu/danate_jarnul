@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dante/database/local_database.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dante/view/flash/flas_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -12,6 +13,7 @@ import 'package:hive/hive.dart';
 import 'package:sizer/sizer.dart';
 
 import 'controller/auth_controller/auth_controller.dart';
+import 'model/admirers_model/admirers_model.dart';
 import 'model/auth_model/email_verify_model.dart';
 import 'model/auth_model/initialData_model.dart';
 
@@ -39,7 +41,14 @@ void main() async {
  await Hive
     ..init(appDocDir.path)
     ..registerAdapter(InitialDataModelAdapter())
+    ..registerAdapter(AdmirerModelAdapter())
     ..registerAdapter(EmailVerifyModelAdapter());
+
+    //initial amdirers profile
+    await Hive.openBox<Map>('initial_Data');
+    await Hive.openBox<Map>('email_verify_bd');
+    await Hive.openBox<Map>('profile');
+    await Hive.openBox<AdmirerModel>("admirers");
 
   await Firebase.initializeApp();
   MobileAds.instance.initialize();
