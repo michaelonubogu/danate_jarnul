@@ -16,7 +16,6 @@ class FlashScreen extends StatefulWidget {
 }
 
 class _FlashScreenState extends State<FlashScreen> {
-
   @override
   void initState() {
     // TODO: implement initState
@@ -30,7 +29,7 @@ class _FlashScreenState extends State<FlashScreen> {
   var id;
   var take_info;
   var isVerify;
-  getUserRedirect()async{
+  getUserRedirect() async {
     var initalData = await AuthController.showInitData();
     var emailVerify = await AuthController.showEmailVerify();
     setState(() {
@@ -38,15 +37,14 @@ class _FlashScreenState extends State<FlashScreen> {
       take_info = initalData["take_info"];
       isVerify = emailVerify["isVerify"];
     });
-    if(take_info){
-     return Get.to(Index(), transition: Transition.rightToLeft);
-    }else if(isVerify){
+    if (take_info) {
+      return Get.to(Index(), transition: Transition.rightToLeft);
+    } else if (isVerify) {
       return Get.to(GetName(), transition: Transition.rightToLeft);
-    }else{
+    } else {
       return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
     }
     print("this is inital value ${initalData["take_info"]}");
-
   }
 
   @override
@@ -59,10 +57,7 @@ class _FlashScreenState extends State<FlashScreen> {
           height: size.height,
           decoration: BoxDecoration(
             gradient: LinearGradient(
-              colors: [
-                AppColors.mainColor,
-                Colors.white
-              ],
+              colors: [AppColors.mainColor, Colors.white],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               stops: [0.0, 1.0],
@@ -79,14 +74,13 @@ class _FlashScreenState extends State<FlashScreen> {
                   height: 200,
                   child: Image.asset("assets/images/logo.png")),
 
-              SizedBox(height: 10,),
+              SizedBox(
+                height: 10,
+              ),
               SizedBox(
                   width: size.width,
                   height: 300,
                   child: Image.asset("assets/images/flash_icon.png")),
-
-
-
             ],
           ),
         ),
