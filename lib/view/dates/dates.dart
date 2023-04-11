@@ -1,4 +1,5 @@
 import 'package:dante/utility/app_colors.dart';
+import 'package:dante/view/dates/single_dates.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
@@ -32,7 +33,9 @@ class _DatesListState extends State<DatesList> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size; 
     return Scaffold(
+      backgroundColor: AppColors.bgColor,
       body: SingleChildScrollView(
         //padding: EdgeInsets.all(),
         child: Column(
@@ -190,16 +193,82 @@ class _DatesListState extends State<DatesList> {
             Padding(
               padding: EdgeInsets.only(left: 20, right: 20),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Current Dates",
                     style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
                       color: AppColors.textColor
                     ),
                   ),
+                  SizedBox(height: 20,),
+                  buildDatesWidget(
+                      size,
+                    profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                    name: "Nayon Talukder",
+                    date: "Thu, 24 March",
+                    location: "Dhaka Bangladesh",
+                    onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
                   SizedBox(height: 30,),
-
+                  Text("Upcoming Dates",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textColor
+                    ),
+                  ),
+                  SizedBox(height: 20,),
+                  buildDatesWidget(
+                      size,
+                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                      name: "Nayon Talukder",
+                      date: "Thu, 24 March",
+                      location: "Dhaka Bangladesh",
+                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
+                  buildDatesWidget(
+                      size,
+                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                      name: "Nayon Talukder",
+                      date: "Thu, 24 March",
+                      location: "Dhaka Bangladesh",
+                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
+                  buildDatesWidget(
+                      size,
+                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                      name: "Nayon Talukder",
+                      date: "Thu, 24 March",
+                      location: "Dhaka Bangladesh",
+                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
+                  buildDatesWidget(
+                      size,
+                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                      name: "Nayon Talukder",
+                      date: "Thu, 24 March",
+                      location: "Dhaka Bangladesh",
+                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
+                  buildDatesWidget(
+                      size,
+                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                      name: "Nayon Talukder",
+                      date: "Thu, 24 March",
+                      location: "Dhaka Bangladesh",
+                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
+                  buildDatesWidget(
+                      size,
+                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                      name: "Nayon Talukder",
+                      date: "Thu, 24 March",
+                      location: "Dhaka Bangladesh",
+                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                  ),
 
 
                 ],
@@ -217,6 +286,72 @@ class _DatesListState extends State<DatesList> {
         icon: const Icon(Icons.add),
         backgroundColor: AppColors.mainColor,
       ),
+    );
+  }
+
+  Widget buildDatesWidget(Size size, {
+    required Image profile,
+    required String name,
+    required String date,
+    required String location,
+    required VoidCallback onClick
+ }) {
+    return InkWell(
+      onTap: onClick,
+      child: Container(
+                    width: size.width,
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(bottom: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 60,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: profile
+                          ),
+                        ),
+                        SizedBox(width: 10,),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(name,
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black
+                              ),
+                            ),
+                            SizedBox(height: 8,),
+                            Row(
+                              children: [
+                                Row(
+                                  children: [
+                                    Image.asset("assets/images/goblet.png", height: 18, width: 18,),
+                                    SizedBox(width: 5.0),
+                                    Text(date, style: TextStyle(fontSize: 13.0)),
+                                  ],
+                                ),
+                                SizedBox(width: 10,),
+                                Row(
+                                  children: [
+                                    Image.asset("assets/images/pin.png", height: 18, width: 18,),
+                                    SizedBox(width: 5.0),
+                                    Text(location, style: TextStyle(fontSize: 13.0)),
+                                  ],
+                                ),
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
     );
   }
 }

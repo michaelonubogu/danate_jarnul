@@ -6,5 +6,6 @@ class Boxes{
   //admirers boxes
   static Box<AdmirerModel> getAdmirers = Hive.box<AdmirerModel>("admirers");
   static Box<AdmirerModel> getProfile = Hive.box<AdmirerModel>("profile");
+  static Box<AdmirerModel> getDates = Hive.box<AdmirerModel>("dates");
 
 }

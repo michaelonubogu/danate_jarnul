@@ -4,7 +4,6 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'package:intl/intl.dart';
 import 'package:dante/boxs/boxs.dart';
-import 'package:dante/controller/admirers_controller/admirers_controllers.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/model/admirers_model/admirers_model.dart';
 import 'package:dante/utility/app_colors.dart';

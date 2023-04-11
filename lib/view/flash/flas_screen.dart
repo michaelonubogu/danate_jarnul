@@ -34,7 +34,7 @@ class _FlashScreenState extends State<FlashScreen> {
     var initalData = await AuthController.showInitData();
     var emailVerify = await AuthController.showEmailVerify();
      if(initalData != null && initalData["take_info"] ){
-        return Get.to(Index(), transition: Transition.rightToLeft);
+        return Get.offAll(Index(), transition: Transition.rightToLeft);
     }else{
       return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
     }
