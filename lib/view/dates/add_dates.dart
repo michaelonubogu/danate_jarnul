@@ -49,12 +49,9 @@ class _AddDatesState extends State<AddDates> {
 
       body: SingleChildScrollView(
         padding: EdgeInsets.all(30),
-<<<<<<< HEAD
         child: Column(
           children: [
-            
-=======
-        child: Form(
+          Form(
           key: addDateFormKey,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -104,13 +101,14 @@ class _AddDatesState extends State<AddDates> {
               ),
               SizedBox(height: 30,),
 
->>>>>>> 753d5af06a22e576bc96897e638b4ca2cc873962
 
 
             ],
           ),
-        ),
+        )
+        ]
       ),
+      )
     );
   }
 
