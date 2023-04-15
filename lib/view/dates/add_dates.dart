@@ -1,9 +1,12 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:dante/boxs/boxs.dart';
+import 'package:dante/view/admirer/add_profile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
-import 'view_controller/show_admirer_popup.dart';
+import 'package:hive/hive.dart';
+import '../../utility/app_input_rightIcons.dart';
 import '../../utility/app_colors.dart';
-
+import 'package:intl/intl.dart';
 
 class AddDates extends StatefulWidget {
   const AddDates({Key? key}) : super(key: key);
@@ -20,13 +23,19 @@ class _AddDatesState extends State<AddDates> {
   final location = TextEditingController();
   final addDateFormKey = GlobalKey<FormState>();
 
-  var items = ["a", "b"];
+  Map<String, dynamic> selectedAdmirerProfiles = {};
 
   var selectedValue;
 
+  //initial current date & time appear
+  var selectedDate = DateFormat.yMMMd().format(DateTime.now());
+
+  var _dateTime = DateFormat('hh:mm a').format(DateTime.now());
+
+
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context);
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       appBar: AppBar(
@@ -90,53 +99,143 @@ class _AddDatesState extends State<AddDates> {
                 ),
               ),
               SizedBox(height: 15,),
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(5),
-                    border: Border.all(color: AppColors.blue, width: 1)
-                ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton2(
-                    hint: Text(
-                      'Select Item',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Theme.of(context).hintColor,
-                      ),
-                    ),
-                    items: []
-                        .map((item) => DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: const TextStyle(
-                          fontSize: 14,
+              InkWell(
+                onTap: ()=>showAdmirers(),
+                child: Container(
+                  padding: EdgeInsets.only(left: 5, right: 15, top: 5, bottom: 5),
+                  height: 60,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(5),
+                     // border: Border.all(color: AppColors.blue, width: 1)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width*0.70,
+                        child: selectedAdmirerProfiles.isNotEmpty ? buildAdmirerWidget(
+                          image: selectedAdmirerProfiles["profile"],
+                          name: selectedAdmirerProfiles["name"],
+                        ) : Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text("Choose admirers",
+                            style: TextStyle(
+                              fontSize: 15
+                            ),
+                          ),
                         ),
                       ),
-                    ))
-                        .toList(),
-                    value: selectedValue,
-                    onChanged: (value) {
-                      setState(() {
-                        selectedValue = value as String;
-
-                      });
-                    },
-                    buttonStyleData: const ButtonStyleData(
-                      height: 40,
-                      width: 140,
-                    ),
-                    menuItemStyleData: const MenuItemStyleData(
-                      height: 40,
-                    ),
+                      AppInputRightIcon()
+                    ],
                   ),
                 ),
               ),
+
               SizedBox(height: 30,),
+              Text("Description",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 15,),
+              TextFormField(
+                controller: dec,
+                maxLines: 6,
+                decoration: InputDecoration(
+                    filled: true,
+                    fillColor: Colors.white,
+                    hintText: "Write here...",
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none
+                    )
+                ),
+              ),
 
+              SizedBox(height: 30,),
+              Text("Date & Time",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 15,),
+              InkWell(
+                onTap: ()=>selectDate(),
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 15, top: 7, bottom: 7),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    // border: Border.all(color: AppColors.blue, width: 1)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width*0.70,
+                        child: Row(
+                          children: [
+                            Image.asset("assets/icons/bs_1.png", height: 30, width: 30,),
+                            SizedBox(width: 8,),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Date", style: TextStyle(fontSize: 13, color: Colors.grey),),
+                                Text("${selectedDate}", style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),),
 
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      AppInputRightIcon()
+                    ],
+                  ),
+                ),
+              ),
+
+              SizedBox(height: 15,),
+              InkWell(
+                onTap: ()=>selectTime(),
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 15, top: 7, bottom: 7),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    // border: Border.all(color: AppColors.blue, width: 1)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width*0.70,
+                        child: Row(
+                          children: [
+                            Icon(Icons.watch_later_outlined, color: Colors.red, size: 30,),
+                            SizedBox(width: 8,),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Time", style: TextStyle(fontSize: 13, color: Colors.grey),),
+                                Text("$_dateTime", style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w600),),
+
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
+                      AppInputRightIcon()
+                    ],
+                  ),
+                ),
+              ),
 
             ],
           ),
@@ -147,6 +246,261 @@ class _AddDatesState extends State<AddDates> {
     );
   }
 
-  //this select addmirer profile popup
+
+  //show admirer profiles
+  Future<void> showAdmirers() async {
+    print("this boxes ${Boxes.getAdmirers.getAt(0)!.admirerName}");
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(10),
+              titlePadding: EdgeInsets.only(top: 10, bottom: 0),
+              actionsPadding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
+              title: Row(
+                children: [
+                  IconButton(
+                    onPressed: ()=>Navigator.pop(context),
+                    icon: Icon(Icons.close),
+                  ),
+                  Text('Choose Admirers',
+                    style: TextStyle(
+                      color: AppColors.blue
+                    ),
+                  ),
+                ],
+              ),
+              content: Container(
+                height:300,
+                width: 300.0,
+                padding: EdgeInsets.only(top: 15, bottom: 0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 1, color: AppColors.blue)
+                  )
+                ),
+                child: Stack(
+                  children: [
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount:  Boxes.getAdmirers.length,
+                      itemBuilder: (_, index){
+                        var data = Boxes.getAdmirers.getAt(index);
+                        print("this is admirers $data");
+                        return InkWell(
+                          onTap: (){
+
+                          setState((){
+                            selectedAdmirerProfiles.clear();
+                            selectedAdmirerProfiles.assignAll({
+                              "id": data!.id,
+                              "name" : data!.admirerName,
+                              "profile" : data!.profile,
+                            });
+
+                            print("select admirers ${selectedAdmirerProfiles.isNotEmpty}");
+
+                          });
+                            setState((){});
+
+                          },
+                          child: Container(
+                              height: 40,
+                              margin: EdgeInsets.only(bottom: 10),
+                              decoration: BoxDecoration(
+                              ),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 40,
+                                    height: 40,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(5),
+                                      child: Image.memory(data!.profile,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 10,),
+                                  Text(data!.admirerName,
+                                    style: TextStyle(
+                                      fontSize: 17,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  )
+                                ],
+                              )),
+                        );
+                      },
+
+                    ),
+
+                    Positioned(
+                      bottom: 10, right: 10,
+                      child: InkWell(
+                        onTap: ()=>Get.to(AddAdmirerProfile(), transition: Transition.rightToLeft),
+                        child: Container(
+                          width: 100,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(100),
+                            color: AppColors.mainColor,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add, color: Colors.white,), 
+                              SizedBox(width: 5,),
+                              Text("Add",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            );
+          }
+        );
+      },
+    );
+  }
+
+
+  //show admirer profiles
+  Future<void> selectTime() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+            return AlertDialog(
+              contentPadding: EdgeInsets.all(10),
+              titlePadding: EdgeInsets.only(top: 10, bottom: 0),
+              actionsPadding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(32.0))),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                    onPressed: ()=>Navigator.pop(context),
+                    icon: Icon(Icons.close),
+                  ),
+                  Text('Set Time',
+                    style: TextStyle(
+                      color: AppColors.blue
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: ()=>setState(()=>Navigator.pop(context)),
+                    icon: Icon(Icons.check, color: AppColors.blue,),
+                  ),
+                ],
+              ),
+              content: Container(
+                height:300,
+                width: 300.0,
+                padding: EdgeInsets.only(top: 15, bottom: 0),
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(width: 1, color: AppColors.blue)
+                  )
+                ),
+                child: TimePickerSpinner(
+                  is24HourMode: false,
+                  normalTextStyle: TextStyle(
+                      fontSize: 24,
+                      color: Colors.grey
+                  ),
+                  highlightedTextStyle: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.blue
+                  ),
+                  spacing: 50,
+                  itemHeight: 80,
+                  isForce2Digits: true,
+                  onTimeChange: (time) {
+                    setState(() {
+                      _dateTime = DateFormat('hh:mm a').format(time);
+                      print("selected time === ${_dateTime}");
+                    });
+                  },
+                )
+              ),
+            );
+          }
+        );
+      },
+    );
+  }
+
+  //select date
+  Future selectDate() async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1920, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = DateFormat.yMMMd().format(picked);
+        date.text = selectedDate;
+        print("this is date === ${date.text}");
+      });
+  }
+
+
+
+
+
+//this select addmirer profile popup
 
 }
+
+class buildAdmirerWidget extends StatelessWidget {
+  const buildAdmirerWidget({
+    Key? key, required this.image, required this.name,
+  }) : super(key: key);
+  final dynamic image;
+  final String name;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 58,
+          height: 58,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(5),
+            child: Image.memory(image,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ),
+        SizedBox(width: 10,),
+        Text(name,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w500,
+          ),
+        )
+      ],
+    );
+  }
+}
+
