@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dante/database/local_database.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dante/view/flash/flas_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -65,7 +66,6 @@ void main() async {
     badge: true,
     sound: true,
   );
-
 
   runApp(MyApp());
 }

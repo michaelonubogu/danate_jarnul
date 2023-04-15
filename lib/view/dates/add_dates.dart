@@ -1,5 +1,6 @@
 import 'package:dante/boxs/boxs.dart';
 import 'package:dante/view/admirer/add_profile.dart';
+import 'package:dante/view/dates/location_map.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
@@ -232,6 +233,50 @@ class _AddDatesState extends State<AddDates> {
                         ),
                       ),
                       AppInputRightIcon()
+                    ],
+                  ),
+                ),
+              ),
+
+
+              //location
+              SizedBox(height: 30,),
+              Text("Location",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 15,),
+              InkWell(
+                onTap: ()=>Get.to(LocationMap(), transition: Transition.rightToLeft),
+                child: Container(
+                  padding: EdgeInsets.only(left: 10, right: 15, top: 7, bottom: 7),
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(5),
+                    // border: Border.all(color: AppColors.blue, width: 1)
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width*0.70,
+                        child: Row(
+                          children: [
+                            Image.asset("assets/icons/map-marker.png", height: 20, width: 20,),
+                            SizedBox(width: 8,),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Search Location", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),),
+                              ],
+                            )
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),

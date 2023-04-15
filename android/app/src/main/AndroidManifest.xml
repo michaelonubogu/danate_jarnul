@@ -4,6 +4,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <application
         android:label="dante"
         android:icon="@mipmap/ic_launcher"
@@ -54,5 +57,7 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5493668820008873~2726237081"/>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDaqWUPPHmmEHB3Ibb_ULj9HkIL3bfuK4Y"/> <!--- check this map key -->
     </application>
 </manifest>

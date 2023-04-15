@@ -10,6 +10,7 @@ import FirebaseCore
   ) -> Bool {
 
     FirebaseApp.configure()
+    GMSServices.provideAPIKey("AIzaSyDaqWUPPHmmEHB3Ibb_ULj9HkIL3bfuK4Y") //change this map api key//
     GeneratedPluginRegistrant.register(with: self)
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
