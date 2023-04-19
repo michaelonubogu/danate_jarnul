@@ -22,76 +22,79 @@ class _GetNameState extends State<GetName> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor:AppColors.bgColor,
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 30.h, width: size.width,
-                child: Image.asset("assets/images/qusition.png", fit: BoxFit.contain,),
-              ),
-
-              SizedBox(height: 6.h,),
-              Text("Hey!",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textColor,
-                    fontSize: 25,
-                  )
-              ),
-              SizedBox(height: 10,),
-              Text("Tell us how to address you !",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.normalTxtColor,
-                    fontSize: 16,
-                  )
-              ),
-              SizedBox(height: 6.h,),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Text("This Dating Journal belongs to...?",
-                  textAlign: TextAlign.start,
-                  style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 17, color: AppColors.textColor
-                  ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor:AppColors.bgColor,
+          body: SingleChildScrollView(
+            padding: EdgeInsets.all(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30.h, width: size.width,
+                  child: Image.asset("assets/images/qusition.png", fit: BoxFit.contain,),
                 ),
-              ),
-              SizedBox(height: 15,),
-              TextFormField(
-                controller: name,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Enter your name",
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none
+
+                SizedBox(height: 6.h,),
+                Text("Hey!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textColor,
+                      fontSize: 25,
                     )
                 ),
-              ),
-              SizedBox(height: 6.h,),
-
-              AppButton(
-                onClick: ()async{
-
-                  //reDirect Next Page
-                 Get.to(NiceToMeet(name: name.text,), transition: Transition.leftToRight);
-                },
-                size: size,
-                child: Text("Next",
-                  style: TextStyle(
-                      fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500
+                SizedBox(height: 10,),
+                Text("Tell us how to address you !",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.normalTxtColor,
+                      fontSize: 16,
+                    )
+                ),
+                SizedBox(height: 6.h,),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text("This Dating Journal belongs to...?",
+                    textAlign: TextAlign.start,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 17, color: AppColors.textColor
+                    ),
                   ),
                 ),
-              )
-            ],
+                SizedBox(height: 15,),
+                TextFormField(
+                  controller: name,
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter your name",
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
+                      )
+                  ),
+                ),
+                SizedBox(height: 6.h,),
+
+                AppButton(
+                  onClick: ()async{
+
+                    //reDirect Next Page
+                   Get.to(NiceToMeet(name: name.text,), transition: Transition.leftToRight);
+                  },
+                  size: size,
+                  child: Text("Next",
+                    style: TextStyle(
+                        fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

@@ -37,15 +37,18 @@ class _EditProfileState extends State<EditProfile> {
     var emailRes = await AuthController.showEmailVerify();
     email.text = emailRes["email"];
     var profileRes = await AuthController.showProfile();
-   if(profileRes != null){
+
+    if(profileRes != null){
      image = profileRes["profile"];
      fName.text = profileRes["f_name"];
      lName.text = profileRes["l_name"];
      dob.text = profileRes["dob"];
    }
-   setState(() {});
+    setState(() {});
+
 
   }
+
 
 
 
@@ -242,7 +245,18 @@ class _EditProfileState extends State<EditProfile> {
                       color: AppColors.white
                     ),
                   ),
-                  onClick: ()=>AuthController.editProfile(fName.text, lName.text, dob.text, email.text, profileImage, context)),
+                  onClick: (){
+                      if(profileImage != null){
+                        AuthController.editProfile(fName.text, lName.text, dob.text, email.text, profileImage, context);
+                      }else{
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("Upload your profile image."),
+                          backgroundColor: Colors.red,
+                          duration: Duration(milliseconds: 3000),
+                        ));
+                      }
+
+                   }),
             ),
             SizedBox(height: 40,),
           ],

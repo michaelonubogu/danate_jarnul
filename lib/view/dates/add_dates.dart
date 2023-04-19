@@ -1,6 +1,7 @@
 import 'package:dante/boxs/boxs.dart';
 import 'package:dante/view/admirer/add_profile.dart';
 import 'package:dante/view/dates/location_map.dart';
+import 'package:dante/view/dates/view_controller/addtext_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
@@ -282,6 +283,30 @@ class _AddDatesState extends State<AddDates> {
                 ),
               ),
 
+              //location
+              SizedBox(height: 30,),
+              Text("Today’s Outfit",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 15,),
+
+              Container(
+                height: 80,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade400,
+                  borderRadius: BorderRadius.circular(10)
+                ),
+                child: Center(child: Text("No outfit found"),),
+              ),
+              //add text button, its a user
+              AddTextButton(
+                text: "Add Outfit",
+                onClick: (){},
+              )
+
             ],
           ),
         )
@@ -349,9 +374,9 @@ class _AddDatesState extends State<AddDates> {
                             });
 
                             print("select admirers ${selectedAdmirerProfiles.isNotEmpty}");
+                            Navigator.pop(context);
 
                           });
-                            setState((){});
 
                           },
                           child: Container(
@@ -515,6 +540,7 @@ class _AddDatesState extends State<AddDates> {
 //this select addmirer profile popup
 
 }
+
 
 class buildAdmirerWidget extends StatelessWidget {
   const buildAdmirerWidget({

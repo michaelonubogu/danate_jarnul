@@ -17,40 +17,43 @@ class _VerifySuccessState extends State<VerifySuccess> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size; 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor:AppColors.bgColor,
-        body: Padding(
-          padding: EdgeInsets.all(30),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 30.h, width: size.width,
-                child: Image.asset("assets/images/email_verified.png", fit: BoxFit.cover,),
-              ),
-
-              SizedBox(height: 6.h,),
-              Text("Email Verified!",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: AppColors.textColor,
-                  fontSize: 30,
-                )
-              ),
-              SizedBox(height: 6.h,),
-
-              AppButton(
-                onClick: ()=>Get.to(GetName(), transition: Transition.rightToLeft), //rout the next login pages
-                size: size,
-                child: Text("Continue",
-                  style: TextStyle(
-                      fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500
-                  ),
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor:AppColors.bgColor,
+          body: Padding(
+            padding: EdgeInsets.all(30),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 30.h, width: size.width,
+                  child: Image.asset("assets/images/email_verified.png", fit: BoxFit.cover,),
                 ),
-              )
-            ],
+
+                SizedBox(height: 6.h,),
+                Text("Email Verified!",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    color: AppColors.textColor,
+                    fontSize: 30,
+                  )
+                ),
+                SizedBox(height: 6.h,),
+
+                AppButton(
+                  onClick: ()=>Get.offAll(GetName(), transition: Transition.rightToLeft), //rout the next login pages
+                  size: size,
+                  child: Text("Continue",
+                    style: TextStyle(
+                        fontSize: 15, color: Colors.white, fontWeight: FontWeight.w500
+                    ),
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

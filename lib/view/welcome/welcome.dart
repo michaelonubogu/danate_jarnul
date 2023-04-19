@@ -56,7 +56,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
                 SizedBox(height: 10.h,),
                 AppButton(
-                  onClick: ()=>Get.to(Login(), transition: Transition.rightToLeft), //rout the next login pages
+                  onClick: ()=>Get.offAll(Login(), transition: Transition.rightToLeft), //rout the next login pages
                     size: size,
                     child: Text("Get Started",
                       style: TextStyle(

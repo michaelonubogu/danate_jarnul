@@ -579,7 +579,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     socialMedia: socialMediaList
                 );
                var box = await Boxes.getAdmirers;
-               box.add(data);
+                box.put("${id}", data);
                Get.to(Index(index: 2,), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Added!"),
