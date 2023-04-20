@@ -32,7 +32,7 @@ class SendOtp{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.green,
         duration: Duration(milliseconds: 3000),
-        content: Text('OTP Send Your Email.'),
+        content: Text('Verification code has been sent.'),
       ));
       Navigator.pop(context);
       //redirect otp verification page
@@ -71,7 +71,7 @@ class SendOtp{
         "data" : "${DateTime.now()}"
       };
       //if success, then store data
-      AuthController.emailVerify(data);
+      AuthController.emailVerify(data, context);
 
     }else{ //if otp not sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

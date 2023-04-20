@@ -27,7 +27,7 @@ class _ProfileState extends State<Profile> {
     if(res != null){
       return res;
     }else{
-      return Get.to(EditProfile(), transition: Transition.leftToRight);
+      return Get.to(EditProfile());
     }
 
   }

@@ -79,7 +79,7 @@ class _NiceToMeetState extends State<NiceToMeet> {
                 SizedBox(height: 5.h,),
 
                 AppButton(
-                  onClick: ()=>Get.to(Question(name: widget.name,), transition: Transition.rightToLeft), //rout the next login pages
+                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>Question(name: widget.name,))), //rout the next login pages
                   size: size,
                   child: Text("Let's go",
                     style: TextStyle(

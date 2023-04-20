@@ -145,7 +145,7 @@ class _AdmirersState extends State<Admirers> {
                     selectedTextStyle: TextStyle(color: AppColors.blue, fontSize: 15,),
                     unselectedTextStyle: TextStyle(color: AppColors.blue.withOpacity(0.7), fontSize: 12),
                   )
-                      : Center(child: Text("No Data Found!"),);
+                      : Center(child: Text("You don't have any Admirer yet!"),);
                 }
               ),
             ),

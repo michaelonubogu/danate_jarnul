@@ -84,7 +84,7 @@ class _GetNameState extends State<GetName> {
                   onClick: ()async{
 
                     //reDirect Next Page
-                   Get.to(NiceToMeet(name: name.text,), transition: Transition.leftToRight);
+                   Navigator.push(context, MaterialPageRoute(builder: (context)=>NiceToMeet(name: name.text,)));
                   },
                   size: size,
                   child: Text("Next",

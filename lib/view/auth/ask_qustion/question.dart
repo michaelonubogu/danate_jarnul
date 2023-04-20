@@ -202,7 +202,7 @@ class _QuestionState extends State<Question> {
                 Align(
                   alignment: Alignment.center,
                   child: TextButton(
-                    onPressed: ()=>Get.to(GetName(), transition: Transition.leftToRight),
+                    onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>GetName())),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

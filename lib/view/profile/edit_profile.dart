@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-
+import 'package:intl/intl.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/utility/app_button.dart';
 import 'package:dob_input_field/dob_input_field.dart';
@@ -188,7 +188,7 @@ class _EditProfileState extends State<EditProfile> {
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
-                  hintText: "First Name",
+                  hintText: "Last Name",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none
@@ -205,12 +205,19 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(height: 12,),
-            DOBInputField(
-              firstDate: DateTime(1900),
-              lastDate: DateTime.now(),
-              showLabel: true,
-              dateFormatType: DateFormatType.DDMMYYYY,
-              autovalidateMode: AutovalidateMode.always,
+            TextFormField(
+              onTap: ()=>selectDate(),
+              readOnly: true,
+              controller: dob,
+              decoration: InputDecoration(
+                  filled: true,
+                  fillColor: Colors.white,
+                  hintText: "MM-DD-YYYY",
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: BorderSide.none
+                  )
+              ),
             ),
             SizedBox(height: 20,),
 
@@ -265,6 +272,22 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
+
+  var selectedDate;
+  Future selectDate() async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(1920, 8),
+        lastDate: DateTime(2101));
+    if (picked != null && picked != selectedDate)
+      setState(() {
+        selectedDate = picked;
+        var data = "${selectedDate.toLocal()}".split(' ')[0];
+        dob.text =  DateFormat('MM-dd-yyyy').format(DateTime.parse(data));
+        print("dob.text ${dob.text}");
+      });
+  }
 
 
 

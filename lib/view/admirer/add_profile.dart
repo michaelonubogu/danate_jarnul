@@ -846,7 +846,9 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     if (picked != null && picked != selectedDate)
       setState(() {
         selectedDate = picked;
-        dob.text = "${selectedDate.toLocal()}".split(' ')[0];
+       var data = "${selectedDate.toLocal()}".split(' ')[0];
+        dob.text =  DateFormat('MM-dd-yyyy').format(DateTime.parse(data));
+        print("dob.text ${dob.text}");
       });
   }
 

@@ -79,6 +79,7 @@ dependencies:
   jiffy: ^6.1.0
   flutter_time_picker_spinner: ^2.0.0
   google_maps_flutter: ^2.2.5
+  geolocator: ^9.0.2
 
 dev_dependencies:
   flutter_test:

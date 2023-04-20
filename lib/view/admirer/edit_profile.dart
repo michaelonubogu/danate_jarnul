@@ -373,7 +373,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
               decoration: InputDecoration(
                   filled: true,
                   fillColor: Colors.white,
-                  hintText: "YYYY-MM-DD",
+                  hintText: "MM-DD-YYYY",
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none
@@ -718,7 +718,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 );
                 var box = await Boxes.getAdmirers;
                 box.put("${widget.admirers.id}", data);
-               Get.to(Index(index: 2,), transition: Transition.rightToLeft);
+               Get.to(Index(index: 2,), transition: Transition.leftToRight);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Updated!"),
                   backgroundColor: Colors.green,

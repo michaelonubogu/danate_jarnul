@@ -33,13 +33,13 @@ class AuthController{
 
 
   //this method for store email verify data
-  static Future emailVerify(data)async{
+  static Future emailVerify(data, context)async{
     print("data === $data");
     var res = await LocalDatabases.EMAIL_VERIFY;
     //await userDB.delete("initial_Data");
     await res.put("email_verify", data);//insert data
     //redirect otp verification page
-    Get.to(VerifySuccess(), transition: Transition.leftToRight);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>VerifySuccess()), (route) => false);
     // Prints the map data.
   }
 

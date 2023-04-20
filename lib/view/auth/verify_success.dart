@@ -44,7 +44,7 @@ class _VerifySuccessState extends State<VerifySuccess> {
                 SizedBox(height: 6.h,),
 
                 AppButton(
-                  onClick: ()=>Get.offAll(GetName(), transition: Transition.rightToLeft), //rout the next login pages
+                  onClick: ()=>Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>GetName()), (route) => false), //rout the next login pages
                   size: size,
                   child: Text("Continue",
                     style: TextStyle(

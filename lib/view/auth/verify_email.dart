@@ -63,7 +63,7 @@ class _EmailVerifyState extends State<EmailVerify> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return WillPopScope(
-      onWillPop: () async => false,
+      onWillPop: () async => true,
       child: SafeArea(
         child: Scaffold(
           body: SingleChildScrollView(
@@ -85,7 +85,7 @@ class _EmailVerifyState extends State<EmailVerify> {
                 SizedBox(height: 10,),
                 SizedBox(
                   width: 280,
-                  child: Text("Type the verification code we send to your e-mail.",
+                  child: Text("Type the verification code we sent to your e-mail.",
                     style: TextStyle(
                         wordSpacing: 0.9,
                         fontSize: 15,

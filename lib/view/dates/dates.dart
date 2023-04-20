@@ -210,7 +210,7 @@ class _DatesListState extends State<DatesList> {
                     name: "Nayon Talukder",
                     date: "Thu, 24 March",
                     location: "Dhaka Bangladesh",
-                    onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
+                    onClick: ()=>Get.to(SingleDates(),  transition: Transition.rightToLeft)
                   ),
                   SizedBox(height: 30,),
                   Text("Upcoming Dates",
@@ -279,7 +279,7 @@ class _DatesListState extends State<DatesList> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          Get.to(AddDates(), transition: Transition.rightToLeft);
+          Get.to(AddDates(),  transition: Transition.rightToLeft);
           // Add your onPressed code here!
         },
         label: const Text('Add Date'),

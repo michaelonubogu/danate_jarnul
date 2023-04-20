@@ -57,7 +57,7 @@ class _SingleAdmirersState extends State<SingleAdmirers> {
                 borderRadius: BorderRadius.circular(10)
             ),
             child: IconButton(
-              onPressed: ()=>Get.to(EditAdmirerProfile(admirers: widget.admirers,)),
+              onPressed: ()=>Get.to(EditAdmirerProfile(admirers: widget.admirers,), transition: Transition.rightToLeft),
               icon: Icon(IconlyLight.edit,),
             ),
           )

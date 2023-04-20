@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:dante/boxs/boxs.dart';
+import 'package:dante/utility/app_button.dart';
 import 'package:dante/view/admirer/add_profile.dart';
 import 'package:dante/view/dates/location_map.dart';
 import 'package:dante/view/dates/view_controller/addtext_button.dart';
@@ -6,9 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../utility/app_input_rightIcons.dart';
 import '../../utility/app_colors.dart';
 import 'package:intl/intl.dart';
+import 'package:geolocator/geolocator.dart';
 
 class AddDates extends StatefulWidget {
   const AddDates({Key? key}) : super(key: key);
@@ -24,6 +29,16 @@ class _AddDatesState extends State<AddDates> {
   final time = TextEditingController();
   final location = TextEditingController();
   final addDateFormKey = GlobalKey<FormState>();
+  final outfitName = TextEditingController();
+
+
+  //image picker global variable
+  final ImagePicker _picker = ImagePicker();
+
+
+  // this is profile image store variable
+  var outfitImage, outfitImageStr;
+
 
   Map<String, dynamic> selectedAdmirerProfiles = {};
 
@@ -33,6 +48,22 @@ class _AddDatesState extends State<AddDates> {
   var selectedDate = DateFormat.yMMMd().format(DateTime.now());
 
   var _dateTime = DateFormat('hh:mm a').format(DateTime.now());
+
+
+  //show selected locatiom
+  Future showSelectedLocation(BuildContext context)async{
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LocationMap()),
+    );
+    // When a BuildContext is used from a StatefulWidget, the mounted property
+    // must be checked after an asynchronous gap.
+    if (!mounted) return;
+    location.text = result;
+    print("this is result location $result");
+  }
 
 
   @override
@@ -250,7 +281,7 @@ class _AddDatesState extends State<AddDates> {
               ),
               SizedBox(height: 15,),
               InkWell(
-                onTap: ()=>Get.to(LocationMap(), transition: Transition.rightToLeft),
+                onTap: ()=>showSelectedLocation(context),
                 child: Container(
                   padding: EdgeInsets.only(left: 10, right: 15, top: 7, bottom: 7),
                   height: 60,
@@ -272,7 +303,7 @@ class _AddDatesState extends State<AddDates> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("Search Location", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),),
+                                Text("${location.text.isNotEmpty ? location.text : "Search Location"}", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),),
                               ],
                             )
                           ],
@@ -304,7 +335,7 @@ class _AddDatesState extends State<AddDates> {
               //add text button, its a user
               AddTextButton(
                 text: "Add Outfit",
-                onClick: (){},
+                onClick: ()=>showOutfitPoup(),
               )
 
             ],
@@ -531,6 +562,162 @@ class _AddDatesState extends State<AddDates> {
         date.text = selectedDate;
         print("this is date === ${date.text}");
       });
+  }
+
+  //show Outfit popup
+ Future showOutfitPoup() {
+    var size = MediaQuery.of(context).size;
+   return showDialog<void>(
+     context: context,
+     barrierDismissible: false, // user must tap button!
+     builder: (BuildContext context) {
+       return StatefulBuilder(
+         builder: (context, setState) {
+           return AlertDialog(
+             contentPadding: EdgeInsets.all(20),
+
+             titlePadding: EdgeInsets.zero,
+             actionsPadding: EdgeInsets.zero,
+             shape: RoundedRectangleBorder(
+                 borderRadius: BorderRadius.all(Radius.circular(32.0))),
+             title: const Text(''),
+             content: SingleChildScrollView(
+               child: ListBody(
+                 children:  <Widget>[
+                   Text('Outfit Name:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                      color: AppColors.blue
+                    ),
+                   ),
+                   SizedBox(height: 10,),
+                   TextFormField(
+                     controller: outfitName,
+                     decoration: InputDecoration(
+                       hintText: "Outfit Name",
+                       contentPadding: EdgeInsets.only(left: 15, right: 15),
+                       focusedBorder:OutlineInputBorder(
+                         borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                         borderRadius: BorderRadius.circular(5.0),
+                       ),
+                         border:OutlineInputBorder(
+                           borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                           borderRadius: BorderRadius.circular(5.0),
+                         ),
+                         enabledBorder:OutlineInputBorder(
+                           borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                           borderRadius: BorderRadius.circular(5.0),
+                         )
+                     ),
+                   ),
+                   SizedBox(height: 30,),
+                   InkWell(
+                     onTap: (){
+                       openBottomSheet();
+                       setState((){});
+                     },
+                     child: Container(
+                       padding: EdgeInsets.all(10),
+                       decoration: BoxDecoration(
+                         color: AppColors.blue.withOpacity(0.2),
+                         borderRadius: BorderRadius.circular(5),
+                       ),
+                       child: Row(
+                         children: [
+                          Image.asset("assets/icons/gallery.png", height: 30, width: 30,),
+                           SizedBox(width: 10,),
+                           Text("Upload photo",
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: AppColors.blue
+                            ),
+                           )
+                         ],
+                       ),
+                     ),
+                   ),
+                   SizedBox(height: 30,),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                     children: [
+                       SizedBox(width: 110,
+                        child: AppButton(
+                            size: size,
+                            bg: Colors.grey.shade300,
+                            child: Text("Close",
+                              style: TextStyle(
+                                fontSize: 15,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            onClick: ()=>Navigator.pop(context)
+                        ),
+                       ),
+                       SizedBox(width: 110,
+                         child: AppButton(
+                             size: size,
+                             child: Text("SAVE",
+                               style: TextStyle(
+                                 fontSize: 15,
+                                 color: Colors.white,
+                                 fontWeight: FontWeight.w600,
+                               ),
+                             ),
+                             onClick: ()=>Navigator.pop(context)
+                         ),
+                       )
+                     ],
+                   )
+                 ],
+               ),
+             ),
+
+           );
+         }
+       );
+     },
+   );
+ }
+
+ //open bottom sheet for outfit image
+  openBottomSheet() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                leading: new Icon(Icons.photo),
+                title: new Text('Gallery'),
+                onTap: () {
+                  //select image
+                  selectImage(ImageSource.gallery);
+                  setState(() {});
+                },
+              ),
+              ListTile(
+                leading: new Icon(Icons.camera_alt_outlined),
+                title: new Text('Camera'),
+                onTap: () {
+                  selectImage(ImageSource.camera);
+                  setState(() {});
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  void selectImage(type) async{
+    var image = await _picker.pickImage(source: type);
+    setState(() {
+      outfitImage = File(image!.path); // store the image path in this local variable
+      outfitImageStr = image;
+    });
+    Navigator.pop(context); //when image taken, it will be close bottom sheets.
   }
 
 
