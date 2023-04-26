@@ -20,6 +20,7 @@ class AddTextButton extends StatelessWidget {
             SizedBox(width: 5,),
             Text(text,
               style: TextStyle(
+                color: AppColors.textColor,
                 fontWeight: FontWeight.w600,
               ),
             )

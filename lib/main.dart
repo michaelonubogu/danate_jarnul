@@ -17,6 +17,7 @@ import 'controller/auth_controller/auth_controller.dart';
 import 'model/admirers_model/admirers_model.dart';
 import 'model/auth_model/email_verify_model.dart';
 import 'model/auth_model/initialData_model.dart';
+import 'model/dates_model/dates_screen_model.dart';
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', //id
@@ -43,6 +44,7 @@ void main() async {
     ..init(appDocDir.path)
     ..registerAdapter(InitialDataModelAdapter())
     ..registerAdapter(AdmirerModelAdapter())
+    ..registerAdapter(DatesModelAdapter())
     ..registerAdapter(EmailVerifyModelAdapter());
 
     //initial amdirers profile
@@ -50,6 +52,7 @@ void main() async {
     await Hive.openBox<Map>('email_verify_bd');
     await Hive.openBox<Map>('profile');
     await Hive.openBox<AdmirerModel>("admirers");
+    await Hive.openBox<DatesModel>("dates");
 
   await Firebase.initializeApp();
   MobileAds.instance.initialize();
