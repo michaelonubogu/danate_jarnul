@@ -1,10 +1,12 @@
 import 'dart:math';
 
+import 'package:dante/boxs/boxs.dart';
 import 'package:dante/config/app_config.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/model/auth_model/email_verify_model.dart';
 import 'package:dante/view/auth/verify_email.dart';
 import 'package:dante/view/auth/verify_success.dart';
+import 'package:dante/view/index.dart';
 import 'package:email_otp/email_otp.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -55,7 +57,10 @@ class SendOtp{
 
     AppLoading.appLoading(context: context);
     var res =await myauth.verifyOTP(otp: otp);
+    var existingUser = await AuthController.showEmailVerify();
     print("otp send response ===== ${myauth.sendOTP}");
+    print("otp send response existingUser ===== ${existingUser}");
+    print("otp send response email ===== ${email}");
     if(res){//if otp sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.green,
@@ -63,15 +68,25 @@ class SendOtp{
         content: Text('Email Verified.'),
       ));
 
+      if(existingUser != null && existingUser["email"] == email){
+          print("========= user exist ===========");
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Index()), (route) => false);
+
+      }else {
+      print("========= user not exist ===========");
       var id = new Random().nextInt(1000);
-      var data = {
-        "id" : id,
-        "email" : email,
-        "isVerified" : true,
-        "data" : "${DateTime.now()}"
-      };
+      var data = EmailVerifyModel(
+          id: id,
+          email: email,
+          isVerified: true,
+          isLogin: true
+      );
       //if success, then store data
-      AuthController.emailVerify(data, context);
+      var box = await Boxes.getLogin;
+      box.put("user", data);
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>VerifySuccess()), (route) => false);
+
+      }
 
     }else{ //if otp not sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

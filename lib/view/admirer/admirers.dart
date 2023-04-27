@@ -10,6 +10,7 @@ import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../boxs/boxs.dart';
+import '../../controller/auth_controller/auth_controller.dart';
 import '../../model/admirers_model/admirers_model.dart';
 import 'add_profile.dart';
 
@@ -26,7 +27,18 @@ class _AdmirersState extends State<Admirers> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getLogedInUser();
   }
+
+  //user auth
+  var userId;
+  getLogedInUser()async{
+    var res = await AuthController.showEmailVerify();
+    setState(() {
+      userId = res["id"];
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,25 +65,34 @@ class _AdmirersState extends State<Admirers> {
                 valueListenable: Boxes.getAdmirers.listenable(),
                 builder: (context, box, _) {
                   var data = box.values.toList().cast<AdmirerModel>();
-                  // print("this is admirer === ${data[0].zodiacSign}");
-                  // print("this is admirer === ${box.values.length}");
-                  return box.values.length != 0
+
+                  //empty admirer model list
+                  List<AdmirerModel> shortedData = [];
+
+                  for(var i in data){
+                    if(i.userId == userId.toString()){
+                      shortedData.add(i);
+                    }
+                  }
+
+                  return shortedData.length != 0
                       ? AlphabetScrollView(
                    // list: AdmirersListJson.admirersList.map((e) => AlphaModel(e["name"])).toList(),
-                    list: data.map((e) => AlphaModel(e.admirerName)).toList(),
+                    list: shortedData.map((e) => AlphaModel(e.admirerName)).toList(),
                     itemExtent: 150,
                     itemBuilder: (_, k, id) {
-                      return InkWell(
-                        onTap: ()=>Get.to(SingleAdmirers(admirers: data[k]), transition: Transition.rightToLeft),
+                      print("=== ${data.contains(data[k].userId)}===");
+                      return  InkWell(
+                        onTap: ()=>Get.to(SingleAdmirers(admirers: shortedData[k]), transition: Transition.rightToLeft),
                         child: Container(
                           margin: EdgeInsets.only(bottom: 20),
                           child: ListTile(
                             //contentPadding: EdgeInsets.only(bottom: 20),
                             leading: ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: Image.memory(Uint8List.fromList(data[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
+                                child: Image.memory(Uint8List.fromList(shortedData[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
 
-                            title: Text("${data[k].admirerName}",
+                            title: Text("${shortedData[k].admirerName}",
                               style: TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
                               ),
@@ -80,7 +101,7 @@ class _AdmirersState extends State<Admirers> {
                               children: [
                                 Row(
                                   children: [
-                                    data[k].rate > 80.00
+                                    shortedData[k].rate > 80.00
                                     ? Row(
                                       children: [
                                         Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
@@ -89,7 +110,7 @@ class _AdmirersState extends State<Admirers> {
                                         Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                       ],
                                     )
-                                        : data[k].rate > 60.00
+                                        : shortedData[k].rate > 60.00
                                         ? Row(
                                       children: [
                                         Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
@@ -97,7 +118,7 @@ class _AdmirersState extends State<Admirers> {
                                         Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
                                         Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
                                       ],
-                                    ) :  data[k].rate > 40.00
+                                    ) :  shortedData[k].rate > 40.00
                                         ? Row(
                                       children: [
                                         Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
@@ -105,7 +126,7 @@ class _AdmirersState extends State<Admirers> {
                                         Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
                                         Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
                                       ],
-                                    ) : data[k].rate > 20.00
+                                    ) : shortedData[k].rate > 20.00
                                         ? Row(
                                       children: [
                                         Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
@@ -128,7 +149,7 @@ class _AdmirersState extends State<Admirers> {
                                   children: [
                                     Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
                                     SizedBox(width: 5,),
-                                    Text("${(data[k].rate/10).toStringAsFixed(0)}",
+                                    Text("${(shortedData[k].rate/10).toStringAsFixed(0)}",
                                       style: TextStyle(
                                         fontSize: 14,
                                         color: AppColors.blue
@@ -140,7 +161,7 @@ class _AdmirersState extends State<Admirers> {
                             ),
                           ),
                         ),
-                      );
+                      ) ;
                     },
                     selectedTextStyle: TextStyle(color: AppColors.blue, fontSize: 15,),
                     unselectedTextStyle: TextStyle(color: AppColors.blue.withOpacity(0.7), fontSize: 12),

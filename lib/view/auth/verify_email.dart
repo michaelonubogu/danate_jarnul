@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:dante/controller/auth_controller/sent_opt.dart';
 import 'package:email_otp/email_otp.dart';
 
+import '../../controller/auth_controller/auth_controller.dart';
 import '../../utility/app_colors.dart';
 import '../../view/auth/verify_success.dart';
 import 'package:flutter/material.dart';
@@ -37,6 +38,8 @@ class _EmailVerifyState extends State<EmailVerify> {
     super.initState();
     _startTimer(); // initial the method, it means, when the page is loaded the method was called.
   }
+
+
 
   @override
   void dispose() {
@@ -133,7 +136,7 @@ class _EmailVerifyState extends State<EmailVerify> {
                 SizedBox(height: 6.h,),
 
                 AppButton(
-                  onClick: (){
+                  onClick: ()async{
                     SendOtp.checkOTP(context: context, otp: otp, myauth: widget.myauth, email: widget.email);
                     //rout the next login pages
                   },

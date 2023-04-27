@@ -1,6 +1,8 @@
+import 'package:dante/boxs/boxs.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/view/auth/ask_qustion/get_name.dart';
 import 'package:dante/view/index.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 import '../../utility/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -32,9 +34,14 @@ class _FlashScreenState extends State<FlashScreen> {
   var isVerify;
   getUserRedirect()async{
     var initalData = await AuthController.showInitData();
-    var emailVerify = await AuthController.showEmailVerify();
-     if(initalData != null && initalData["take_info"] ){
-        return Get.offAll(Index(), transition: Transition.rightToLeft);
+    //var login = await AuthController.showEmailVerify();
+    // var box = await Hive.openBox("login");
+   // var box = Boxes.getLogin.listenable();
+
+
+    // print("===== this is box ${box.get("login_data")}");
+     if(initalData != null && initalData["take_info"]){
+        return Get.offAll(WelcomeScreen(), transition: Transition.rightToLeft);
     }else{
       return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
     }

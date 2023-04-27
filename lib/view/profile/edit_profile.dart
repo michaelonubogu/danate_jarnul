@@ -32,13 +32,15 @@ class _EditProfileState extends State<EditProfile> {
   //it help use to take images
 
   //EMAIL
-  var image;
+  var image, userid;
   Future showEmail()async{
     var emailRes = await AuthController.showEmailVerify();
     email.text = emailRes["email"];
+    userid = emailRes["id"];
     var profileRes = await AuthController.showProfile();
+    print("show profile ==== $profileRes");
 
-    if(profileRes != null){
+    if(profileRes != null && profileRes["user_id"] == userid){
      image = profileRes["profile"];
      fName.text = profileRes["f_name"];
      lName.text = profileRes["l_name"];
@@ -254,7 +256,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                   onClick: (){
                       if(profileImage != null){
-                        AuthController.editProfile(fName.text, lName.text, dob.text, email.text, profileImage, context);
+                        AuthController.editProfile(fName.text, lName.text, dob.text, email.text, profileImage, userid, context);
                       }else{
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Upload your profile image."),

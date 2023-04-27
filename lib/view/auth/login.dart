@@ -21,6 +21,13 @@ class _LoginState extends State<Login> {
   final email = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    email.text = "nayon.coders@gmail.com";
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size; 
     return WillPopScope(

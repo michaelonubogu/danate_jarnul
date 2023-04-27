@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:dante/database/local_database.dart';
 import 'package:dante/view/auth/ask_qustion/niceto_meet.dart';
+import 'package:dante/view/auth/login.dart';
 import 'package:dante/view/index.dart';
 import 'package:dante/view/profile/profile.dart';
 import 'package:flutter/material.dart';
@@ -37,16 +38,25 @@ class AuthController{
     print("data === $data");
     var res = await LocalDatabases.EMAIL_VERIFY;
     //await userDB.delete("initial_Data");
-    await res.put("email_verify", data);//insert data
+    await res.add(data);//insert data
     //redirect otp verification page
     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>VerifySuccess()), (route) => false);
     // Prints the map data.
   }
 
+  //this method for store email verify data
+  static Future logout(data, context)async{
+    var res = await LocalDatabases.EMAIL_VERIFY;
+    //await userDB.delete("initial_Data");
+    await res.put("email_verify", data);//insert data
+    //redirect otp verification page
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
+    // Prints the map data.
+  }
   //this method for store user data
   static Future showEmailVerify()async{
     var res = await LocalDatabases.EMAIL_VERIFY;
-    final retrievedData = await res.get('email_verify');
+    final retrievedData = await res.get('dsdasfdas');
     print("this is email verify === $retrievedData");
     return retrievedData;
   }
@@ -55,7 +65,7 @@ class AuthController{
 
 
   // Edit profile
-  static Future editProfile(fname, lname, dob, email, image, context)async{
+  static Future editProfile(fname, lname, dob, email, image, userid, context)async{
     var res = await LocalDatabases.PROFILE;
    // await res.put("user_profile", data);//insert data
 
@@ -66,6 +76,7 @@ class AuthController{
     Uint8List _image = await image.readAsBytes();
     var id = new Random().nextInt(1000);
     var data = {
+      "user_id": userid,
       "id" : "$id",
       "f_name" : fname,
       "l_name" : lname,

@@ -10,12 +10,15 @@ class EmailVerifyModel extends HiveObject{
   final String email;
   @HiveField(2)
   final bool isVerified;
+  @HiveField(3)
+  final bool isLogin;
 
 
   EmailVerifyModel({
     required this.id,
     required this.email,
     required this.isVerified,
+    required this.isLogin,
   });
 
 

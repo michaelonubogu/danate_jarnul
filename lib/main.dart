@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dante/database/local_database.dart';
+import 'package:dante/model/profile_model/profile_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dante/view/flash/flas_screen.dart';
@@ -45,11 +46,13 @@ void main() async {
     ..registerAdapter(InitialDataModelAdapter())
     ..registerAdapter(AdmirerModelAdapter())
     ..registerAdapter(DatesModelAdapter())
+    ..registerAdapter(ProfileModelAdapter())
     ..registerAdapter(EmailVerifyModelAdapter());
 
     //initial amdirers profile
     await Hive.openBox<Map>('initial_Data');
     await Hive.openBox<Map>('email_verify_bd');
+  await Hive.openBox<EmailVerifyModel>('users');
     await Hive.openBox<Map>('profile');
     await Hive.openBox<AdmirerModel>("admirers");
     await Hive.openBox<DatesModel>("dates");

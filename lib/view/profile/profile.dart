@@ -1,3 +1,4 @@
+import 'package:dante/boxs/boxs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -21,9 +22,17 @@ class _ProfileState extends State<Profile> {
 
   Future? showProfileFuture;
   //EMAIL
+  var userid, email, isVerify;
    showProfile()async{
-    var res = await AuthController.showProfile();
-    print("this is profile === $res");
+     var loginRes = await Boxes.getLogin.get("user");
+     // setState(() {
+     //   userid = loginRes["id"];
+     //   email = loginRes["email"];
+     //   isVerify = loginRes["isVerified"];
+     // });
+    var res = await Boxes.getProfile.get("profile_info");
+    print("this is profile === ${loginRes?.email}");
+    print("this is profile === ${res}");
     if(res != null){
       return res;
     }else{
@@ -98,7 +107,8 @@ class _ProfileState extends State<Profile> {
                    ),
                  );
                }else if(snapshot.hasData){
-                 return Container(
+                 return snapshot.data["user_id"] == userid ?
+                  Container(
                    width: size.width,
                    padding: EdgeInsets.all(30),
                    height: 30.h,
@@ -138,49 +148,9 @@ class _ProfileState extends State<Profile> {
                        )
                      ],
                    ),
-                 );
+                 ):buildEditProfile(size);
                }else{
-                 return Container(
-                   width: size.width,
-                   padding: EdgeInsets.all(30),
-                   height: 30.h,
-                   decoration: BoxDecoration(
-                       color: AppColors.white
-                   ),
-                   child: Column(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     crossAxisAlignment: CrossAxisAlignment.center,
-                     children: [
-                       ClipRRect(
-                         borderRadius: BorderRadius.circular(10),
-                         child: Image.asset("assets/images/profile.jpeg", height: 120, width: 120,),
-                       ),
-                       SizedBox(height: 20,),
-                       Text("Edit Your Profile",
-                         style: TextStyle(
-                             fontSize: 15,
-                             color: AppColors.textColor,
-                             fontWeight: FontWeight.w600
-                         ),
-                       ),
-                       SizedBox(height: 10,),
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           Icon(Icons.date_range, color: AppColors.mainColor,),
-                           SizedBox(width: 10,),
-                           Text("January 15",
-                             style: TextStyle(
-                                 fontSize: 13,
-                                 color: AppColors.textColor,
-                                 fontWeight: FontWeight.w400
-                             ),
-                           ),
-                         ],
-                       )
-                     ],
-                   ),
-                 );
+                 return buildEditProfile(size);
                }
               }
             ),
@@ -210,6 +180,16 @@ class _ProfileState extends State<Profile> {
                   buildProfileItems(
                     image: "assets/icons/logout.png",
                     title: "Logout",
+                    onClick: ()async{
+                      var data = {
+                        "id" : userid,
+                        "email" : email,
+                        "isVerified" : isVerify,
+                        "data" : "${DateTime.now()}",
+                        "isLogin" : false,
+                      };
+                      AuthController.logout(data,context);
+                    }
                   )
 
 
@@ -222,7 +202,52 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Container buildProfileItems({required String image, required String title, bool isTrailing = false }) {
+  Container buildEditProfile(Size size) {
+    return Container(
+                 width: size.width,
+                 padding: EdgeInsets.all(30),
+                 height: 30.h,
+                 decoration: BoxDecoration(
+                     color: AppColors.white
+                 ),
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   crossAxisAlignment: CrossAxisAlignment.center,
+                   children: [
+                     ClipRRect(
+                       borderRadius: BorderRadius.circular(10),
+                       child: Image.asset("assets/images/profile.jpeg", height: 120, width: 120,),
+                     ),
+                     SizedBox(height: 20,),
+                     Text("Edit Your Profile",
+                       style: TextStyle(
+                           fontSize: 15,
+                           color: AppColors.textColor,
+                           fontWeight: FontWeight.w600
+                       ),
+                     ),
+                     SizedBox(height: 10,),
+                     Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Icon(Icons.date_range, color: AppColors.mainColor,),
+                         SizedBox(width: 10,),
+                         Text("January 15",
+                           style: TextStyle(
+                               fontSize: 13,
+                               color: AppColors.textColor,
+                               fontWeight: FontWeight.w400
+                           ),
+                         ),
+                       ],
+                     )
+                   ],
+                 ),
+               );
+  }
+
+  Container buildProfileItems(
+  {required String image, required String title, bool isTrailing = false, VoidCallback? onClick } ) {
     return Container(
                   margin: EdgeInsets.only(bottom: 10),
                   decoration: BoxDecoration(
@@ -230,6 +255,7 @@ class _ProfileState extends State<Profile> {
                       color: AppColors.white
                   ),
                   child: ListTile(
+                    onTap: onClick,
                     contentPadding: EdgeInsets.zero,
                     leading: Container(
                       width: 55, height: 55,
