@@ -6,26 +6,27 @@ part of 'email_verify_model.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class EmailVerifyModelAdapter extends TypeAdapter<EmailVerifyModel> {
+class EmailVerifyModelAdapter extends TypeAdapter<LoginModel> {
   @override
   final int typeId = 1;
 
   @override
-  EmailVerifyModel read(BinaryReader reader) {
+  LoginModel read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return EmailVerifyModel(
+    return LoginModel(
       id: fields[0] as int,
       email: fields[1] as String,
       isVerified: fields[2] as bool,
       isLogin: fields[3] as bool,
+      token: fields[4] as String,
     );
   }
 
   @override
-  void write(BinaryWriter writer, EmailVerifyModel obj) {
+  void write(BinaryWriter writer, LoginModel obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
@@ -35,7 +36,9 @@ class EmailVerifyModelAdapter extends TypeAdapter<EmailVerifyModel> {
       ..writeByte(2)
       ..write(obj.isVerified)
       ..writeByte(3)
-      ..write(obj.isLogin);
+      ..write(obj.isLogin)
+      ..writeByte(4)
+      ..write(obj.token);
   }
 
   @override

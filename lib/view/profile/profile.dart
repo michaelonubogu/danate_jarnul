@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dante/boxs/boxs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +9,7 @@ import 'package:iconly/iconly.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controller/auth_controller/auth_controller.dart';
+import '../../model/profile_model/profile_model.dart';
 import '../../utility/app_colors.dart';
 import 'edit_profile.dart';
 
@@ -20,21 +23,23 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   bool status = false;
 
-  Future? showProfileFuture;
+  Future<ProfileModel>? showProfileFuture;
+
+
   //EMAIL
-  var userid, email, isVerify;
+  var userid, email, fname, lname, image, isVerify;
    showProfile()async{
-     var loginRes = await Boxes.getLogin.get("user");
-     // setState(() {
-     //   userid = loginRes["id"];
-     //   email = loginRes["email"];
-     //   isVerify = loginRes["isVerified"];
-     // });
-    var res = await Boxes.getProfile.get("profile_info");
-    print("this is profile === ${loginRes?.email}");
-    print("this is profile === ${res}");
-    if(res != null){
-      return res;
+     var loginRes = await Boxes.getLogin.get("users");
+     userid = loginRes?.id;
+     var profiles = (await Boxes.getProfile.get("${userid}"))!;
+
+    if(profiles.userId.toString() == userid.toString()){
+      setState(() {
+        fname = profiles.fName;
+        lname = profiles.lName;
+        image = profiles.profile;
+      });
+      return profiles;
     }else{
       return Get.to(EditProfile());
     }
@@ -45,12 +50,13 @@ class _ProfileState extends State<Profile> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    showProfileFuture = showProfile();
+    showProfile();
   }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: AppColors.bgColor,
       //profile app bar 
@@ -86,74 +92,49 @@ class _ProfileState extends State<Profile> {
         //padding: EdgeInsets.all(30),
         child: Column(
           children: [
-            //profile image section
-            FutureBuilder(
-              future: showProfileFuture,
-              builder: (context,AsyncSnapshot<dynamic> snapshot) {
-               if(snapshot.connectionState == ConnectionState.waiting){
-                 return Container(
-                   width: size.width,
-                   padding: EdgeInsets.all(30),
-                   height: 30.h,
-                   decoration: BoxDecoration(
-                       color: AppColors.white
-                   ),
-                   child: Column(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     crossAxisAlignment: CrossAxisAlignment.center,
-                     children: [
-                      CircularProgressIndicator(color: AppColors.mainColor, strokeWidth: 4,)
-                     ],
-                   ),
-                 );
-               }else if(snapshot.hasData){
-                 return snapshot.data["user_id"] == userid ?
-                  Container(
-                   width: size.width,
-                   padding: EdgeInsets.all(30),
-                   height: 30.h,
-                   decoration: BoxDecoration(
-                       color: AppColors.white
-                   ),
-                   child: Column(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     crossAxisAlignment: CrossAxisAlignment.center,
-                     children: [
-                       ClipRRect(
-                         borderRadius: BorderRadius.circular(10),
-                         child: Image.memory(Uint8List.fromList(snapshot.data["profile"]), height: 120, width: 120, fit: BoxFit.cover),
-                       ),
-                       SizedBox(height: 20,),
-                       Text("${snapshot.data["f_name"]} ${snapshot.data["l_name"]}",
-                         style: TextStyle(
-                             fontSize: 15,
-                             color: AppColors.textColor,
-                             fontWeight: FontWeight.w600
-                         ),
-                       ),
-                       SizedBox(height: 10,),
-                       Row(
-                         mainAxisAlignment: MainAxisAlignment.center,
-                         children: [
-                           Icon(Icons.date_range, color: AppColors.mainColor,),
-                           SizedBox(width: 10,),
-                           Text("January 15",
-                             style: TextStyle(
-                                 fontSize: 13,
-                                 color: AppColors.textColor,
-                                 fontWeight: FontWeight.w400
-                             ),
-                           ),
-                         ],
-                       )
-                     ],
-                   ),
-                 ):buildEditProfile(size);
-               }else{
-                 return buildEditProfile(size);
-               }
-              }
-            ),
+
+          fname != null ? Container(
+          width: size.width,
+          padding: EdgeInsets.all(30),
+          height: 30.h,
+          decoration: BoxDecoration(
+              color: AppColors.white
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child:  Image.memory(image, height: 120, width: 120, fit: BoxFit.cover),
+              ),
+              SizedBox(height: 20,),
+              Text("${fname} ${lname}",
+                style: TextStyle(
+                    fontSize: 15,
+                    color: AppColors.textColor,
+                    fontWeight: FontWeight.w600
+                ),
+              ),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.date_range, color: AppColors.mainColor,),
+                  SizedBox(width: 10,),
+                  Text("January 15",
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.textColor,
+                        fontWeight: FontWeight.w400
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ):buildEditProfile(size),
+
 
             Padding(
               padding: EdgeInsets.all(30),
@@ -299,5 +280,42 @@ class _ProfileState extends State<Profile> {
                 );
   }
 
+
+  Future<void> _showLogoutPopup() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Are you sure?'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: const <Widget>[
+                Text('Are you sure? Do you want to logout?'),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Yes'),
+              onPressed: () {
+               _logout();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _logout() async{
+
+  }
 
 }

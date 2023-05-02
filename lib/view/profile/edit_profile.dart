@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
+import '../../boxs/boxs.dart';
 import '../../utility/app_colors.dart';
 
 class EditProfile extends StatefulWidget {
@@ -34,19 +35,25 @@ class _EditProfileState extends State<EditProfile> {
   //EMAIL
   var image, userid;
   Future showEmail()async{
-    var emailRes = await AuthController.showEmailVerify();
-    email.text = emailRes["email"];
-    userid = emailRes["id"];
-    var profileRes = await AuthController.showProfile();
-    print("show profile ==== $profileRes");
+    var loginRes = await Boxes.getLogin.get("users");
+    userid = loginRes?.id;
 
-    if(profileRes != null && profileRes["user_id"] == userid){
-     image = profileRes["profile"];
-     fName.text = profileRes["f_name"];
-     lName.text = profileRes["l_name"];
-     dob.text = profileRes["dob"];
+    print("user id == ${userid}");
+
+    var profile = (await Boxes.getProfile.get("${userid}"))!;
+
+    email.text = (loginRes?.email != null ? loginRes?.email! : "")!;
+
+    if(profile.userId.toString() == userid.toString()){
+     setState(() {
+       image = profile.profile;
+       fName.text = profile.fName;
+       lName.text = profile.lName;
+       dob.text = profile.dob;
+     });
+
+     print("---- ${fName.text}");
    }
-    setState(() {});
 
 
   }

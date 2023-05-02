@@ -7,7 +7,6 @@ import 'package:dante/view/admirer/single_admirers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../boxs/boxs.dart';
 import '../../controller/auth_controller/auth_controller.dart';
@@ -33,10 +32,10 @@ class _AdmirersState extends State<Admirers> {
   //user auth
   var userId;
   getLogedInUser()async{
-    var res = await AuthController.showEmailVerify();
-    setState(() {
-      userId = res["id"];
-    });
+    var loginRes = await Boxes.getLogin.get("users");
+   setState(() {
+     userId = loginRes?.id;
+   });
   }
 
   @override

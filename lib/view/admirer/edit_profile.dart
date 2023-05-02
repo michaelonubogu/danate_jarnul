@@ -685,8 +685,8 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
             AppButton(
               onClick: ()async{
                 //get user id
-                var res = await AuthController.showEmailVerify();
-                var userId = res["id"];
+                var res = await Boxes.getLogin.get("users");
+                var userId = res?.id;
                 print("this is user id ==== ${userId}");
                 //id
                 //image convert

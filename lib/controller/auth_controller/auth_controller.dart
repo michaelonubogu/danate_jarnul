@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:dante/boxs/boxs.dart';
 import 'package:dante/database/local_database.dart';
+import 'package:dante/model/profile_model/profile_model.dart';
 import 'package:dante/view/auth/ask_qustion/niceto_meet.dart';
 import 'package:dante/view/auth/login.dart';
 import 'package:dante/view/index.dart';
@@ -66,7 +68,7 @@ class AuthController{
 
   // Edit profile
   static Future editProfile(fname, lname, dob, email, image, userid, context)async{
-    var res = await LocalDatabases.PROFILE;
+    var res = await Boxes.getProfile;
    // await res.put("user_profile", data);//insert data
 
     List<int> imageBytes = await image.readAsBytes();
@@ -75,18 +77,17 @@ class AuthController{
 
     Uint8List _image = await image.readAsBytes();
     var id = new Random().nextInt(1000);
-    var data = {
-      "user_id": userid,
-      "id" : "$id",
-      "f_name" : fname,
-      "l_name" : lname,
-      "dob" : dob,
-      "email" : email,
-      "profile" : _image
-    };
+    var data = ProfileModel(
+        userId: userid.toString(),
+        id: id.toString(),
+        email: email,
+        dob: dob,
+        profile: _image,
+        fName: fname,
+        lName: lname
+    );
 
-    await res.put("profile_info", data);//insert data
-    print("print profile edit data === $data");
+    await res.put("$userid", data);//insert data
     //redirect otp verification page
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text("Profile Updated!"),

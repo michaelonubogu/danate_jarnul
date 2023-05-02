@@ -1,6 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive_generator/hive_generator.dart';
 
 part 'profile_model.g.dart';
 
@@ -37,7 +38,7 @@ class ProfileModel extends HiveObject{
   final String email;
 
   @HiveField(6)
-  final String profile;
+  final Uint8List profile;
 
 
 

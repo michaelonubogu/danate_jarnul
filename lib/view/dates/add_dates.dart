@@ -13,6 +13,7 @@ import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../model/admirers_model/admirers_model.dart';
 import '../../model/dates_model/dates_screen_model.dart';
 import '../../utility/app_input_rightIcons.dart';
 import '../../utility/app_colors.dart';
@@ -84,6 +85,22 @@ class _AddDatesState extends State<AddDates> {
     if (!mounted) return;
     location.text = result;
     print("this is result location $result");
+  }
+
+  //user auth
+  var userId;
+  getLogedInUser()async{
+    var loginRes = await Boxes.getLogin.get("users");
+    setState(() {
+      userId = loginRes?.id;
+    });
+  }
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLogedInUser(); 
   }
 
 
@@ -346,9 +363,10 @@ class _AddDatesState extends State<AddDates> {
               SizedBox(height: 15,),
           outFitList.length != 0
               ? Container(
+            width: size.width,
                padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
+                  color: Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(10)
                 ),
                 child:SizedBox(
@@ -640,7 +658,7 @@ class _AddDatesState extends State<AddDates> {
                             purses: purseCheck
                         );
                         var box = await Boxes.getDates;
-                        box.put("${id}", data);
+                        box.put("dates", data);
                         Get.to(Index(index: 0,), transition: Transition.rightToLeft);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("New Date Added!"),
@@ -711,6 +729,7 @@ class _AddDatesState extends State<AddDates> {
                       itemCount:  Boxes.getAdmirers.length,
                       itemBuilder: (_, index){
                         var data = Boxes.getAdmirers.getAt(index);
+
                         print("this is admirers $data");
                         return InkWell(
                           onTap: (){

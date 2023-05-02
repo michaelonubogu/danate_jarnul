@@ -554,8 +554,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             AppButton(
               onClick: ()async{
                 //get user id
-                var res = await AuthController.showEmailVerify();
-                var userId = res["id"];
+                var res = await Boxes.getLogin.get("users");
+                var userId = res?.id;
                 //id
                 var id = new Random().nextInt(1000);
 
@@ -580,7 +580,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     socialMedia: socialMediaList
                 );
                var box = await Boxes.getAdmirers;
-                box.put("${id}",data);
+                box.put("admirers_profiles",data);
                Get.to(Index(index: 2,), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Added!"),

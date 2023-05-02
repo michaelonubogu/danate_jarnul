@@ -10,7 +10,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:hive/hive.dart';
 import 'package:sizer/sizer.dart';
 
@@ -41,6 +40,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory appDocDir = await getApplicationDocumentsDirectory();
 
+  print("program is run");
+
  await Hive
     ..init(appDocDir.path)
     ..registerAdapter(InitialDataModelAdapter())
@@ -49,16 +50,15 @@ void main() async {
     ..registerAdapter(ProfileModelAdapter())
     ..registerAdapter(EmailVerifyModelAdapter());
 
-    //initial amdirers profile
-    await Hive.openBox<Map>('initial_Data');
-    await Hive.openBox<Map>('email_verify_bd');
-  await Hive.openBox<EmailVerifyModel>('users');
-    await Hive.openBox<Map>('profile');
+    //initial admirers profile
+    await Hive.openBox<Map>('initial_Data'); 
+    await Hive.openBox<LoginModel>('login');
+    await Hive.openBox<ProfileModel>('profiles');
     await Hive.openBox<AdmirerModel>("admirers");
     await Hive.openBox<DatesModel>("dates");
 
   await Firebase.initializeApp();
-  MobileAds.instance.initialize();
+  // MobileAds.instance.initialize(); // comment this, face problem//
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
