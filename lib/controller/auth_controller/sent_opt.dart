@@ -29,6 +29,7 @@ class SendOtp{
         otpType: OTPType.digitsOnly
     );
     print("otp send response ===== ${myauth.sendOTP}");
+
     if(await myauth.sendOTP() == true){//if otp sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.green,
@@ -75,11 +76,11 @@ class SendOtp{
       print(token);
       //add token in sharedPreferences storage
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("token", token);
+      prefs.setString("token", token.toString());
 
 
       //if existing user
-      if(existingUser != null && existingUser.email == email){
+      if(existingUser != null && existingUser.token == token){
           print("========= user exist ===========");
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Index()), (route) => false);
       }else {

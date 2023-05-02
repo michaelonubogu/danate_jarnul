@@ -10,22 +10,26 @@ class LoginModel extends HiveObject{
   @HiveField(1)
   final String email;
 
+  @HiveField(4)
+  final dynamic token;
+
   @HiveField(2)
   final bool isVerified;
 
   @HiveField(3)
   final bool isLogin;
-
-  @HiveField(4)
-  final String token;
+  //
+  // @HiveField(4)
+  // final String? token;
 
 
   LoginModel({
     required this.id,
     required this.email,
+    required this.token,
     required this.isVerified,
     required this.isLogin,
-    required this.token,
+     // this.token,
   });
 
 

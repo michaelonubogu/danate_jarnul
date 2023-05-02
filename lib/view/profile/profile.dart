@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../controller/auth_controller/auth_controller.dart';
@@ -29,20 +30,27 @@ class _ProfileState extends State<Profile> {
   //EMAIL
   var userid, email, fname, lname, image, isVerify;
    showProfile()async{
+     SharedPreferences prefes = await SharedPreferences.getInstance();
+     var token = prefes.getString("token");
+
+
      var loginRes = await Boxes.getLogin.get("users");
      userid = loginRes?.id;
-     var profiles = (await Boxes.getProfile.get("${userid}"))!;
+     var profiles = await Boxes.getProfile.get("${userid}");
 
-    if(profiles.userId.toString() == userid.toString()){
-      setState(() {
-        fname = profiles.fName;
-        lname = profiles.lName;
-        image = profiles.profile;
-      });
-      return profiles;
-    }else{
-      return Get.to(EditProfile());
-    }
+     if(profiles != null){
+       if(loginRes?.token.toString() == token.toString()){
+         setState(() {
+           fname = profiles.fName;
+           lname = profiles.lName;
+           image = profiles.profile;
+         });
+         return profiles;
+       }
+     }else{
+       return Get.to(EditProfile());
+     }
+
 
   }
 
@@ -162,14 +170,15 @@ class _ProfileState extends State<Profile> {
                     image: "assets/icons/logout.png",
                     title: "Logout",
                     onClick: ()async{
-                      var data = {
-                        "id" : userid,
-                        "email" : email,
-                        "isVerified" : isVerify,
-                        "data" : "${DateTime.now()}",
-                        "isLogin" : false,
-                      };
-                      AuthController.logout(data,context);
+                      _showLogoutPopup();
+                      // var data = {
+                      //   "id" : userid,
+                      //   "email" : email,
+                      //   "isVerified" : isVerify,
+                      //   "data" : "${DateTime.now()}",
+                      //   "isLogin" : false,
+                      // };
+                      // AuthController.logout(data,context);
                     }
                   )
 
@@ -291,7 +300,7 @@ class _ProfileState extends State<Profile> {
           content: SingleChildScrollView(
             child: ListBody(
               children: const <Widget>[
-                Text('Are you sure? Do you want to logout?'),
+                Text('Do you want to logout?'),
               ],
             ),
           ),

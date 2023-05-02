@@ -1,7 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:dante/database/local_database.dart';
-import 'package:dante/json/admirors_json.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/admirer/single_admirers.dart';
 import 'package:flutter/material.dart';
@@ -165,7 +164,9 @@ class _AdmirersState extends State<Admirers> {
                     selectedTextStyle: TextStyle(color: AppColors.blue, fontSize: 15,),
                     unselectedTextStyle: TextStyle(color: AppColors.blue.withOpacity(0.7), fontSize: 12),
                   )
-                      : Center(child: Text("You don't have any Admirer yet!"),);
+                      : Center(child: Text("You don't have any Admirer yet!\nAdd new admirer.",
+                      textAlign: TextAlign.center,
+                    ),);
                 }
               ),
             ),

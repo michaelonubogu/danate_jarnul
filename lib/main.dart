@@ -40,25 +40,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Directory appDocDir = await getApplicationDocumentsDirectory();
 
-  print("program is run");
-
  await Hive
     ..init(appDocDir.path)
     ..registerAdapter(InitialDataModelAdapter())
     ..registerAdapter(AdmirerModelAdapter())
     ..registerAdapter(DatesModelAdapter())
     ..registerAdapter(ProfileModelAdapter())
-    ..registerAdapter(EmailVerifyModelAdapter());
+    ..registerAdapter(LoginModelAdapter())
+  ;
 
-    //initial admirers profile
-    await Hive.openBox<Map>('initial_Data'); 
+    //initial amdirers profile
+    await Hive.openBox<Map>('initial_Data');
     await Hive.openBox<LoginModel>('login');
     await Hive.openBox<ProfileModel>('profiles');
     await Hive.openBox<AdmirerModel>("admirers");
     await Hive.openBox<DatesModel>("dates");
 
   await Firebase.initializeApp();
-  // MobileAds.instance.initialize(); // comment this, face problem//
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 

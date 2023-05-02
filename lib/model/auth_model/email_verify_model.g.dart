@@ -6,7 +6,7 @@ part of 'email_verify_model.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class EmailVerifyModelAdapter extends TypeAdapter<LoginModel> {
+class LoginModelAdapter extends TypeAdapter<LoginModel> {
   @override
   final int typeId = 1;
 
@@ -21,14 +21,14 @@ class EmailVerifyModelAdapter extends TypeAdapter<LoginModel> {
       email: fields[1] as String,
       isVerified: fields[2] as bool,
       isLogin: fields[3] as bool,
-      token: fields[4] as String,
+      token: fields[4] as dynamic,
     );
   }
 
   @override
   void write(BinaryWriter writer, LoginModel obj) {
     writer
-      ..writeByte(4)
+      ..writeByte(5)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +47,7 @@ class EmailVerifyModelAdapter extends TypeAdapter<LoginModel> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is EmailVerifyModelAdapter &&
+      other is LoginModelAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

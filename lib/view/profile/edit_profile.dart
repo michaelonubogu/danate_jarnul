@@ -7,6 +7,7 @@ import 'package:dob_input_field/dob_input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../boxs/boxs.dart';
@@ -35,21 +36,32 @@ class _EditProfileState extends State<EditProfile> {
   //EMAIL
   var image, userid;
   Future showEmail()async{
+
+    SharedPreferences prefes = await SharedPreferences.getInstance();
+    var token = prefes.getString("token");
+
+
+
     var loginRes = await Boxes.getLogin.get("users");
     userid = loginRes?.id;
 
     print("user id == ${userid}");
 
-    var profile = (await Boxes.getProfile.get("${userid}"))!;
+    var profile = await Boxes.getProfile.get("${userid}");
 
-    email.text = (loginRes?.email != null ? loginRes?.email! : "")!;
+    //assign email
+    setState(() {
+      email.text = (loginRes?.email != null ? loginRes?.email! : "")!;
+    });
 
-    if(profile.userId.toString() == userid.toString()){
+    //check token
+    if(loginRes?.token.toString() == token.toString()){
      setState(() {
-       image = profile.profile;
-       fName.text = profile.fName;
-       lName.text = profile.lName;
-       dob.text = profile.dob;
+       //assign value
+       image = profile?.profile;
+       fName.text = (profile?.fName != null ? profile?.fName : "")!;
+       lName.text = (profile?.lName != null ? profile?.fName : "")!;
+       dob.text = (profile?.dob != null ? profile?.dob : "")!;
      });
 
      print("---- ${fName.text}");

@@ -49,7 +49,23 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
 
   double _value = 30.0;
 
-  String dropdownValue = 'One';
+  String? zodiacSelectedValue;
+
+  final List<String> zodiacList = [
+    'Cancer',
+    'Sagittarius',
+    'Leo',
+    'Libra',
+    'Gemini',
+    'Taurus',
+    'Virgo',
+    'Pisces',
+    'Aquarius',
+    'Aries',
+    'Capricorn',
+    'Scorpio'
+  ];
+
   final List<String> items = [
     'Facebook',
     'Instagram',
@@ -328,16 +344,62 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
             SizedBox(height: 15,),
-            TextFormField(
-              controller: zodiac_sign,
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Choose Sign",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
+            // TextFormField(
+            //   controller: zodiac_sign,
+            //   decoration: InputDecoration(
+            //       filled: true,
+            //       fillColor: Colors.white,
+            //       hintText: "Choose Sign",
+            //       border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //           borderSide: BorderSide.none
+            //       )
+            //   ),
+            // ),
+            Container(
+              width: size.width,
+              height: 60,
+              padding: EdgeInsets.only(left: 15, right: 15),
+              decoration: BoxDecoration(
+                color: AppColors.white,
+                borderRadius: BorderRadius.circular(10)
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2(
+                  hint: Text(
+                    'Select Zodiac',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                  items: zodiacList
+                      .map((item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  )).toList(),
+
+
+                  value: zodiacSelectedValue,
+                  onChanged: (value) {
+                    setState(() {
+                      zodiacSelectedValue = value as String;
+                      zodiac_sign.text = zodiacSelectedValue!;
+                    });
+                  },
+                  buttonStyleData: const ButtonStyleData(
+                    height: 40,
+                    width: 140,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 40,
+                  ),
+                ),
               ),
             ),
 

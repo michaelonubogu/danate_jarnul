@@ -5,7 +5,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 part 'profile_model.g.dart';
 
-@HiveType(typeId: 5)
+@HiveType(typeId: 4)
 class ProfileModel extends HiveObject{
 
   ProfileModel({
@@ -39,12 +39,6 @@ class ProfileModel extends HiveObject{
 
   @HiveField(6)
   final Uint8List profile;
-
-
-
-
-
-
 
 
 }
