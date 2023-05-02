@@ -38,13 +38,24 @@ class _FlashScreenState extends State<FlashScreen> {
     var token = prefs.get("token"); //get the token
 
     var login = await Boxes.getLogin.get("users");
-    print("this is loin user data ==== ${login?.token}");
+    print("this is loin user data ==== ${Boxes.getLogin.length}");
 
-     if(token!= null && login?.token == token){
+    //show all login data
+    for(var i = 0; i < Boxes.getLogin.length; i ++){
+
+      //store data with index
+      var data = Boxes.getLogin.getAt(i);
+      print("this is all token ${data?.token}");
+
+      //check token
+      if(token!= null && data?.token == token){
         return Get.offAll(Index(), transition: Transition.rightToLeft);
-    }else{
-      return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
+      }else{
+        return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
+      }
+
     }
+
 
 
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dante/boxs/boxs.dart';
+import 'package:dante/view/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -324,7 +325,9 @@ class _ProfileState extends State<Profile> {
   }
 
   void _logout() async{
-
+     SharedPreferences prefs = await SharedPreferences.getInstance(); 
+     prefs.remove("token"); 
+     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
   }
 
 }

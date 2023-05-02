@@ -13,12 +13,10 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hive/hive.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
-import '../../database/local_database.dart';
 import '../../utility/app_button.dart';
 import '../index.dart';
 
@@ -294,48 +292,30 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
             SizedBox(height: 30,),
-            Text("Date of Birth",
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            SizedBox(height: 15,),
-            // DateFormatField(
-            //     type: DateFormatType.type4,
-            //     addCalendar: false,
-            //     decoration: InputDecoration(
-            //         hintText: "DD-MM-YYYY",
-            //         filled: true,
-            //         fillColor: Colors.white,
-            //         border: OutlineInputBorder(
-            //             borderSide: BorderSide.none
-            //         )
-            //     ),
-            //     onComplete: (date){
-            //       setState(() {
-            //         dob.text = DateFormat("dd-MM-yyyy").format(date!);
-            //       });
-            //       print("this date of birth ${dob.text}");
-            //     }
+            // Text("Date of Birth",
+            //   style: TextStyle(
+            //     fontSize: 16,
+            //     fontWeight: FontWeight.w600,
+            //   ),
             // ),
-            TextFormField(
-              onTap: ()=>selectDate(),
-              readOnly: true,
-              controller: dob,
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "YYYY-MM-DD",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
-              ),
-            ),
-
-            SizedBox(height: 30,),
+            //
+            // SizedBox(height: 15,),
+            // TextFormField(
+            //   onTap: ()=>selectDate(),
+            //   readOnly: true,
+            //   controller: dob,
+            //   decoration: InputDecoration(
+            //       filled: true,
+            //       fillColor: Colors.white,
+            //       hintText: "YYYY-MM-DD",
+            //       border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //           borderSide: BorderSide.none
+            //       )
+            //   ),
+            // ),
+            //
+            // SizedBox(height: 30,),
 
             Text("Zodiac Sign",
               style: TextStyle(
@@ -633,7 +613,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     userId: "$userId",
                     profile: _profileImage,
                     featureImages: _featureImage ,
-                    dob: dob.text,
+                    dob: "remove by client",
                     zodiacSign: zodiac_sign.text,
                     rate: _value,
                     description: description.text,

@@ -21,6 +21,8 @@ class SendOtp{
   static Future sendOTP({required BuildContext context,  required String email})async{
     AppLoading.appLoading(context: context);
     EmailOTP myauth = EmailOTP();
+
+    //otp config
     myauth.setConfig(
         appEmail: AppConfig.APP_MAIL,
         appName: "Dante - Digital Dating Journal: Verify you email. ",
@@ -28,7 +30,6 @@ class SendOtp{
         otpLength: 5,
         otpType: OTPType.digitsOnly
     );
-    print("otp send response ===== ${myauth.sendOTP}");
 
     if(await myauth.sendOTP() == true){//if otp sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -58,8 +59,8 @@ class SendOtp{
     AppLoading.appLoading(context: context);
     var res =await myauth.verifyOTP(otp: otp);
     var existingUser = await Boxes.getLogin.get("users");
-    print("otp send response existingUser ===== ${existingUser?.id}");
-    print("otp send response email ===== ${email}");
+
+
     if(res){
       //if otp sent
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -74,33 +75,48 @@ class SendOtp{
       final length = 32;
       String token = String.fromCharCodes(Iterable.generate(length, (_) => chars.codeUnitAt(random.nextInt(chars.length))));
       print(token);
+
+
       //add token in sharedPreferences storage
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString("token", token.toString());
 
+      //show all login data
+      for(var i = 0; i < Boxes.getLogin.length; i ++){
+        //store data with index
+        var data = Boxes.getLogin.getAt(i);
+        print("this is all token ${data?.token}");
 
-      //if existing user
-      if(existingUser != null && existingUser.token == token){
-          print("========= user exist ===========");
+        //check token
+        //this mean user is exit
+        if(data!= null && data?.email == email){
+          //user is exit, and redirect to the home pages
+          print("=================== user is exit =========================");
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Index()), (route) => false);
-      }else {
-      print("========= user not exist ===========");
-      var id = new Random().nextInt(1000);
-      var data = LoginModel(
-          id: id,
-          email: email,
-          isVerified: true,
-          isLogin: true,
-          token: token
-      );
-      //if success, then store data
-      var box = await Boxes.getLogin;
-      box.put("users", data);
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>VerifySuccess()), (route) => false);
+        }else{
+          print("=================== user is not exit =========================");
+          //this mean user is not exit
+          //now create a new user
+          prefs.setString("token", token.toString()); //store the token data
+
+          //create random user id
+          var id = new Random().nextInt(1000);
+          var data = LoginModel(
+              id: id,
+              email: email,
+              isVerified: true,
+              isLogin: true,
+              token: token
+          );
+          //if success, then store data
+          var box = await Boxes.getLogin;
+          box.put("users", data);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>VerifySuccess()), (route) => false);
+        }
 
       }
 
-    }else{ //if otp not sent
+
+    }else{
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         backgroundColor: Colors.red,
         duration: Duration(milliseconds: 3500),
