@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:dante/model/auth_model/email_verify_model.dart';
 import 'package:intl/intl.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/utility/app_button.dart';
@@ -36,14 +37,20 @@ class _EditProfileState extends State<EditProfile> {
   //EMAIL
   var image, userid;
   Future showEmail()async{
+    List userTokenList = [];
+    List<LoginModel> users = [];
 
     SharedPreferences prefes = await SharedPreferences.getInstance();
     var token = prefes.getString("token");
 
 
-
-    var loginRes = await Boxes.getLogin.get("users");
-    userid = loginRes?.id;
+    for(var i = 0; i < Boxes.getLogin.length; i ++){
+      //store data with index
+      var data = Boxes.getLogin.getAt(i);
+      users.add(Boxes.getLogin.getAt(i)!);
+      userTokenList.add(Boxes.getLogin.getAt(i)!.token);
+    }
+    userid = users[0]?.id;
 
     print("user id == ${userid}");
 
@@ -51,11 +58,11 @@ class _EditProfileState extends State<EditProfile> {
 
     //assign email
     setState(() {
-      email.text = (loginRes?.email != null ? loginRes?.email! : "")!;
+      email.text = users[0].email;
     });
 
     //check token
-    if(loginRes?.token.toString() == token.toString()){
+    if(userTokenList.contains(token)){
      setState(() {
        //assign value
        image = profile?.profile;

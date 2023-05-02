@@ -1,14 +1,10 @@
 import 'package:dante/boxs/boxs.dart';
-import 'package:dante/controller/auth_controller/auth_controller.dart';
-import 'package:dante/view/auth/ask_qustion/get_name.dart';
+import 'package:dante/view/auth/login.dart';
 import 'package:dante/view/index.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../welcome/welcome.dart';
 
 class FlashScreen extends StatefulWidget {
@@ -30,31 +26,34 @@ class _FlashScreenState extends State<FlashScreen> {
     });
   }
 
-  var id;
-  var take_info;
-  var isVerify;
+
   getUserRedirect()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var token = prefs.get("token"); //get the token
 
-    var login = await Boxes.getLogin.get("users");
-    print("this is loin user data ==== ${Boxes.getLogin.length}");
+    print("this is token ==== ${token}");
+    List userToken = []; 
 
-    //show all login data
-    for(var i = 0; i < Boxes.getLogin.length; i ++){
-
-      //store data with index
-      var data = Boxes.getLogin.getAt(i);
-      print("this is all token ${data?.token}");
-
+    if(token != null ){
+      //show all login data
+      for(var i = 0; i < Boxes.getLogin.length; i ++){
+        //store data with index
+        var data = Boxes.getLogin.getAt(i);
+        print("this is user data ==== ${data?.email}");
+        userToken.add(data?.token);
+      }
       //check token
-      if(token!= null && data?.token == token){
+      if(userToken.contains(token)){
+        print("========== user is exit =============");
         return Get.offAll(Index(), transition: Transition.rightToLeft);
       }else{
-        return Get.to(WelcomeScreen(), transition: Transition.rightToLeft);
+        print("========== user is not exit =============");
+        return Get.offAll(Login(), transition: Transition.rightToLeft);
       }
-
+    }else{
+      return Get.offAll(WelcomeScreen(), transition: Transition.rightToLeft);
     }
+
 
 
 

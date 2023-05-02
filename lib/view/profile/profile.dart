@@ -31,16 +31,33 @@ class _ProfileState extends State<Profile> {
   //EMAIL
   var userid, email, fname, lname, image, isVerify;
    showProfile()async{
+     List userTokenList = [];
+     List userIdList = [];
+
      SharedPreferences prefes = await SharedPreferences.getInstance();
      var token = prefes.getString("token");
 
+     print("this user token ==== ${token}");
 
-     var loginRes = await Boxes.getLogin.get("users");
-     userid = loginRes?.id;
+
+     for(var i = 0; i < Boxes.getLogin.length; i ++){
+       //store data with index
+       var data = Boxes.getLogin.getAt(i);
+       print("userIdList ${data?.id}");
+      if(data?.token == token){
+        userIdList.add(data?.id);
+        userTokenList.add(data?.token);
+      }
+     }
+
+     print("userIdList ${userIdList}");
+     userid = userIdList[0];
+     print(userid);
      var profiles = await Boxes.getProfile.get("${userid}");
+     print("profiles?.email ${profiles?.email}");
 
      if(profiles != null){
-       if(loginRes?.token.toString() == token.toString()){
+       if(userTokenList.contains(token)){
          setState(() {
            fname = profiles.fName;
            lname = profiles.lName;
@@ -325,9 +342,9 @@ class _ProfileState extends State<Profile> {
   }
 
   void _logout() async{
-     SharedPreferences prefs = await SharedPreferences.getInstance(); 
-     prefs.remove("token"); 
-     Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove("token");
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
   }
 
 }
