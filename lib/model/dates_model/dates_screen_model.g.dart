@@ -18,19 +18,20 @@ class DatesModelAdapter extends TypeAdapter<DatesModel> {
     };
     return DatesModel(
       id: fields[0] as int,
-      title: fields[1] as String,
-      admirer: (fields[2] as Map).cast<String, dynamic>(),
-      description: fields[3] as String,
-      date: fields[4] as String,
-      time: fields[5] as String,
-      location: fields[6] as String,
-      outfit: (fields[7] as List)
+      token: fields[1] as String,
+      title: fields[2] as String,
+      admirer: (fields[3] as Map).cast<String, dynamic>(),
+      description: fields[4] as String,
+      date: fields[5] as String,
+      time: fields[6] as String,
+      location: fields[7] as String,
+      outfit: (fields[8] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
-      reminders: (fields[8] as List)
+      reminders: (fields[9] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
-      purses: (fields[9] as List)
+      purses: (fields[10] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
     );
@@ -39,26 +40,28 @@ class DatesModelAdapter extends TypeAdapter<DatesModel> {
   @override
   void write(BinaryWriter writer, DatesModel obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.title)
+      ..write(obj.token)
       ..writeByte(2)
-      ..write(obj.admirer)
+      ..write(obj.title)
       ..writeByte(3)
-      ..write(obj.description)
+      ..write(obj.admirer)
       ..writeByte(4)
-      ..write(obj.date)
+      ..write(obj.description)
       ..writeByte(5)
-      ..write(obj.time)
+      ..write(obj.date)
       ..writeByte(6)
-      ..write(obj.location)
+      ..write(obj.time)
       ..writeByte(7)
-      ..write(obj.outfit)
+      ..write(obj.location)
       ..writeByte(8)
-      ..write(obj.reminders)
+      ..write(obj.outfit)
       ..writeByte(9)
+      ..write(obj.reminders)
+      ..writeByte(10)
       ..write(obj.purses);
   }
 

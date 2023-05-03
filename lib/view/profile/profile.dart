@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dante/boxs/boxs.dart';
+import 'package:dante/utility/app_button.dart';
 import 'package:dante/view/auth/login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -309,33 +310,65 @@ class _ProfileState extends State<Profile> {
 
 
   Future<void> _showLogoutPopup() async {
+     var size = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Are you sure?'),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
           content: SingleChildScrollView(
             child: ListBody(
-              children: const <Widget>[
-                Text('Do you want to logout?'),
+              children:  <Widget>[
+                Center(
+                  child: Image.asset("assets/images/logo.png", height: 80, width: 80,),
+                ),
+                SizedBox(height: 20,),
+                Center(
+                  child: Text('Are you sure?',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                SizedBox(height: 10,),
+                Center(child: Text('Do you want to logout?')),
+                SizedBox(height: 40,),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      width: size.width*.25,
+                      child: AppButton(
+                          size: size,
+                          child: Text("NO",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          onClick: ()=>Navigator.pop(context)
+                      ),
+                    ),
+                    SizedBox(
+                      width: size.width*.25,
+                      child: AppButton(
+                          size: size,
+                          child: Text("Yes",
+                            style: TextStyle(color: AppColors.mainColor, fontWeight: FontWeight.w600,),
+                          ),
+                          onClick: ()=>_logout(),
+                        bg: Colors.white,
+
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('No'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Yes'),
-              onPressed: () {
-               _logout();
-              },
-            ),
-          ],
+
         );
       },
     );

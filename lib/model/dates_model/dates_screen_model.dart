@@ -7,6 +7,7 @@ class DatesModel extends HiveObject{
 
   DatesModel({
     required this.id,
+    required this.token,
     required this.title,
     required this.admirer,
     required this.description,
@@ -24,31 +25,34 @@ class DatesModel extends HiveObject{
   final int id;
 
   @HiveField(1)
-  final String title;
+  final dynamic token;
 
   @HiveField(2)
+  final dynamic title;
+
+  @HiveField(3)
   final Map<String, dynamic> admirer;
 
 
-  @HiveField(3)
+  @HiveField(4)
   final String description;
 
-  @HiveField(4)
+  @HiveField(5)
   final String date;
 
-  @HiveField(5)
+  @HiveField(6)
   final String time;
 
-  @HiveField(6)
+  @HiveField(7)
   final String location;
 
-  @HiveField(7)
+  @HiveField(8)
   final List<Map<String, dynamic>> outfit;
 
-  @HiveField(8)
+  @HiveField(9)
   final List<Map<String, dynamic>> reminders;
 
-  @HiveField(9)
+  @HiveField(10)
   final List<Map<String, dynamic>> purses;
 
 }

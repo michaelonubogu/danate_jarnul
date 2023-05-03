@@ -1,12 +1,15 @@
+import 'package:dante/model/dates_model/dates_screen_model.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/dates/single_dates.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
+import '../../boxs/boxs.dart';
 import 'add_dates.dart';
 class DatesList extends StatefulWidget {
   const DatesList({Key? key}) : super(key: key);
@@ -30,6 +33,39 @@ class _DatesListState extends State<DatesList> {
   bool selectMonth = false;
   var currentMonthYear = DateTime.now().month;
   double calenderheight = 180.00;
+
+
+  bool isLoading = false;
+
+  //empty admirer model list
+  List<DatesModel> datesModel = [];
+
+
+  getDates() async{
+    setState(() => isLoading = true);
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userToken = await prefs.getString("token");
+
+
+    if(Boxes.getDates.length != 0){
+      for(var i = 0; i < Boxes.getDates.length; i ++){
+        var data = Boxes.getDates.getAt(i);
+        print("this is date===== ${Boxes.getDates.getAt(i)?.title}");
+        if(data?.token == userToken){
+          datesModel.add(data!);
+        }
+      }
+    }
+    setState(() => isLoading = false);
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getDates();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -210,7 +246,7 @@ class _DatesListState extends State<DatesList> {
                     name: "Nayon Talukder",
                     date: "Thu, 24 March",
                     location: "Dhaka Bangladesh",
-                    onClick: ()=>Get.to(SingleDates(),  transition: Transition.rightToLeft)
+                    onClick: (){}
                   ),
                   SizedBox(height: 30,),
                   Text("Upcoming Dates",
@@ -221,54 +257,25 @@ class _DatesListState extends State<DatesList> {
                     ),
                   ),
                   SizedBox(height: 20,),
-                  buildDatesWidget(
-                      size,
-                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                      name: "Nayon Talukder",
-                      date: "Thu, 24 March",
-                      location: "Dhaka Bangladesh",
-                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
-                  ),
-                  buildDatesWidget(
-                      size,
-                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                      name: "Nayon Talukder",
-                      date: "Thu, 24 March",
-                      location: "Dhaka Bangladesh",
-                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
-                  ),
-                  buildDatesWidget(
-                      size,
-                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                      name: "Nayon Talukder",
-                      date: "Thu, 24 March",
-                      location: "Dhaka Bangladesh",
-                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
-                  ),
-                  buildDatesWidget(
-                      size,
-                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                      name: "Nayon Talukder",
-                      date: "Thu, 24 March",
-                      location: "Dhaka Bangladesh",
-                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
-                  ),
-                  buildDatesWidget(
-                      size,
-                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                      name: "Nayon Talukder",
-                      date: "Thu, 24 March",
-                      location: "Dhaka Bangladesh",
-                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
-                  ),
-                  buildDatesWidget(
-                      size,
-                      profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                      name: "Nayon Talukder",
-                      date: "Thu, 24 March",
-                      location: "Dhaka Bangladesh",
-                      onClick: ()=>Get.to(SingleDates(), transition: Transition.rightToLeft)
-                  ),
+                 isLoading
+                     ? Center(child: CircularProgressIndicator(color: AppColors.mainColor,),)
+                     : datesModel.isNotEmpty
+                     ? SizedBox(
+                       child: ListView.builder(
+                         shrinkWrap: true,
+                          itemCount: datesModel.length,
+                          itemBuilder: (context, index) {
+                           return buildDatesWidget(
+                            size,
+                            profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                            name: "${datesModel[index]?.title}",
+                            date: "${datesModel[index]?.date}",
+                            location: "${datesModel[index]?.location}",
+                            onClick: ()=>Get.to(SingleDates(datesModel: datesModel[index],), transition: Transition.rightToLeft)
+                  );
+                         }
+                       ),
+                     ) : Center(child: Text("No dates fount. Create new dates."),),
 
 
                 ],

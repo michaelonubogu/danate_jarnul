@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:alphabet_scroll_view/alphabet_scroll_view.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../boxs/boxs.dart';
 import '../../controller/auth_controller/auth_controller.dart';
 import '../../model/admirers_model/admirers_model.dart';
@@ -29,11 +30,11 @@ class _AdmirersState extends State<Admirers> {
   }
 
   //user auth
-  var userId;
+  var userToken;
   getLogedInUser()async{
-    var loginRes = await Boxes.getLogin.get("users");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
    setState(() {
-     userId = loginRes?.id;
+     userToken = prefs.getString("token");
    });
   }
 
@@ -68,10 +69,14 @@ class _AdmirersState extends State<Admirers> {
                   List<AdmirerModel> shortedData = [];
 
                   for(var i in data){
-                    if(i.userId == userId.toString()){
+                    if(i.userId == userToken.toString()){
                       shortedData.add(i);
                     }
+                    print("this is token ==== ${i.userId}");
+                    print("this is token ==== ${userToken}");
                   }
+
+
 
                   return shortedData.length != 0
                       ? AlphabetScrollView(

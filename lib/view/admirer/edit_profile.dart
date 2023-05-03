@@ -686,8 +686,8 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
               onClick: ()async{
                 //get user id
                 var res = await Boxes.getLogin.get("users");
-                var userId = res?.id;
-                print("this is user id ==== ${userId}");
+                var token = res?.token;
+                print("this is user id ==== ${token}");
                 //id
                 //image convert
 

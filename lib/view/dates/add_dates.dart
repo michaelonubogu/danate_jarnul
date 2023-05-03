@@ -13,6 +13,7 @@ import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/admirers_model/admirers_model.dart';
 import '../../model/dates_model/dates_screen_model.dart';
 import '../../utility/app_input_rightIcons.dart';
@@ -641,12 +642,15 @@ class _AddDatesState extends State<AddDates> {
                         ),
                       ),
                       onClick: ()async{
+                        SharedPreferences prefs = await SharedPreferences.getInstance();
+                        var userToken = await prefs.getString("token");
 
                         //id
                         var id = new Random().nextInt(1000);
 
                         var data = DatesModel(
                             id: id,
+                            token: userToken!,
                             title: title.text,
                             admirer: selectedAdmirerProfiles,
                             description: dec.text,

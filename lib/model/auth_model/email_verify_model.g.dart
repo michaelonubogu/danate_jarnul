@@ -19,9 +19,9 @@ class LoginModelAdapter extends TypeAdapter<LoginModel> {
     return LoginModel(
       id: fields[0] as int,
       email: fields[1] as String,
+      token: fields[4] as dynamic,
       isVerified: fields[2] as bool,
       isLogin: fields[3] as bool,
-      token: fields[4] as dynamic,
     );
   }
 
@@ -33,12 +33,12 @@ class LoginModelAdapter extends TypeAdapter<LoginModel> {
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.email)
+      ..writeByte(4)
+      ..write(obj.token)
       ..writeByte(2)
       ..write(obj.isVerified)
       ..writeByte(3)
-      ..write(obj.isLogin)
-      ..writeByte(4)
-      ..write(obj.token);
+      ..write(obj.isLogin);
   }
 
   @override

@@ -15,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../utility/app_button.dart';
@@ -596,8 +597,9 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
             AppButton(
               onClick: ()async{
                 //get user id
-                var res = await Boxes.getLogin.get("users");
-                var userId = res?.id;
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                var userToken = await prefs.getString("token");
+                print("user token ==== $userToken");
                 //id
                 var id = new Random().nextInt(1000);
 
@@ -610,7 +612,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 var data = AdmirerModel(
                     id: id,
                     admirerName: admirerName.text,
-                    userId: "$userId",
+                    userId: userToken.toString(),
                     profile: _profileImage,
                     featureImages: _featureImage ,
                     dob: "remove by client",
@@ -622,7 +624,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     socialMedia: socialMediaList
                 );
                var box = await Boxes.getAdmirers;
-                box.put("admirers_profiles",data);
+                box.put("$id",data);
                Get.to(Index(index: 2,), transition: Transition.rightToLeft);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Added!"),

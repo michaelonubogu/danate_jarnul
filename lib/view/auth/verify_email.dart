@@ -68,7 +68,6 @@ class _EmailVerifyState extends State<EmailVerify> {
           "email" : data?.email,
           "token" : data?.token
         });
-
       }
 
       print(userEmail);
