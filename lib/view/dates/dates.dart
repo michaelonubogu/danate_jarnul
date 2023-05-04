@@ -34,11 +34,15 @@ class _DatesListState extends State<DatesList> {
   var currentMonthYear = DateTime.now().month;
   double calenderheight = 180.00;
 
+  var currentDates = DateFormat.yMMMd().format(DateTime.now());
+
+
 
   bool isLoading = false;
 
   //empty admirer model list
   List<DatesModel> datesModel = [];
+  List<DatesModel> currentDatesModel = [];
 
 
   getDates() async{
@@ -51,10 +55,14 @@ class _DatesListState extends State<DatesList> {
       for(var i = 0; i < Boxes.getDates.length; i ++){
         var data = Boxes.getDates.getAt(i);
         print("this is date===== ${Boxes.getDates.getAt(i)?.title}");
-        if(data?.token == userToken){
+        if(data?.token.contains(userToken)){
           datesModel.add(data!);
+          if(datesModel[i].date.contains(currentDates)){
+            currentDatesModel.add(datesModel[i]);
+          }
         }
       }
+
     }
     setState(() => isLoading = false);
 
@@ -240,14 +248,32 @@ class _DatesListState extends State<DatesList> {
                     ),
                   ),
                   SizedBox(height: 20,),
-                  buildDatesWidget(
-                      size,
-                    profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
-                    name: "Nayon Talukder",
-                    date: "Thu, 24 March",
-                    location: "Motijeel, Dhaka, Bangladesh. ",
-                    onClick: (){}
+                  isLoading
+                      ? Center(child: CircularProgressIndicator(color: AppColors.mainColor,),)
+                      : datesModel.contains(currentDates)
+                      ? SizedBox(
+                    child: ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: datesModel.length,
+                        itemBuilder: (context, index) {
+                          var img = datesModel[index]?.userProfile.profile!;
+                          return buildDatesWidget(
+                              size,
+                              profile: Image.memory(img!, height: 60, width: 60, fit: BoxFit.cover,),
+                              name: "${datesModel[index]?.title}",
+                              date: "${datesModel[index]?.date}",
+                              location: "${datesModel[index]?.location}",
+                              onClick: ()=>Get.to(SingleDates(datesModel: datesModel[index],), transition: Transition.rightToLeft)
+                          );
+                        }
+                    ),
+                  ) : Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Center(child: Text("Not found any current dates."),),
                   ),
+
+
                   SizedBox(height: 30,),
                   Text("Upcoming Dates",
                     style: TextStyle(
@@ -262,6 +288,7 @@ class _DatesListState extends State<DatesList> {
                      : datesModel.isNotEmpty
                      ? SizedBox(
                        child: ListView.builder(
+                           physics: NeverScrollableScrollPhysics(),
                          shrinkWrap: true,
                           itemCount: datesModel.length,
                           itemBuilder: (context, index) {
@@ -276,7 +303,10 @@ class _DatesListState extends State<DatesList> {
                   );
                          }
                        ),
-                     ) : Center(child: Text("No dates fount. Create new dates."),),
+                     ) : Padding(
+                       padding: const EdgeInsets.only(top: 150),
+                       child: Center(child: Text("No dates found. Create new dates."),),
+                     ),
 
 
                 ],
