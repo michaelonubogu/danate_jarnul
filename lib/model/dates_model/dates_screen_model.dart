@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dante/model/profile_model/profile_model.dart';
 import 'package:hive/hive.dart';
 part 'dates_screen_model.g.dart';
 
@@ -17,6 +18,7 @@ class DatesModel extends HiveObject{
     required this.outfit,
     required this.reminders,
     required this.purses,
+    required this.userProfile
   });
 
 
@@ -54,5 +56,8 @@ class DatesModel extends HiveObject{
 
   @HiveField(10)
   final List<Map<String, dynamic>> purses;
+
+  @HiveField(11)
+  final ProfileModel userProfile;
 
 }

@@ -18,8 +18,8 @@ class DatesModelAdapter extends TypeAdapter<DatesModel> {
     };
     return DatesModel(
       id: fields[0] as int,
-      token: fields[1] as String,
-      title: fields[2] as String,
+      token: fields[1] as dynamic,
+      title: fields[2] as dynamic,
       admirer: (fields[3] as Map).cast<String, dynamic>(),
       description: fields[4] as String,
       date: fields[5] as String,
@@ -34,13 +34,14 @@ class DatesModelAdapter extends TypeAdapter<DatesModel> {
       purses: (fields[10] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
+      userProfile: fields[11] as ProfileModel,
     );
   }
 
   @override
   void write(BinaryWriter writer, DatesModel obj) {
     writer
-      ..writeByte(11)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -62,7 +63,9 @@ class DatesModelAdapter extends TypeAdapter<DatesModel> {
       ..writeByte(9)
       ..write(obj.reminders)
       ..writeByte(10)
-      ..write(obj.purses);
+      ..write(obj.purses)
+      ..writeByte(11)
+      ..write(obj.userProfile);
   }
 
   @override

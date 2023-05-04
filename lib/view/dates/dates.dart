@@ -245,7 +245,7 @@ class _DatesListState extends State<DatesList> {
                     profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
                     name: "Nayon Talukder",
                     date: "Thu, 24 March",
-                    location: "Dhaka Bangladesh",
+                    location: "Motijeel, Dhaka, Bangladesh. ",
                     onClick: (){}
                   ),
                   SizedBox(height: 30,),
@@ -265,9 +265,10 @@ class _DatesListState extends State<DatesList> {
                          shrinkWrap: true,
                           itemCount: datesModel.length,
                           itemBuilder: (context, index) {
+                           var img = datesModel[index]?.userProfile.profile!;
                            return buildDatesWidget(
                             size,
-                            profile: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 60, width: 60,),
+                            profile: Image.memory(img!, height: 60, width: 60, fit: BoxFit.cover,),
                             name: "${datesModel[index]?.title}",
                             date: "${datesModel[index]?.date}",
                             location: "${datesModel[index]?.location}",
@@ -349,7 +350,14 @@ class _DatesListState extends State<DatesList> {
                                   children: [
                                     Image.asset("assets/images/pin.png", height: 18, width: 18,),
                                     SizedBox(width: 5.0),
-                                    Text(location, style: TextStyle(fontSize: 13.0)),
+                                    SizedBox(
+                                      width: size.width*.32,
+                                      child: Text(location,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(
+                                            fontSize: 13.0,
+                                          )),
+                                    ),
                                   ],
                                 ),
                               ],
