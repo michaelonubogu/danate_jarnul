@@ -711,7 +711,8 @@ class _AddDatesState extends State<AddDates> {
                         );
                         var box = await Boxes.getDates;
                         box.put("$id", data);
-                        Get.to(Index(index: 0,), transition: Transition.rightToLeft);
+                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 0,)));
+
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("New Date Added!"),
                           backgroundColor: Colors.green,
