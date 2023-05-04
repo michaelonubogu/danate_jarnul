@@ -16,12 +16,14 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/admirers_model/admirers_model.dart';
 import '../../model/dates_model/dates_screen_model.dart';
+import '../../model/profile_model/profile_model.dart';
 import '../../utility/app_input_rightIcons.dart';
 import '../../utility/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 
 import '../index.dart';
+import '../profile/edit_profile.dart';
 
 class AddDates extends StatefulWidget {
   const AddDates({Key? key}) : super(key: key);
@@ -84,7 +86,9 @@ class _AddDatesState extends State<AddDates> {
     // When a BuildContext is used from a StatefulWidget, the mounted property
     // must be checked after an asynchronous gap.
     if (!mounted) return;
-    location.text = result;
+   setState(() {
+     location.text = result;
+   });
     print("this is result location $result");
   }
 
@@ -96,12 +100,55 @@ class _AddDatesState extends State<AddDates> {
       userId = loginRes?.id;
     });
   }
+
+
+  //show user profile
+  ProfileModel? showUserProfile;
+
+  //EMAIL
+  var userid, email, fname, lname, image, isVerify;
+  showProfile()async{
+    List userTokenList = [];
+    List userIdList = [];
+
+    SharedPreferences prefes = await SharedPreferences.getInstance();
+    var token = prefes.getString("token");
+
+
+    for(var i = 0; i < Boxes.getLogin.length; i ++){
+      //store data with index
+      var data = Boxes.getLogin.getAt(i);
+      if(data?.token == token){
+        userIdList.add(data?.id);
+        userTokenList.add(data?.token);
+      }
+    }
+
+    userid = userIdList[0];
+    print(userid);
+    var profiles = await Boxes.getProfile.get("${userid}");
+
+    if(profiles != null){
+      if(userTokenList.contains(token)){
+        setState(() {
+          showUserProfile = profiles;
+        });
+        print("this user profile ==== ${showUserProfile?.fName}");
+        return profiles;
+      }
+    }else{
+      return Get.to(EditProfile());
+    }
+
+
+  }
   
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getLogedInUser(); 
+    getLogedInUser();
+    showProfile();
   }
 
 
@@ -659,10 +706,11 @@ class _AddDatesState extends State<AddDates> {
                             location: location.text,
                             outfit: outFitList,
                             reminders: allReminders,
-                            purses: purseCheck
+                            purses: purseCheck,
+                            userProfile: showUserProfile!
                         );
                         var box = await Boxes.getDates;
-                        box.put("dates", data);
+                        box.put("$id", data);
                         Get.to(Index(index: 0,), transition: Transition.rightToLeft);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("New Date Added!"),
@@ -1057,12 +1105,12 @@ class _AddDatesState extends State<AddDates> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(32.0))),
                 title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
                     onPressed: ()=>Navigator.pop(context),
                     icon: Icon(Icons.close),
                   ),
+                  SizedBox(width: 30,),
                   Text('Set Reminder',
                     style: TextStyle(
                         color: AppColors.blue
