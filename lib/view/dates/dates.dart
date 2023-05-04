@@ -55,11 +55,17 @@ class _DatesListState extends State<DatesList> {
       for(var i = 0; i < Boxes.getDates.length; i ++){
         var data = Boxes.getDates.getAt(i);
         print("this is date===== ${Boxes.getDates.getAt(i)?.title}");
-        if(data?.token.contains(userToken)){
+        if(data?.token == userToken){
           datesModel.add(data!);
-          if(datesModel[i].date.contains(currentDates)){
-            currentDatesModel.add(datesModel[i]);
-          }
+          // if(datesModel[i].date.contains(currentDates)){
+          //   currentDatesModel.add(datesModel[i]);
+          // }
+        }
+      }
+
+      for(var i = 0; i < datesModel.length; i ++){
+        if(datesModel[i].date.contains(currentDates)){
+          currentDatesModel.add(datesModel[i]);
         }
       }
 
@@ -199,13 +205,18 @@ class _DatesListState extends State<DatesList> {
                       return isSameDay(_selectedDay, day);
                     },
                     onDaySelected: (selectedDay, focusedDay) {
+                      currentDatesModel.clear();
+                      datesModel.clear();
+                      getDates();
                       setState(() {
                         _selectedDay = selectedDay;
+
                         _focusedDay = focusedDay;
                         selectDate = true;
                       });
                       SearchDay =
                       (DateFormat("yyyy-MM-dd").format(_selectedDay!));
+                      currentDates = DateFormat.yMMMd().format(_selectedDay!);
                       toDay = (dateFormate.format(_selectedDay!));
                       print(SearchDay);
                     },
@@ -250,21 +261,21 @@ class _DatesListState extends State<DatesList> {
                   SizedBox(height: 20,),
                   isLoading
                       ? Center(child: CircularProgressIndicator(color: AppColors.mainColor,),)
-                      : datesModel.contains(currentDates)
+                      : currentDatesModel.isNotEmpty
                       ? SizedBox(
                     child: ListView.builder(
                       physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: datesModel.length,
+                        itemCount: currentDatesModel.length,
                         itemBuilder: (context, index) {
-                          var img = datesModel[index]?.userProfile.profile!;
-                          return buildDatesWidget(
+                          var img = currentDatesModel[index]?.userProfile.profile!;
+                          return  buildDatesWidget(
                               size,
                               profile: Image.memory(img!, height: 60, width: 60, fit: BoxFit.cover,),
-                              name: "${datesModel[index]?.title}",
-                              date: "${datesModel[index]?.date}",
-                              location: "${datesModel[index]?.location}",
-                              onClick: ()=>Get.to(SingleDates(datesModel: datesModel[index],), transition: Transition.rightToLeft)
+                              name: "${currentDatesModel[index]?.title}",
+                              date: "${currentDatesModel[index]?.date}",
+                              location: "${currentDatesModel[index]?.location}",
+                              onClick: ()=>Get.to(SingleDates(datesModel: currentDatesModel[index],), transition: Transition.rightToLeft)
                           );
                         }
                     ),
@@ -293,14 +304,14 @@ class _DatesListState extends State<DatesList> {
                           itemCount: datesModel.length,
                           itemBuilder: (context, index) {
                            var img = datesModel[index]?.userProfile.profile!;
-                           return buildDatesWidget(
+                           return  datesModel[index]?.date.contains(currentDates) != true ? buildDatesWidget(
                             size,
                             profile: Image.memory(img!, height: 60, width: 60, fit: BoxFit.cover,),
                             name: "${datesModel[index]?.title}",
                             date: "${datesModel[index]?.date}",
                             location: "${datesModel[index]?.location}",
                             onClick: ()=>Get.to(SingleDates(datesModel: datesModel[index],), transition: Transition.rightToLeft)
-                  );
+                  ):SizedBox();
                          }
                        ),
                      ) : Padding(
