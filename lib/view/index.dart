@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:iconly/iconly.dart';
 
 import 'dates/dates.dart';
+import 'journals/Journals.dart';
 
 class Index extends StatefulWidget {
   final int? index;
@@ -22,7 +23,7 @@ class _IndexState extends State<Index> {
   List<Widget> pages = [
     DatesList(),
     Admirers(),
-    Admirers(),
+    Journals(),
     Profile(),
   ];
 
