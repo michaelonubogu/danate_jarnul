@@ -1,6 +1,7 @@
 import 'package:dante/model/dates_model/dates_screen_model.dart';
 import 'package:dante/utility/app_bar.dart';
 import 'package:dante/utility/app_colors.dart';
+import 'package:dante/view/dates/edit_dates.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -40,7 +41,7 @@ class _SingleDatesState extends State<SingleDates> {
                     title: "Date Details",
                     isRightSideBar: true,
                     onBack: ()=>Get.back(),
-                    onClickRight: (){}
+                    onClickRight: ()=>Get.to(EditDates(datesModel: widget.datesModel))
                 ),
               ),
               Divider(height: 1, color: Colors.grey,),
@@ -57,10 +58,10 @@ class _SingleDatesState extends State<SingleDates> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 45, width: 45,),
+                            child: Image.memory(widget.datesModel.userProfile.profile, height: 45, width: 45, fit: BoxFit.cover,),
                           ),
                           SizedBox(width: 15,),
-                          Text("Nayon Talukder",
+                          Text("${widget.datesModel.userProfile.fName} ${widget.datesModel.userProfile.lName}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
