@@ -216,7 +216,7 @@ class _LocationMapState extends State<LocationMap> {
               bottom: 0,
               child: Container(
                 width: size.width,
-                height: size.height*0.24,
+                height: size.height*0.25,
                 padding: EdgeInsets.all(30),
                 decoration: BoxDecoration(
                   color: AppColors.bgColor
