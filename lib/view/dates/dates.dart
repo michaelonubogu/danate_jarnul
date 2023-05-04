@@ -210,7 +210,6 @@ class _DatesListState extends State<DatesList> {
                       getDates();
                       setState(() {
                         _selectedDay = selectedDay;
-
                         _focusedDay = focusedDay;
                         selectDate = true;
                       });
@@ -331,7 +330,12 @@ class _DatesListState extends State<DatesList> {
           Get.to(AddDates(),  transition: Transition.rightToLeft);
           // Add your onPressed code here!
         },
-        label: const Text('Add Date'),
+        label: const Text('Add Date',
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 17
+          ),
+        ),
         icon: const Icon(Icons.add),
         backgroundColor: AppColors.mainColor,
       ),

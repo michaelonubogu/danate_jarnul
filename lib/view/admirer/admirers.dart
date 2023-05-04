@@ -184,7 +184,12 @@ class _AdmirersState extends State<Admirers> {
           Get.to(AddAdmirerProfile(), transition: Transition.rightToLeft);
           // Add your onPressed code here!
         },
-        label: const Text('Add'),
+        label: const Text('Add',
+          style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 17
+          ),
+        ),
         icon: const Icon(Icons.add),
         backgroundColor: AppColors.mainColor,
       ),
