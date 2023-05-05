@@ -2,6 +2,8 @@ import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+import 'add_Journals.dart';
+
 class Journals extends StatefulWidget {
   const Journals({Key? key}) : super(key: key);
 
@@ -174,7 +176,7 @@ class _JournalsState extends State<Journals> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>AddJournals()));
           // Add your onPressed code here!
         },
         label: const Text('Create Journal',
