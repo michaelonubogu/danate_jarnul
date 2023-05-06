@@ -1,6 +1,10 @@
+import 'package:dante/boxs/boxs.dart';
+import 'package:dante/model/admirers_model/admirers_model.dart';
+import 'package:dante/model/journal_model/journal_model.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'add_Journals.dart';
 
@@ -14,6 +18,35 @@ class Journals extends StatefulWidget {
 class _JournalsState extends State<Journals> {
   //search controller
   final search = TextEditingController();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getJournal();
+  }
+
+  List<JournalModel> journalList = [];
+  getJournal()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var userToken =  prefs.getString("token");
+    print(Boxes.getJournal.length);
+
+    for(var i = 0; i < Boxes.getJournal.length; i++){
+      var data = Boxes.getJournal.getAt(i)!;
+      print("journals === ${data!.title}");
+      print("journals === ${data!.details}");
+      journalList.add(data);
+    }
+    setState(() {
+
+    });
+
+    print("this is journal === ${journalList}");
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -109,20 +142,23 @@ class _JournalsState extends State<Journals> {
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: 10,
+                itemCount: journalList.length,
                 itemBuilder: (context, index){
+                  var data = journalList[index]!;
+
+               
                   return Container(
                     padding: EdgeInsets.all(20),
                     margin: EdgeInsets.only(bottom: 20),
                     decoration: BoxDecoration(
-                      color:index.isOdd ? Colors.blue.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                      color: Color(data.color),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Today’s date was amazing...",
+                        Text("${data.title}",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
@@ -139,10 +175,10 @@ class _JournalsState extends State<Journals> {
                                 children: [
                                   ClipRRect(
                                       borderRadius: BorderRadius.circular(100),
-                                      child: Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaXaKH9Q7gVGHSc2_IK3mOhpEaiULsMGxwRUe2nL4b&s", height: 40, width: 40, fit: BoxFit.cover,),
+                                      child: Image.memory(data.admirers["profile"], height: 40, width: 40, fit: BoxFit.cover,),
                                   ),
                                   SizedBox(width: 10,),
-                                  Text("Nayon Talukder",
+                                  Text("${data.admirers["name"]}",
                                     style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
@@ -176,6 +212,7 @@ class _JournalsState extends State<Journals> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
+          //Boxes.getJournal.clear();
           Navigator.push(context, MaterialPageRoute(builder: (context)=>AddJournals()));
           // Add your onPressed code here!
         },
