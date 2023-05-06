@@ -1,9 +1,18 @@
+import 'dart:math';
+
+import 'package:dante/model/journal_model/journal_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:get/get.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../boxs/boxs.dart';
 import '../../model/admirers_model/admirers_model.dart';
 import '../../utility/app_colors.dart';
 import '../admirer/add_profile.dart';
+import '../index.dart';
+import 'editor.dart';
 
 class AddJournals extends StatefulWidget {
   const AddJournals({Key? key}) : super(key: key);
@@ -14,17 +23,44 @@ class AddJournals extends StatefulWidget {
 
 class _AddJournalsState extends State<AddJournals> {
 
+  HtmlEditorController controller = HtmlEditorController();
 
+  //user auth
+  //empty admirer model list
+  List<AdmirerModel> getAdmirerList = [];
+  var userToken;
+  getLogedInUser()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      userToken = prefs.getString("token");
+    });
+    for(var i = 0; i< Boxes.getAdmirers.length; i ++ ){
+      var data = Boxes.getAdmirers.getAt(i);
+      if(data!.userId == userToken.toString()){
+        getAdmirerList.add(data);
+      }
+    }
+
+
+  }
   //empty admirers list
-  List<AdmirerModel> admirerList = [];
+  Map<String, dynamic> admirerList = {};
+  final title = TextEditingController();
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLogedInUser();
+  }
 
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
-      body: Padding(
+      body: SingleChildScrollView(
         padding: EdgeInsets.only(left: 30, right: 30, top: 50),
         child: Column(
           children: [
@@ -35,7 +71,7 @@ class _AddJournalsState extends State<AddJournals> {
                   onTap: ()=>showAdmirers(),
                   child: Container(
                     //width: size.width*.55,
-                    padding: EdgeInsets.all(10),
+                    padding: EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(100),
                       border: Border.all(width: 1, color: Colors.blue)
@@ -47,10 +83,10 @@ class _AddJournalsState extends State<AddJournals> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(100),
-                                child: Image.memory(admirerList[0].profile, height: 40, width: 40, fit: BoxFit.cover,),
+                                child: Image.memory(admirerList["profile"], height: 40, width: 40, fit: BoxFit.cover,),
                               ),
                               SizedBox(width: 10,),
-                              Text("${admirerList[0].admirerName}",
+                              Text("${admirerList["name"]}",
                                 style: TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.w600,
@@ -98,20 +134,40 @@ class _AddJournalsState extends State<AddJournals> {
                     ),
                     SizedBox(width: 10,),
                     InkWell(
-                      onTap: (){},
+                      onTap: ()=>dataStore(),
                       child: Icon(Icons.check_box, size: 40, color: AppColors.mainColor,)
                     )
                   ],
                 ),
 
-
-                SizedBox(height: 30,),
-
-
-                ///TODO: text editor
-
               ],
-            )
+            ),
+
+
+            SizedBox(height: 10,),
+            TextFormField(
+              style: TextStyle(
+                fontSize: 28,
+                color: AppColors.blue.withOpacity(0.9),
+                fontWeight: FontWeight.w600
+            ),
+              controller: title,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide.none,
+                ),
+                hintText: "Title Here",
+                hintStyle: TextStyle(
+                  fontSize: 28,
+                  color: AppColors.blue.withOpacity(0.5),
+                  fontWeight: FontWeight.w600
+                )
+              ),
+            ),
+            TextEditor(controller: controller, size: size, hintText: "Write your journal here...",),
           ],
         ),
       ),
@@ -126,7 +182,9 @@ class _AddJournalsState extends State<AddJournals> {
   bool _portraitOnly = false;
 // ValueChanged<Color> callback
   void changeColor(Color color) {
-    setState(() => pickerColor = color);
+    setState(() {
+      pickerColor = color;
+    });
     Navigator.pop(context);
   }
 
@@ -192,20 +250,20 @@ class _AddJournalsState extends State<AddJournals> {
                       children: [
                         Boxes.getAdmirers.length != 0? ListView.builder(
                           shrinkWrap: true,
-                          itemCount:  Boxes.getAdmirers.length,
+                          itemCount:  getAdmirerList.length,
                           itemBuilder: (_, index){
                             var data = Boxes.getAdmirers.getAt(index);
+
 
                             print("this is admirers $data");
                             return InkWell(
                               onTap: ()async{
-
-                                setState(() async {
-                                  admirerList.clear();
-                                  admirerList.add(data!);
-                                  Navigator.pop(context, true);
+                                admirerList.clear();
+                                admirerList.assignAll({
+                                  "name": getAdmirerList[index].admirerName,
+                                  "profile": getAdmirerList[index].profile
                                 });
-
+                                Navigator.pop(context, true);
                                 setState((){});
                               },
                               child: Container(
@@ -220,13 +278,13 @@ class _AddJournalsState extends State<AddJournals> {
                                         height: 40,
                                         child: ClipRRect(
                                           borderRadius: BorderRadius.circular(5),
-                                          child: Image.memory(data!.profile,
+                                          child: Image.memory(getAdmirerList[index]!.profile,
                                             fit: BoxFit.cover,
                                           ),
                                         ),
                                       ),
                                       SizedBox(width: 10,),
-                                      Text(data!.admirerName,
+                                      Text(getAdmirerList[index]!.admirerName,
                                         style: TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.w500,
@@ -275,4 +333,44 @@ class _AddJournalsState extends State<AddJournals> {
       },
     );
   }
+
+  dataStore() async{
+    var id = new Random().nextInt(1000);
+    var dateTime = DateTime.now();
+    // String colorString = pickerColor.toString(); // Color(0x12345678)
+    // String valueString = colorString.split('(0x')[1].split(')')[0]; // kind of hacky..
+
+     controller.getText().then((value)async{
+       print("this is details == =$value");
+       var data = JournalModel(
+           id: id.toString(),
+           token: userToken.toString(),
+           title: title.text,
+           admirers: admirerList,
+           details: value.toString(),
+           dateTime: dateTime.toString(),
+           color: pickerColor.value
+       );
+       print("this is details == =${data.color}");
+       var boxes = await Boxes.getJournal;
+       boxes.put("$id", data).then((value) {
+         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 2,)));
+
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+           content: Text("New Journal Added!"),
+           backgroundColor: Colors.green,
+           duration: Duration(milliseconds: 3000),
+         ));
+         if(kDebugMode){
+           print("Journal added");
+         }
+       });
+
+     });
+
+
+
+
+  }
 }
+
