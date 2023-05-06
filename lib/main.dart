@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:dante/database/local_database.dart';
+import 'package:dante/model/journal_model/journal_model.dart';
 import 'package:dante/model/profile_model/profile_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,15 +47,17 @@ void main() async {
     ..registerAdapter(AdmirerModelAdapter())
     ..registerAdapter(DatesModelAdapter())
     ..registerAdapter(ProfileModelAdapter())
+    ..registerAdapter(JournalModelAdapter())
     ..registerAdapter(LoginModelAdapter())
   ;
 
-    //initial amdirers profile
+    //initial admirers profile
     await Hive.openBox<Map>('initial_Data');
     await Hive.openBox<LoginModel>('login');
     await Hive.openBox<ProfileModel>('profiles');
     await Hive.openBox<AdmirerModel>("admirers");
     await Hive.openBox<DatesModel>("dates");
+    await Hive.openBox<JournalModel>("journals");
 
   await Firebase.initializeApp();
 
