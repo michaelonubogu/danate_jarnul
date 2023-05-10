@@ -1,11 +1,10 @@
 import 'package:dante/boxs/boxs.dart';
-import 'package:dante/model/admirers_model/admirers_model.dart';
 import 'package:dante/model/journal_model/journal_model.dart';
 import 'package:dante/utility/app_colors.dart';
+import 'package:dante/view/journals/single_journal.dart';
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:intl/intl.dart';
 import 'add_Journals.dart';
 
 class Journals extends StatefulWidget {
@@ -27,6 +26,7 @@ class _JournalsState extends State<Journals> {
     getJournal();
   }
 
+  //initial current date & time appear
   List<JournalModel> journalList = [];
   getJournal()async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -147,58 +147,61 @@ class _JournalsState extends State<Journals> {
                   var data = journalList[index]!;
 
                
-                  return Container(
-                    padding: EdgeInsets.all(20),
-                    margin: EdgeInsets.only(bottom: 20),
-                    decoration: BoxDecoration(
-                      color: Color(data.color),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("${data.title}",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black
+                  return InkWell(
+                    onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SingleJournal(journalModel: data,))),
+                    child: Container(
+                      padding: EdgeInsets.all(20),
+                      margin: EdgeInsets.only(bottom: 20),
+                      decoration: BoxDecoration(
+                        color: Color(data.color),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("${data.title}",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black
+                            ),
                           ),
-                        ),
-                        SizedBox(height: 20,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                              width: size.width*.40,
-                              child: Row(
-                                children: [
-                                  ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.memory(data.admirers["profile"], height: 40, width: 40, fit: BoxFit.cover,),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Text("${data.admirers["name"]}",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.textColor
+                          SizedBox(height: 20,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: size.width*.40,
+                                child: Row(
+                                  children: [
+                                    ClipRRect(
+                                        borderRadius: BorderRadius.circular(100),
+                                        child: Image.memory(data.admirers["profile"], height: 40, width: 40, fit: BoxFit.cover,),
                                     ),
-                                  ),
-                                ],
+                                    SizedBox(width: 10,),
+                                    Text("${data.admirers["name"]}",
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.textColor
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Text("May 25, 2023",
-                              style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: AppColors.textColor
+                              Text(DateFormat.yMMMd().format(DateTime.parse("${data.dateTime}")),
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.textColor
+                                ),
                               ),
-                            ),
 
-                          ],
-                        )
-                      ],
+                            ],
+                          )
+                        ],
+                      ),
                     ),
                   );
                 },
