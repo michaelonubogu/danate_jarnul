@@ -7,12 +7,13 @@ class TextEditor extends StatelessWidget {
   const TextEditor({
     Key? key,
     required this.controller,
-    required this.size, required this.hintText,
+    required this.size,  this.hintText, this.initalText
   }) : super(key: key);
 
   final HtmlEditorController controller;
   final Size size;
-  final String hintText;
+  final String? hintText;
+  final dynamic initalText;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +24,7 @@ class TextEditor extends StatelessWidget {
         toolbarType: ToolbarType.nativeExpandable,
       ),
       htmlEditorOptions: HtmlEditorOptions(
-
         hint: "$hintText",
-        //initalText: "text content initial, if any",
       ),
       otherOptions: OtherOptions(
         decoration: BoxDecoration(
