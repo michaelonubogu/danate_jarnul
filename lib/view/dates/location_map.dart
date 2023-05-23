@@ -99,9 +99,6 @@ class _LocationMapState extends State<LocationMap> {
   Completer<GoogleMapController>();
 
 
-
-
-
   //marker list
   final Set<Marker> markers = new Set();
 
@@ -188,6 +185,7 @@ class _LocationMapState extends State<LocationMap> {
               ),
             ),
 
+            ///TODO: search location and show the suggested.
             Positioned(
               top: size.height*.07,
               child: Container(
@@ -248,6 +246,7 @@ class _LocationMapState extends State<LocationMap> {
                     Padding(
                       padding: const EdgeInsets.only(left: 35),
                       child: Text("$location",
+                        maxLines: 2,
                         style: TextStyle(
                             fontWeight: FontWeight.w400,
                             color: Colors.black,
@@ -259,7 +258,7 @@ class _LocationMapState extends State<LocationMap> {
                     SizedBox(height: 25,),
                     Container(
                         margin: EdgeInsets.only(left: 30, right: 30),
-                        child: AppButton(size: size, child: Center(child: Text("Set Location", style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.white),),), onClick: ()=>Navigator.pop(context, location)))
+                        child: AppButton(size: size, child: Center(child: Text("Set Location", style: TextStyle(fontWeight: FontWeight.w600, color: AppColors.white),),), onClick: ()=>Navigator.pop(context, selectedLocation)))
                   ],
                 ),
               ),
@@ -271,6 +270,7 @@ class _LocationMapState extends State<LocationMap> {
   }
 
 
+  var selectedLocation;
 bool isLocation = false;
   String location = "";
   getAddressFromLatLng(context, double lat, double lng) async {
@@ -288,6 +288,11 @@ bool isLocation = false;
         setState(() {
           isLocation = false;
           location = _formattedAddress;
+          selectedLocation = {
+            "location" : location,
+            "lat" : lat,
+            "lng" : lng
+          };
         });
         SharedPreferences localStore = await SharedPreferences.getInstance();
         localStore.setString("lat", "$lat");
