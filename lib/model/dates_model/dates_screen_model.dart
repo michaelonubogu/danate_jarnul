@@ -46,7 +46,7 @@ class DatesModel extends HiveObject{
   final String time;
 
   @HiveField(7)
-  final String location;
+  final Map<String, dynamic> location;
 
   @HiveField(8)
   final List<Map<String, dynamic>> outfit;

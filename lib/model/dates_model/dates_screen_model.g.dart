@@ -24,7 +24,7 @@ class DatesModelAdapter extends TypeAdapter<DatesModel> {
       description: fields[4] as String,
       date: fields[5] as String,
       time: fields[6] as String,
-      location: fields[7] as String,
+      location: (fields[7] as Map).cast<String, dynamic>(),
       outfit: (fields[8] as List)
           .map((dynamic e) => (e as Map).cast<String, dynamic>())
           .toList(),
