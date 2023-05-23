@@ -27,6 +27,11 @@ class _AdmirersState extends State<Admirers> {
     // TODO: implement initState
     super.initState();
     getLogedInUser();
+    Future.delayed(Duration(microseconds: 300), (){
+        setState(() {
+          isLoading = false;
+        });
+    });
   }
 
   //user auth
@@ -37,6 +42,8 @@ class _AdmirersState extends State<Admirers> {
      userToken = prefs.getString("token");
    });
   }
+
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
@@ -72,106 +79,112 @@ class _AdmirersState extends State<Admirers> {
                     if(i.userId == userToken.toString()){
                       shortedData.add(i);
                     }
-                    print("this is token ==== ${i.userId}");
-                    print("this is token ==== ${userToken}");
                   }
 
 
+                  if(isLoading){
+                   return const SizedBox(
+                       height: 30,
+                       width: 30,
+                       child: CircularProgressIndicator(color: AppColors.mainColor,)
+                   );
+                  }else{
+                    return shortedData.isNotEmpty
+                        ? AlphabetScrollView(
+                      // list: AdmirersListJson.admirersList.map((e) => AlphaModel(e["name"])).toList(),
+                      list: shortedData.map((e) => AlphaModel(e.admirerName)).toList(),
+                      itemExtent: 150,
+                      itemBuilder: (_, k, id) {
+                        print("=== ${data.contains(data[k].userId)}===");
+                        return  InkWell(
+                          onTap: ()=>Get.to(SingleAdmirers(admirers: shortedData[k]), transition: Transition.rightToLeft),
+                          child: Container(
+                            margin: EdgeInsets.only(bottom: 20),
+                            child: ListTile(
+                              //contentPadding: EdgeInsets.only(bottom: 20),
+                              leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: Image.memory(Uint8List.fromList(shortedData[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
 
-                  return shortedData.length != 0
-                      ? AlphabetScrollView(
-                   // list: AdmirersListJson.admirersList.map((e) => AlphaModel(e["name"])).toList(),
-                    list: shortedData.map((e) => AlphaModel(e.admirerName)).toList(),
-                    itemExtent: 150,
-                    itemBuilder: (_, k, id) {
-                      print("=== ${data.contains(data[k].userId)}===");
-                      return  InkWell(
-                        onTap: ()=>Get.to(SingleAdmirers(admirers: shortedData[k]), transition: Transition.rightToLeft),
-                        child: Container(
-                          margin: EdgeInsets.only(bottom: 20),
-                          child: ListTile(
-                            //contentPadding: EdgeInsets.only(bottom: 20),
-                            leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(100),
-                                child: Image.memory(Uint8List.fromList(shortedData[k].profile) , height: 50, width: 50, fit: BoxFit.cover,)),
-
-                            title: Text("${shortedData[k].admirerName}",
-                              style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
+                              title: Text("${shortedData[k].admirerName}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black
+                                ),
+                              ),
+                              subtitle: Row(
+                                children: [
+                                  Row(
+                                    children: [
+                                      shortedData[k].rate > 80.00
+                                          ? Row(
+                                        children: [
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                        ],
+                                      )
+                                          : shortedData[k].rate > 60.00
+                                          ? Row(
+                                        children: [
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                        ],
+                                      ) :  shortedData[k].rate > 40.00
+                                          ? Row(
+                                        children: [
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                        ],
+                                      ) : shortedData[k].rate > 20.00
+                                          ? Row(
+                                        children: [
+                                          Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                        ],
+                                      ): Row(
+                                        children: [
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
+                                          Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(width: 20,),
+                                  Row(
+                                    children: [
+                                      Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
+                                      SizedBox(width: 5,),
+                                      Text("${(shortedData[k].rate/10).toStringAsFixed(0)}",
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            color: AppColors.blue
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                ],
                               ),
                             ),
-                            subtitle: Row(
-                              children: [
-                                Row(
-                                  children: [
-                                    shortedData[k].rate > 80.00
-                                    ? Row(
-                                      children: [
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                      ],
-                                    )
-                                        : shortedData[k].rate > 60.00
-                                        ? Row(
-                                      children: [
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                      ],
-                                    ) :  shortedData[k].rate > 40.00
-                                        ? Row(
-                                      children: [
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                      ],
-                                    ) : shortedData[k].rate > 20.00
-                                        ? Row(
-                                      children: [
-                                        Icon(Icons.favorite, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                      ],
-                                    ): Row(
-                                      children: [
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,),
-                                        Icon(Icons.favorite_border, size: 20, color: AppColors.mainColor,)
-                                      ],
-                                    )
-                                  ],
-                                ),
-                                SizedBox(width: 20,),
-                                Row(
-                                  children: [
-                                    Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
-                                    SizedBox(width: 5,),
-                                    Text("${(shortedData[k].rate/10).toStringAsFixed(0)}",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.blue
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
                           ),
-                        ),
-                      ) ;
-                    },
-                    selectedTextStyle: TextStyle(color: AppColors.blue, fontSize: 15,),
-                    unselectedTextStyle: TextStyle(color: AppColors.blue.withOpacity(0.7), fontSize: 12),
-                  )
-                      : Center(child: Text("You don't have any Admirer yet!\nAdd new admirer.",
+                        ) ;
+                      },
+                      selectedTextStyle: TextStyle(color: AppColors.blue, fontSize: 15,),
+                      unselectedTextStyle: TextStyle(color: AppColors.blue.withOpacity(0.7), fontSize: 12),
+                    )
+                        : const Center(child: Text("You don't have any Admirer yet!\nAdd new admirer.",
                       textAlign: TextAlign.center,
                     ),);
+                  }
+
                 }
               ),
             ),

@@ -625,8 +625,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 );
                var box = await Boxes.getAdmirers;
                 box.put("$id",data);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 2,)));
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 1,)));
+                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("New Admirers Profile Added!"),
                   backgroundColor: Colors.green,
                   duration: Duration(milliseconds: 3000),

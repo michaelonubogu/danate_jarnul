@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<channels>
+    <channel id="basic_channel"
+        name="Basic Channel"
+        description="This is the basic notification channel"
+        importance="HIGH"/>
+</channels>
