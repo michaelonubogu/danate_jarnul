@@ -17,6 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../model/admirers_model/admirers_model.dart';
 import '../../model/dates_model/dates_screen_model.dart';
 import '../../model/profile_model/profile_model.dart';
+import '../../notification/notification.dart';
 import '../../utility/app_input_rightIcons.dart';
 import '../../utility/app_colors.dart';
 import 'package:intl/intl.dart';
@@ -59,12 +60,11 @@ class _EditDatesState extends State<EditDates> {
     dec.text = widget.datesModel.description;
     selectedDate = widget.datesModel.date;
     _dateTime = widget.datesModel.time;
-    location.text = widget.datesModel.location;
+    location.text = widget.datesModel.location["location"].toString();
     allReminders.addAll(widget.datesModel.reminders);
     outFitList.addAll(widget.datesModel.outfit);
     purseCheck.addAll(widget.datesModel.purses);
     selectedAdmirerProfiles.addAll(widget.datesModel.admirer);
-
   }
 
   //image picker global variable
@@ -73,6 +73,7 @@ class _EditDatesState extends State<EditDates> {
 
   // this is profile image store variable
   var outfitImage, outfitImageStr;
+  var selectLocationList;
 
 
   Map<String, dynamic> selectedAdmirerProfiles = {};
@@ -86,7 +87,10 @@ class _EditDatesState extends State<EditDates> {
 
   //reminder time
   var _reminderTime = DateFormat('hh:mm a').format(DateTime.now());
+  //reminder time
 
+  var reminderAlarmTime;
+  var reminderAlarmDate;
   //this list for out fit
   List<Map<String, dynamic>> outFitList = [];
 
@@ -96,6 +100,8 @@ class _EditDatesState extends State<EditDates> {
 
   //this list for all Reminders
   List<Map<String, dynamic>> allReminders = [];
+
+
 
   //show selected locatiom
   Future showSelectedLocation(BuildContext context)async{
@@ -108,8 +114,12 @@ class _EditDatesState extends State<EditDates> {
     // When a BuildContext is used from a StatefulWidget, the mounted property
     // must be checked after an asynchronous gap.
     if (!mounted) return;
-    location.text = result;
     print("this is result location $result");
+    setState(() {
+      selectLocationList = result.toString();
+      location.text = result["location"];
+    });
+
   }
 
   //user auth
@@ -675,7 +685,7 @@ class _EditDatesState extends State<EditDates> {
                                     description: dec.text,
                                     date: selectedDate.toString(),
                                     time: _dateTime.toString(),
-                                    location: location.text,
+                                    location: selectLocationList,
                                     outfit: outFitList,
                                     reminders: allReminders,
                                     purses: purseCheck,
@@ -920,9 +930,12 @@ class _EditDatesState extends State<EditDates> {
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate)
       setState(() {
+
+
         selectedDate = DateFormat.yMMMd().format(picked);
         date.text = selectedDate;
-        print("this is date === ${date.text}");
+        reminderAlarmDate = DateFormat('yyyy-MM-dd').format(picked);
+        print("this is date === ${reminderAlarmDate}");
       });
   }
 
@@ -1214,6 +1227,8 @@ class _EditDatesState extends State<EditDates> {
                     ),
                     IconButton(
                       onPressed: (){
+                        int nId = Random().nextInt(1001);
+
                         var item = allReminders.firstWhere((i) => i["reminder_id"] == id); // getting the item
                         var index = allReminders.indexOf(item); // Item index
                         allReminders[index] ={
@@ -1224,6 +1239,20 @@ class _EditDatesState extends State<EditDates> {
                         }; // replace item at the index
                         print("allReminders true");
                         print("allReminders true ${allReminders}");
+
+                        var formetedDateTime = "${reminderAlarmDate} ${reminderAlarmTime}";
+                        // var formetedDateTime = DateTime.now().toString();
+                        // print("this is remider date and time === ${formetedDateTime}");
+                        //
+                        //
+                        // NotificationServices.showNotification(
+                        //     id: nId,
+                        //     title: "Hey! Today you have a date with ${selectedAdmirerProfiles["name"]}",
+                        //     body: "Today you have a date with ${selectedAdmirerProfiles["name"]}\n Location: ${location.text}",
+                        //     interval: DateTime.parse(formetedDateTime));
+                        //
+                        // debugPrint("this is notification times ===${formetedDateTime} ");
+
                         setState(() => Navigator.pop(context));
 
                       },
@@ -1257,6 +1286,7 @@ class _EditDatesState extends State<EditDates> {
                       onTimeChange: (time) {
                         setState(() {
                           _reminderTime = DateFormat('hh:mm a').format(time);
+                          reminderAlarmTime = "${time.hour}:${time.minute}:${time.second}";
                         });
                       },
                     )
