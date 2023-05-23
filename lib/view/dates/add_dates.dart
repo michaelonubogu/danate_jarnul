@@ -1,8 +1,9 @@
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
-
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dante/boxs/boxs.dart';
+import 'package:dante/notification/notification.dart';
 import 'package:dante/utility/app_button.dart';
 import 'package:dante/view/admirer/add_profile.dart';
 import 'package:dante/view/dates/location_map.dart';
@@ -63,7 +64,10 @@ class _AddDatesState extends State<AddDates> {
   var _dateTime = DateFormat('hh:mm a').format(DateTime.now());
 
   //reminder time
-  var _reminderTime = DateFormat('hh:mm a').format(DateTime.now());
+  var _reminderTime;
+
+  var reminderAlarmTime;
+  var reminderAlarmDate;
 
   //this list for out fit
   List<Map<String, dynamic>> outFitList = [];
@@ -74,6 +78,8 @@ class _AddDatesState extends State<AddDates> {
 
   //this list for all Reminders
   List<Map<String, dynamic>> allReminders = [];
+
+  var selectLocationList;
 
   //show selected locatiom
   Future showSelectedLocation(BuildContext context)async{
@@ -86,21 +92,24 @@ class _AddDatesState extends State<AddDates> {
     // When a BuildContext is used from a StatefulWidget, the mounted property
     // must be checked after an asynchronous gap.
     if (!mounted) return;
-   setState(() {
-     location.text = result;
-   });
     print("this is result location $result");
+   setState(() {
+     selectLocationList = result;
+     location.text = result["location"];
+   });
+
   }
 
   //user auth
-  var userId;
+  var userToken;
   getLogedInUser()async{
-    var loginRes = await Boxes.getLogin.get("users");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      userId = loginRes?.id;
+      userToken = prefs.getString("token");
     });
   }
 
+  
 
   //show user profile
   ProfileModel? showUserProfile;
@@ -149,7 +158,14 @@ class _AddDatesState extends State<AddDates> {
     super.initState();
     getLogedInUser();
     showProfile();
+   // Boxes.getDates.clear();
   }
+
+
+
+
+  DateTime scheduledDateTime = DateTime(2023, 5, 20, 03, 40, 40); // Replace with your desired date and time
+
 
 
   @override
@@ -389,7 +405,13 @@ class _AddDatesState extends State<AddDates> {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("${location.text.isNotEmpty ? location.text : "Search Location"}", style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),),
+                                SizedBox(
+                                  width: size.width*0.60,
+                                  child: Text("${location.text.isNotEmpty ? location.text : "Search Location"}",
+                                    overflow: TextOverflow.ellipsis,
+
+                                    style: TextStyle(fontSize: 14, color: Colors.black, fontWeight: FontWeight.w400),),
+                                ),
                               ],
                             )
                           ],
@@ -520,7 +542,7 @@ class _AddDatesState extends State<AddDates> {
                                         ),
                                       ),
                                       SizedBox(height: 10, ),
-                                      Text("${data["reminder_time"]}",
+                                      Text("${reminderAlarmTime !=null ? data["reminder_time"] :"Set Time"}",
                                         style: TextStyle(
                                             fontWeight: FontWeight.w500,
                                             fontSize: 12,
@@ -689,38 +711,77 @@ class _AddDatesState extends State<AddDates> {
                         ),
                       ),
                       onClick: ()async{
-                        SharedPreferences prefs = await SharedPreferences.getInstance();
-                        var userToken = await prefs.getString("token");
+                        print("this ===== ${reminderAlarmTime}");
+                        if(title.text.isNotEmpty && selectedAdmirerProfiles.isNotEmpty && dec.text.isNotEmpty && selectedDate.isNotEmpty
+                        && _dateTime.isNotEmpty && purseCheck.isNotEmpty && outFitList.isNotEmpty && allReminders.isNotEmpty
+                        ){
+                          if(reminderAlarmTime!=null){
 
-                        //id
-                        var id = new Random().nextInt(1000);
+                            //reminder time is not null
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            var userToken = await prefs.getString("token");
 
-                        var data = DatesModel(
-                            id: id,
-                            token: userToken!,
-                            title: title.text,
-                            admirer: selectedAdmirerProfiles,
-                            description: dec.text,
-                            date: selectedDate.toString(),
-                            time: _dateTime.toString(),
-                            location: location.text,
-                            outfit: outFitList,
-                            reminders: allReminders,
-                            purses: purseCheck,
-                            userProfile: showUserProfile!
-                        );
-                        var box = await Boxes.getDates;
-                        box.put("$id", data);
-                        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 0,)));
+                            print("this is date for reminder ${reminderAlarmDate} ${reminderAlarmTime}");
 
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("New Date Added!"),
-                          backgroundColor: Colors.green,
-                          duration: Duration(milliseconds: 3000),
-                        ));
-                        if(kDebugMode){
-                          print("admirer added");
+                            //id
+                            var id = new Random().nextInt(1000);
+
+                            var data = DatesModel(
+                                id: id,
+                                token: userToken!,
+                                title: title.text,
+                                admirer: selectedAdmirerProfiles,
+                                description: dec.text,
+                                date: selectedDate.toString(),
+                                time: _dateTime.toString(),
+                                location: selectLocationList,
+                                outfit: outFitList,
+                                reminders: allReminders,
+                                purses: purseCheck,
+                                userProfile: showUserProfile!
+                            );
+                            var box = await Boxes.getDates;
+
+                            print("schedule notification send");
+                            box.put("$id", data);
+
+                            // NotificationServices.showNotification(
+                            //     id: id,
+                            //     title: "Hey! Today you have a date with ${allReminders[0]["name"]}",
+                            //     body: "Today you have a date with ${allReminders[0]["name"]}\n Location: ${location.text}",
+                            //     interval: DateTime.parse("${reminderAlarmDate} ${reminderAlarmTime}"));
+
+
+
+                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 0,)));
+
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("New Date Added!"),
+                              backgroundColor: Colors.green,
+                              duration: Duration(milliseconds: 3000),
+                            ));
+                            if(kDebugMode){
+                              print("admirer added");
+                            }
+
+
+                          }else{
+                            //reminder time is null
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Reminder time is missing. Set reminder time."),
+                              backgroundColor: Colors.red,
+                              duration: Duration(milliseconds: 3000),
+                            ));
+                          }
+                        }else{
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                            content: Text("Filed must not be empty. Some filed is empty."),
+                            backgroundColor: Colors.red,
+                            duration: Duration(milliseconds: 3000),
+                          ));
                         }
+
+
 
                       }
 
@@ -738,9 +799,252 @@ class _AddDatesState extends State<AddDates> {
     );
   }
 
+  ///TODO:
+  //show reminder popup
+  Future showReminderPopup() {
+    var size = MediaQuery.of(context).size;
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.all(20),
+                titlePadding: EdgeInsets.zero,
+                actionsPadding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                title: Row(
+                  children: [
+                    IconButton(
+                      onPressed: ()=>Navigator.pop(context),
+                      icon: Icon(Icons.close),
+                    ),
+                    SizedBox(width: 30,),
+                    Text('Set Reminder',
+                      style: TextStyle(
+                          color: AppColors.blue
+                      ),
+                    ),
+                  ],
+                ),
+                content: SingleChildScrollView(
+                  child: ListBody(
+                    children:  <Widget>[
+                      TextFormField(
+                        controller: reminderName,
+                        decoration: InputDecoration(
+                            hintText: "Remainder Name",
+                            contentPadding: EdgeInsets.only(left: 15, right: 15),
+                            focusedBorder:OutlineInputBorder(
+                              borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            border:OutlineInputBorder(
+                              borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            enabledBorder:OutlineInputBorder(
+                              borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(5.0),
+                            )
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      TextFormField(
+                        controller: reminderText,
+                        maxLines: 4,
+                        decoration: InputDecoration(
+                            hintText: "Type...",
+                            filled: true,
+                            fillColor: Colors.grey.shade200,
+                            contentPadding: EdgeInsets.only(left: 15, top: 15, right: 15),
+                            focusedBorder:OutlineInputBorder(
+                              borderSide:  BorderSide.none,
+                              borderRadius: BorderRadius.circular(5.0),
+
+                            ),
+                            border:OutlineInputBorder(
+                              borderSide:  BorderSide.none,
+                              //borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(5.0),
+                            ),
+                            enabledBorder:OutlineInputBorder(
+                              borderSide:  BorderSide.none,
+                              //borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
+                              borderRadius: BorderRadius.circular(5.0),
+                            )
+                        ),
+                      ),
+                      SizedBox(height: 30,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(width: 110,
+                            child: AppButton(
+                                size: size,
+                                child: Text("SAVE",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                onClick: ()async{
+                                  Random random = new Random();
+                                  int id = random.nextInt(100);
+                                  Map<String, dynamic> data = {
+                                    "reminder_id" : id.toString(),
+                                    "reminder_name" : reminderName.text,
+                                    "reminder_text" : reminderText.text,
+                                    "reminder_time" : _reminderTime,
+                                  };
+
+                                  setState((){
+                                    allReminders.add(data);
+                                    print("this is outFitList ${allReminders}");
+                                    print("this is outFitList ${data}");
+                                    reminderText.clear();
+                                    reminderName.clear();
+                                  });
+
+                                  setState(()=>Navigator.pop(context));
+                                }
+                            ),
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+
+              );
+            }
+        );
+      },
+    );
+  }
+
+  //show reminder time popup
+  Future<void> shoReminderTimePopup({required int index,  required String id, required String name, required String text}) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+            builder: (context, setState) {
+              return AlertDialog(
+                contentPadding: EdgeInsets.all(10),
+                titlePadding: EdgeInsets.only(top: 10, bottom: 0),
+                actionsPadding: EdgeInsets.zero,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    IconButton(
+                      onPressed: ()=>Navigator.pop(context),
+                      icon: Icon(Icons.close),
+                    ),
+                    Text('Set Reminder Time',
+                      style: TextStyle(
+                          color: AppColors.blue
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: (){
+                        var item = allReminders.firstWhere((i) => i["reminder_id"] == id); // getting the item
+                        var index = allReminders.indexOf(item); // Item index
+                        allReminders[index] ={
+                          "reminder_id": id,
+                          "reminder_name": name,
+                          "reminder_text": text,
+                          "reminder_time": _reminderTime,
+                        }; // replace item at the index
+                        print("allReminders true");
+                        print("allReminders true ${allReminders}");
+
+
+                       var formetedDateTime = "${reminderAlarmDate} ${reminderAlarmTime}";
+                       // var formetedDateTime = DateTime.now().toString();
+                        print("this is remider date and time === ${formetedDateTime}");
+
+
+                        NotificationServices.showNotification(
+                            id: int.parse(id),
+                            title: "Hey! Today you have a date with ${selectedAdmirerProfiles["name"]}",
+                            body: "Today you have a date with ${selectedAdmirerProfiles["name"]}\n Location: ${location.text}",
+                            interval: DateTime.parse("$formetedDateTime"));
+
+                        debugPrint("this is notification times ===${formetedDateTime} ");
+
+
+
+                        setState(() => Navigator.pop(context));
+
+                      },
+                      icon: Icon(Icons.check, color: AppColors.blue,),
+                    ),
+                  ],
+                ),
+                content: Container(
+                    height:300,
+                    width: 300.0,
+                    padding: EdgeInsets.only(top: 15, bottom: 0),
+                    decoration: BoxDecoration(
+                        border: Border(
+                            top: BorderSide(width: 1, color: AppColors.blue)
+                        )
+                    ),
+                    child: TimePickerSpinner(
+                      is24HourMode: false,
+                      normalTextStyle: TextStyle(
+                          fontSize: 24,
+                          color: Colors.grey
+                      ),
+                      highlightedTextStyle: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.blue
+                      ),
+                      spacing: 50,
+                      itemHeight: 80,
+                      isForce2Digits: true,
+                      onTimeChange: (time) {
+                        setState(() {
+                          _reminderTime = DateFormat('hh:mm a').format(time);
+                          reminderAlarmTime = "${time.hour}:${time.minute}:${time.second}";
+                          debugPrint("this is reminder time === ${reminderAlarmTime}");
+
+                        });
+                      },
+                    )
+                ),
+              );
+            }
+        );
+      },
+    );
+  }
+
+
+
 
   //show admirer profiles
   Future<void> showAdmirers() async {
+
+    //empty admirer model list
+    List<AdmirerModel> shortedData = [];
+    for(var i = 0; i<  Boxes.getAdmirers.length; i++){
+      var data =  Boxes.getAdmirers.getAt(i);
+      if(data?.userId == userToken.toString()){
+        shortedData.add(data!);
+      }
+    }
+
+
+
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -779,20 +1083,18 @@ class _AddDatesState extends State<AddDates> {
                   children: [
                     Boxes.getAdmirers.length != 0? ListView.builder(
                       shrinkWrap: true,
-                      itemCount:  Boxes.getAdmirers.length,
+                      itemCount:  shortedData.length,
                       itemBuilder: (_, index){
-                        var data = Boxes.getAdmirers.getAt(index);
 
-                        print("this is admirers $data");
                         return InkWell(
                           onTap: (){
 
                           setState((){
                             selectedAdmirerProfiles.clear();
-                            selectedAdmirerProfiles.assignAll({
-                              "id": data!.id,
-                              "name" : data!.admirerName,
-                              "profile" : data!.profile,
+                            selectedAdmirerProfiles.addAll({
+                              "id": shortedData[index]!.id,
+                              "name" : shortedData[index]!.admirerName,
+                              "profile" : shortedData[index]!.profile,
                             });
 
                             print("select admirers ${selectedAdmirerProfiles.isNotEmpty}");
@@ -813,13 +1115,13 @@ class _AddDatesState extends State<AddDates> {
                                     height: 40,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(5),
-                                      child: Image.memory(data!.profile,
+                                      child: Image.memory(shortedData[index]!.profile,
                                         fit: BoxFit.cover,
                                       ),
                                     ),
                                   ),
                                   SizedBox(width: 10,),
-                                  Text(data!.admirerName,
+                                  Text(shortedData[index]!.admirerName,
                                     style: TextStyle(
                                       fontSize: 17,
                                       fontWeight: FontWeight.w500,
@@ -949,9 +1251,11 @@ class _AddDatesState extends State<AddDates> {
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate)
       setState(() {
+        reminderAlarmDate = DateFormat('yyyy-MM-dd').format(picked);
         selectedDate = DateFormat.yMMMd().format(picked);
         date.text = selectedDate;
         print("this is date === ${date.text}");
+        print("this is date === ${picked}");
       });
   }
 
@@ -1089,213 +1393,6 @@ class _AddDatesState extends State<AddDates> {
      },
    );
  }
-
-  //show reminder popup
-  Future showReminderPopup() {
-    var size = MediaQuery.of(context).size;
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                contentPadding: EdgeInsets.all(20),
-                titlePadding: EdgeInsets.zero,
-                actionsPadding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                title: Row(
-                children: [
-                  IconButton(
-                    onPressed: ()=>Navigator.pop(context),
-                    icon: Icon(Icons.close),
-                  ),
-                  SizedBox(width: 30,),
-                  Text('Set Reminder',
-                    style: TextStyle(
-                        color: AppColors.blue
-                    ),
-                  ),
-                ],
-              ),
-                content: SingleChildScrollView(
-                  child: ListBody(
-                    children:  <Widget>[
-                      TextFormField(
-                        controller: reminderName,
-                        decoration: InputDecoration(
-                            hintText: "Remainder Name",
-                            contentPadding: EdgeInsets.only(left: 15, right: 15),
-                            focusedBorder:OutlineInputBorder(
-                              borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            border:OutlineInputBorder(
-                              borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            enabledBorder:OutlineInputBorder(
-                              borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
-                              borderRadius: BorderRadius.circular(5.0),
-                            )
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-                      TextFormField(
-                        controller: reminderText,
-                        maxLines: 4,
-                        decoration: InputDecoration(
-                          hintText: "Type...",
-                          filled: true,
-                            fillColor: Colors.grey.shade200,
-                            contentPadding: EdgeInsets.only(left: 15, top: 15, right: 15),
-                            focusedBorder:OutlineInputBorder(
-                              borderSide:  BorderSide.none,
-                              borderRadius: BorderRadius.circular(5.0),
-
-                            ),
-                            border:OutlineInputBorder(
-                              borderSide:  BorderSide.none,
-                              //borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
-                              borderRadius: BorderRadius.circular(5.0),
-                            ),
-                            enabledBorder:OutlineInputBorder(
-                              borderSide:  BorderSide.none,
-                              //borderSide: const BorderSide(color: AppColors.blue, width: 1.0),
-                              borderRadius: BorderRadius.circular(5.0),
-                            )
-                        ),
-                      ),
-                      SizedBox(height: 30,),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(width: 110,
-                            child: AppButton(
-                                size: size,
-                                child: Text("SAVE",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                onClick: ()async{
-                                  Random random = new Random();
-                                  int id = random.nextInt(100);
-                                  Map<String, dynamic> data = {
-                                    "reminder_id" : id.toString(),
-                                    "reminder_name" : reminderName.text,
-                                    "reminder_text" : reminderText.text,
-                                    "reminder_time" : _reminderTime,
-                                  };
-
-                                  setState((){
-                                    allReminders.add(data);
-                                    print("this is outFitList ${allReminders}");
-                                    print("this is outFitList ${data}");
-                                    reminderText.clear();
-                                    reminderName.clear();
-                                  });
-                                  setState(()=>Navigator.pop(context));
-                                }
-                            ),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                ),
-
-              );
-            }
-        );
-      },
-    );
-  }
-
-  //show reminder time popup
-  Future<void> shoReminderTimePopup({required int index,  required String id, required String name, required String text}) async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                contentPadding: EdgeInsets.all(10),
-                titlePadding: EdgeInsets.only(top: 10, bottom: 0),
-                actionsPadding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      onPressed: ()=>Navigator.pop(context),
-                      icon: Icon(Icons.close),
-                    ),
-                    Text('Set Reminder Time',
-                      style: TextStyle(
-                          color: AppColors.blue
-                      ),
-                    ),
-                    IconButton(
-                      onPressed: (){
-                        var item = allReminders.firstWhere((i) => i["reminder_id"] == id); // getting the item
-                        var index = allReminders.indexOf(item); // Item index
-                        allReminders[index] ={
-                          "reminder_id": id,
-                          "reminder_name": name,
-                          "reminder_text": text,
-                          "reminder_time": _reminderTime,
-                        }; // replace item at the index
-                        print("allReminders true");
-                        print("allReminders true ${allReminders}");
-                        setState(() => Navigator.pop(context));
-
-                      },
-                      icon: Icon(Icons.check, color: AppColors.blue,),
-                    ),
-                  ],
-                ),
-                content: Container(
-                    height:300,
-                    width: 300.0,
-                    padding: EdgeInsets.only(top: 15, bottom: 0),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            top: BorderSide(width: 1, color: AppColors.blue)
-                        )
-                    ),
-                    child: TimePickerSpinner(
-                      is24HourMode: false,
-                      normalTextStyle: TextStyle(
-                          fontSize: 24,
-                          color: Colors.grey
-                      ),
-                      highlightedTextStyle: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: AppColors.blue
-                      ),
-                      spacing: 50,
-                      itemHeight: 80,
-                      isForce2Digits: true,
-                      onTimeChange: (time) {
-                        setState(() {
-                          _reminderTime = DateFormat('hh:mm a').format(time);
-                        });
-                      },
-                    )
-                ),
-              );
-            }
-        );
-      },
-    );
-  }
 
 
   //show Outfit popup
