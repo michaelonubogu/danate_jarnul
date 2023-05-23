@@ -175,18 +175,27 @@ class _QuestionState extends State<Question> {
                 SizedBox(height: 5.h,),
                 AppButton(
                   onClick: ()async{
-                    var id = new Random().nextInt(1000);
-                    var data = {
-                      "id": id,
-                      "name": widget.name,
-                      "first_dating": status,
-                      "last_relationship": lRelation.text,
-                      "looking_partner": lookingPartnet.text,
-                      "next_relationship": nRelation.text,
-                      "take_info": true,
-                    };
-                    AuthController.initData(data);
-                    Get.to(Index(), transition: Transition.leftToRight);
+                    if(lookingPartnet.text.isNotEmpty && nRelation.text.isNotEmpty && lRelation.text.isNotEmpty){
+                      var id = new Random().nextInt(1000);
+                      var data = {
+                        "id": id,
+                        "name": widget.name,
+                        "first_dating": status,
+                        "last_relationship": lRelation.text,
+                        "looking_partner": lookingPartnet.text,
+                        "next_relationship": nRelation.text,
+                        "take_info": true,
+                      };
+                      AuthController.initData(data);
+                      Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context)=>Index()), (route) => false);
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Filed must not be empty!"),
+                        backgroundColor: Colors.red,
+                        duration: Duration(milliseconds: 3000),
+                      ));
+                    }
+
 
                     //reDirect Next Page
                     //Get.to(NiceToMeet(), transition: Transition.leftToRight);

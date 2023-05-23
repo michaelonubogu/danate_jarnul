@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dante/database/local_database.dart';
 import 'package:dante/model/journal_model/journal_model.dart';
 import 'package:dante/model/profile_model/profile_model.dart';
+import 'package:dante/notification/notification.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:dante/view/flash/flas_screen.dart';
@@ -39,6 +40,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage) async {
 void main() async {
   // WidgetsBinding.instance?.ensureVisualUpdate();
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationServices.initNotification();
   Directory appDocDir = await getApplicationDocumentsDirectory();
 
  await Hive
