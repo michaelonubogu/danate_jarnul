@@ -1,9 +1,14 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:dante/model/dates_model/dates_screen_model.dart';
 import 'package:dante/utility/app_bar.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/dates/edit_dates.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:hive/hive.dart';
 
 class SingleDates extends StatefulWidget {
@@ -20,8 +25,36 @@ class _SingleDatesState extends State<SingleDates> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("==== this is single dates ==== ${widget.datesModel.title}");
+    print("==== this is single dates ==== ${LatLng(widget.datesModel.location["lat"], widget.datesModel.location["lng"])}");
+
+    showMarker(lat: widget.datesModel.location["lat"], lng: widget.datesModel.location["lng"]);
   }
+
+
+  late CameraPosition _kLake;
+
+  //map controller
+  final Completer<GoogleMapController> _controller =
+  Completer<GoogleMapController>();
+
+  final Set<Marker> markers = new Set();
+
+  Future showMarker({double lat = 37.42796133580664, double lng = -122.085749655962}) async {
+    String imgurl = "https://gcdnb.pbrd.co/images/7nLfarqebz8M.png?o=1";
+    Uint8List bytes = (await NetworkAssetBundle(Uri.parse(imgurl))
+        .load(imgurl))
+        .buffer
+        .asUint8List();
+    markers.add(
+        Marker( //add first marker
+          markerId: MarkerId("showLocation.toString()"),
+          position: LatLng(lat, lng ), //position of marker
+          icon: BitmapDescriptor.fromBytes(bytes), //Icon for Marker
+        )
+    );
+    setState(() {});
+  }
+
 
 
   @override
@@ -58,10 +91,10 @@ class _SingleDatesState extends State<SingleDates> {
                         children: [
                           ClipRRect(
                             borderRadius: BorderRadius.circular(100),
-                            child: Image.memory(widget.datesModel.userProfile.profile, height: 45, width: 45, fit: BoxFit.cover,),
+                            child: Image.memory(widget.datesModel.admirer["profile"], height: 45, width: 45, fit: BoxFit.cover,),
                           ),
                           SizedBox(width: 15,),
-                          Text("${widget.datesModel.userProfile.fName} ${widget.datesModel.userProfile.lName}",
+                          Text("${widget.datesModel.admirer["name"]}",
                             style: TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.bold,
@@ -116,6 +149,15 @@ class _SingleDatesState extends State<SingleDates> {
                           color: Colors.black,
                           fontSize: 14,
                         ),
+                      ),
+                      SizedBox(height: 30,),
+                      Container(
+                        width: size.width,
+                        height: 170,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: getLocation(),
                       ),
                       SizedBox(height: 30,),
 
@@ -300,5 +342,36 @@ class _SingleDatesState extends State<SingleDates> {
       ),
     );
   }
+
+  getLocation(){
+    return widget.datesModel.location["lat"]==null
+        ? Center(child: CircularProgressIndicator(color: AppColors.blue,),)
+        : GoogleMap(
+      mapType: MapType.normal,
+      initialCameraPosition: CameraPosition(
+          bearing: 192.8334901395799,
+          target: LatLng(widget.datesModel.location["lat"], widget.datesModel.location["lng"]),
+          tilt: 59.440717697143555,
+          zoom: 14.151926040649414),
+      markers: markers,
+      myLocationEnabled: true,
+      onMapCreated: (GoogleMapController controller) {
+        _controller.complete(controller);
+      },
+      onTap: (value)async{
+        markers.clear();
+        final CameraPosition _kLake = CameraPosition(
+            bearing: 192.8334901395799,
+            target: LatLng(widget.datesModel.location["lat"], widget.datesModel.location["lng"]),
+            tilt: 59.440717697143555,
+            zoom: 19.151926040649414);
+        final GoogleMapController controller = await _controller.future;
+        controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
+        setState(() {});
+
+      },
+    );
+  }
+
 }
 
