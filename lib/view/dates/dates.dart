@@ -1,8 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:dante/model/dates_model/dates_screen_model.dart';
 import 'package:dante/utility/app_colors.dart';
 import 'package:dante/view/dates/single_dates.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:iconly/iconly.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,6 +15,7 @@ import 'package:sizer/sizer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../boxs/boxs.dart';
+import '../notification/notification.dart';
 import 'add_dates.dart';
 class DatesList extends StatefulWidget {
   const DatesList({Key? key}) : super(key: key);
@@ -38,11 +44,14 @@ class _DatesListState extends State<DatesList> {
 
 
 
-  bool isLoading = false;
+
+      bool isLoading = false;
 
   //empty admirer model list
   List<DatesModel> datesModel = [];
   List<DatesModel> currentDatesModel = [];
+
+
 
 
   getDates() async{
@@ -81,6 +90,8 @@ class _DatesListState extends State<DatesList> {
     getDates();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size; 
@@ -104,9 +115,11 @@ class _DatesListState extends State<DatesList> {
               ),
               child: Stack(
                 children: [
-                  Positioned(
-                      right: 0, top: 12,
-                      child: IconButton(onPressed: (){}, icon: Icon(IconlyLight.notification, color: AppColors.white,))),
+                  // Positioned(
+                  //     right: 0, top: 12,
+                  //     child: IconButton(onPressed: (){
+                  //       Navigator.push(context, MaterialPageRoute(builder: (context)=>Notifications()));
+                  //     }, icon: Icon(IconlyLight.notification, color: AppColors.white,))),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: InkWell(
@@ -176,7 +189,7 @@ class _DatesListState extends State<DatesList> {
                         color: AppColors.white,
                       ),
                     ),
-                    weekendDays: [DateTime.friday],
+                    weekendDays: [],
                     headerStyle: HeaderStyle(
                         titleCentered: true,
                         headerMargin: const EdgeInsets.only(top: 10, bottom: 15, left: 50, right: 50),
@@ -267,13 +280,14 @@ class _DatesListState extends State<DatesList> {
                         shrinkWrap: true,
                         itemCount: currentDatesModel.length,
                         itemBuilder: (context, index) {
-                          var img = currentDatesModel[index]?.userProfile.profile!;
+                         // Map<String, dynamic> location = jsonDecode("${currentDatesModel[index]?.location}");
+                          var img = currentDatesModel[index]?.admirer["profile"]!;
                           return  buildDatesWidget(
                               size,
                               profile: Image.memory(img!, height: 60, width: 60, fit: BoxFit.cover,),
                               name: "${currentDatesModel[index]?.title}",
                               date: "${currentDatesModel[index]?.date}",
-                              location: "${currentDatesModel[index]?.location}",
+                              location: "${currentDatesModel[index]?.location["location"]}",
                               onClick: ()=>Get.to(SingleDates(datesModel: currentDatesModel[index],), transition: Transition.rightToLeft)
                           );
                         }
@@ -414,4 +428,6 @@ class _DatesListState extends State<DatesList> {
                   ),
     );
   }
+
+
 }

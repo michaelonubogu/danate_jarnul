@@ -719,7 +719,7 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 );
                 var box = await Boxes.getAdmirers;
                 box.put("${widget.admirers.id}", data);
-               Get.to(Index(index: 2,), transition: Transition.leftToRight);
+               Get.to(Index(index: 1,), transition: Transition.leftToRight);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                   content: Text("New Admirers Profile Updated!"),
                   backgroundColor: Colors.green,

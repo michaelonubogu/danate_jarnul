@@ -77,6 +77,12 @@ class _GetNameState extends State<GetName> {
                           borderSide: BorderSide.none
                       )
                   ),
+                  validator: (v){
+                    if(v!.isEmpty){
+                      return "Field must not be empty!";
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 6.h,),
 
@@ -84,7 +90,15 @@ class _GetNameState extends State<GetName> {
                   onClick: ()async{
 
                     //reDirect Next Page
-                   Navigator.push(context, MaterialPageRoute(builder: (context)=>NiceToMeet(name: name.text,)));
+                    if(name.text.isNotEmpty){
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>NiceToMeet(name: name.text,)));
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Filed must not be empty!"),
+                        backgroundColor: Colors.red,
+                        duration: Duration(milliseconds: 3000),
+                      ));
+                    }
                   },
                   size: size,
                   child: Text("Next",
