@@ -88,6 +88,8 @@ dependencies:
   html_editor_enhanced: ^2.5.1
   flutter_html: ^3.0.0-alpha.6
   awesome_notifications: ^0.6.19
+  permission_handler: ^10.2.0
+  app_settings: ^4.2.0
 
 dev_dependencies:
   flutter_test:
@@ -141,11 +143,12 @@ flutter:
   fonts:
     - family: themeFont
       fonts:
-        - asset: assets/fonts/Montserrat-Bold.ttf
-        - asset: assets/fonts/Montserrat-Light.ttf
-        - asset: assets/fonts/Montserrat-Medium.ttf
-        - asset: assets/fonts/Montserrat-Regular.ttf
-        - asset: assets/fonts/Montserrat-SemiBold.ttf
+        - asset: assets/fonts/Poppins-Medium.ttf
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Exo2-SemiBold.ttf
+    - family: titleFont
+      fonts:
+        - asset: assets/fonts/Exo2-SemiBold.ttf
   #      - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
