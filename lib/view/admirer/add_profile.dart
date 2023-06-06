@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
+import 'package:dante/view/dates/add_dates.dart';
 import 'package:intl/intl.dart';
 import 'package:dante/boxs/boxs.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
@@ -22,7 +23,8 @@ import '../../utility/app_button.dart';
 import '../index.dart';
 
 class AddAdmirerProfile extends StatefulWidget {
-  const AddAdmirerProfile({Key? key}) : super(key: key);
+  final bool isBack;
+  const AddAdmirerProfile({Key? key,  this.isBack = false}) : super(key: key);
 
   @override
   State<AddAdmirerProfile> createState() => _AddAdmirerProfileState();
@@ -81,10 +83,14 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   final my_likes = TextEditingController();
   final my_dislikes = TextEditingController();
   final socialLink = TextEditingController();
+
+  List likeInputList = [''];
+  List dislikeInputList = [''];
   //store variables
   var choose, profile;
   List feature_images = [];
   List<Map> socialMediaList = [];
+
 
 
   @override
@@ -459,28 +465,41 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
             SizedBox(height: 15,),
-            TextFormField(
-              controller: my_likes,
-
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Enter text here",
-                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
-                  prefixIcon: Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.mainColor.withOpacity(0.6),
-                    ),
-                    child: Icon(Icons.add),
+            for(var i=0; i<likeInputList.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: TextFormField(
+                  onChanged: (val){
+                    likeInputList[i] = val;
+                    print("likeInputList === ${likeInputList}");
+                  },
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter text here",
+                      contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                      prefixIcon: InkWell(
+                        onTap:(){
+                          setState(() {
+                            likeInputList.add('');
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: AppColors.mainColor.withOpacity(0.6),
+                          ),
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
+                      )
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
+                ),
               ),
-            ),
 
             SizedBox(height: 30,),
             Text("My Dislikes",
@@ -490,28 +509,43 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               ),
             ),
             SizedBox(height: 15,),
-            TextFormField(
-              controller: my_dislikes,
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Enter text here",
+            for(var i=0; i<dislikeInputList.length; i++)
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: TextFormField(
+                  onChanged: (val){
+                    dislikeInputList[i]= val;
+                  },
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter text here",
 
-                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
-                  prefixIcon: Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.blue.withOpacity(0.6),
-                    ),
-                    child: Icon(Icons.add),
+                      contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                      prefixIcon: InkWell(
+                        onTap:(){
+                          setState(() {
+                            dislikeInputList.add('');
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: AppColors.blue.withOpacity(0.6),
+                          ),
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
+                      )
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
+                ),
               ),
-            ),
+
+
 
             SizedBox(height: 30,),
 
@@ -606,8 +640,6 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                 //image convert
                 Uint8List _profileImage = await profileImage.readAsBytes();
 
-                myLikes.add(my_likes.text);
-                myDisLikes.add(my_dislikes.text);
 
                 var data = AdmirerModel(
                     id: id,
@@ -619,13 +651,15 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     zodiacSign: zodiac_sign.text,
                     rate: _value,
                     description: description.text,
-                    myLikes: myLikes,
-                    myDislikes: myDisLikes,
+                    myLikes: likeInputList,
+                    myDislikes: dislikeInputList,
                     socialMedia: socialMediaList
                 );
                var box = await Boxes.getAdmirers;
                 box.put("$id",data);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 1,)));
+                widget.isBack
+                    ? Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>AddDates()))
+                    : Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Index(index: 1,)));
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                   content: Text("New Admirers Profile Added!"),
                   backgroundColor: Colors.green,
