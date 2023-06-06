@@ -316,10 +316,10 @@ class _DatesListState extends State<DatesList> {
                          shrinkWrap: true,
                           itemCount: datesModel.length,
                           itemBuilder: (context, index) {
-                           var img = datesModel[index]?.userProfile.profile!;
+
                            return  datesModel[index]?.date.contains(currentDates) != true ? buildDatesWidget(
                             size,
-                            profile: Image.memory(img!, height: 60, width: 60, fit: BoxFit.cover,),
+                            profile: Image.memory(datesModel[index]?.admirer["profile"]!, height: 60, width: 60, fit: BoxFit.cover,),
                             name: "${datesModel[index]?.title}",
                             date: "${datesModel[index]?.date}",
                             location: "${datesModel[index]?.location}",
