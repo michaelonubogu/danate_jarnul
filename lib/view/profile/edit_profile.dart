@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:dante/model/auth_model/email_verify_model.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:intl/intl.dart';
 import 'package:dante/controller/auth_controller/auth_controller.dart';
 import 'package:dante/utility/app_button.dart';
@@ -28,6 +29,26 @@ class _EditProfileState extends State<EditProfile> {
   final lName = TextEditingController();
   final dob = TextEditingController();
   final email = TextEditingController();
+  final zodiac_sign = TextEditingController();
+  String? zodiacSelectedValue;
+
+
+  final List<String> zodiacList = [
+    'Cancer',
+    'Sagittarius',
+    'Leo',
+    'Libra',
+    'Gemini',
+    'Taurus',
+    'Virgo',
+    'Pisces',
+    'Aquarius',
+    'Aries',
+    'Capricorn',
+    'Scorpio'
+  ];
+
+
 
 
   //image picker global variable
@@ -233,18 +254,64 @@ class _EditProfileState extends State<EditProfile> {
               ),
             ),
             SizedBox(height: 12,),
-            TextFormField(
-              onTap: ()=>selectDate(),
-              readOnly: true,
-              controller: dob,
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "MM-DD-YYYY",
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
+            // TextFormField(
+            //   onTap: ()=>selectDate(),
+            //   readOnly: true,
+            //   controller: dob,
+            //   decoration: InputDecoration(
+            //       filled: true,
+            //       fillColor: Colors.white,
+            //       hintText: "MM-DD-YYYY",
+            //       border: OutlineInputBorder(
+            //           borderRadius: BorderRadius.circular(10),
+            //           borderSide: BorderSide.none
+            //       )
+            //   ),
+            // ),
+            Container(
+              width: size.width,
+              height: 60,
+              padding: EdgeInsets.only(left: 15, right: 15),
+              decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton2(
+                  hint: Text(
+                    'Select Zodiac',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Theme.of(context).hintColor,
+                    ),
+                  ),
+                  items: zodiacList
+                      .map((item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      item,
+                      style: const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  )).toList(),
+
+
+                  value: zodiacSelectedValue,
+                  onChanged: (value) {
+                    setState(() {
+                      zodiacSelectedValue = value as String;
+                      zodiac_sign.text = zodiacSelectedValue!;
+                    });
+                  },
+                  buttonStyleData: const ButtonStyleData(
+                    height: 40,
+                    width: 140,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 40,
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20,),
@@ -281,15 +348,17 @@ class _EditProfileState extends State<EditProfile> {
                     ),
                   ),
                   onClick: (){
-                      if(profileImage != null){
-                        AuthController.editProfile(fName.text, lName.text, dob.text, email.text, profileImage, userid, context);
-                      }else{
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("Upload your profile image."),
-                          backgroundColor: Colors.red,
-                          duration: Duration(milliseconds: 3000),
-                        ));
-                      }
+                    AuthController.editProfile(fName.text, lName.text, zodiac_sign.text, email.text, profileImage, userid, context);
+
+                    // if(profileImage != null){
+                      //   AuthController.editProfile(fName.text, lName.text, zodiac_sign.text, email.text, profileImage, userid, context);
+                      // }else{
+                      //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //     content: Text("Upload your profile image."),
+                      //     backgroundColor: Colors.red,
+                      //     duration: Duration(milliseconds: 3000),
+                      //   ));
+                      // }
 
                    }),
             ),
