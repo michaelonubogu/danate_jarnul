@@ -145,10 +145,7 @@ class _AddDatesState extends State<AddDates> {
         print("this user profile ==== ${showUserProfile?.fName}");
         return profiles;
       }
-    }else{
-      return Get.to(EditProfile());
     }
-
 
   }
   
@@ -206,7 +203,6 @@ class _AddDatesState extends State<AddDates> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               Text("Date Title",
                 style: TextStyle(
                   fontSize: 16,
@@ -1085,7 +1081,6 @@ class _AddDatesState extends State<AddDates> {
                       shrinkWrap: true,
                       itemCount:  shortedData.length,
                       itemBuilder: (_, index){
-
                         return InkWell(
                           onTap: (){
 
@@ -1096,10 +1091,8 @@ class _AddDatesState extends State<AddDates> {
                               "name" : shortedData[index]!.admirerName,
                               "profile" : shortedData[index]!.profile,
                             });
-
                             print("select admirers ${selectedAdmirerProfiles.isNotEmpty}");
                             Navigator.pop(context);
-
                           });
 
                           },
@@ -1137,7 +1130,7 @@ class _AddDatesState extends State<AddDates> {
                     Positioned(
                       bottom: 10, right: 10,
                       child: InkWell(
-                        onTap: ()=>Get.to(AddAdmirerProfile(), transition: Transition.rightToLeft),
+                        onTap: ()=>Get.to(const AddAdmirerProfile(isBack: true,), transition: Transition.rightToLeft),
                         child: Container(
                           width: 100,
                           height: 40,
