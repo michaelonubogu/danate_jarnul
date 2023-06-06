@@ -21,7 +21,7 @@ class ProfileModelAdapter extends TypeAdapter<ProfileModel> {
       id: fields[1] as String,
       email: fields[5] as String,
       dob: fields[4] as String,
-      profile: fields[6] as Uint8List,
+      profile: fields[6] as dynamic,
       fName: fields[2] as String,
       lName: fields[3] as String,
     );

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:app_settings/app_settings.dart';
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dante/boxs/boxs.dart';
 import 'package:dante/utility/app_button.dart';
 import 'package:dante/view/auth/login.dart';
@@ -8,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get/get.dart';
 import 'package:iconly/iconly.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 
@@ -27,11 +30,31 @@ class _ProfileState extends State<Profile> {
   bool status = false;
 
   Future<ProfileModel>? showProfileFuture;
+  /// Initialize platform state.
+  Future<void> initPlatformState() async {
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+  }
 
 
   //EMAIL
-  var userid, email, fname, lname, image, isVerify;
+  var userid, dob, email, fname, lname, image, isVerify;
    showProfile()async{
+     //if is not permisson for notfication
+     await AwesomeNotifications().isNotificationAllowed().then(
+             (isAllow)async{
+           if(!isAllow){
+             await AwesomeNotifications().requestPermissionToSendNotifications();
+           }
+           setState(() {
+             status = isAllow;
+           });
+         }
+     );
+
+
      List userTokenList = [];
      List userIdList = [];
 
@@ -63,6 +86,7 @@ class _ProfileState extends State<Profile> {
            fname = profiles.fName;
            lname = profiles.lName;
            image = profiles.profile;
+           dob = profiles.dob;
          });
          return profiles;
        }
@@ -78,6 +102,7 @@ class _ProfileState extends State<Profile> {
     // TODO: implement initState
     super.initState();
     showProfile();
+    initPlatformState();
   }
 
   @override
@@ -133,7 +158,7 @@ class _ProfileState extends State<Profile> {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child:  Image.memory(image, height: 120, width: 120, fit: BoxFit.cover),
+                child: image != null? Image.memory(image, height: 120, width: 120, fit: BoxFit.cover) : Image.asset("assets/images/profile.jpeg", height: 120, width: 120,),
               ),
               SizedBox(height: 20,),
               Text("${fname} ${lname}",
@@ -149,7 +174,7 @@ class _ProfileState extends State<Profile> {
                 children: [
                   Icon(Icons.date_range, color: AppColors.mainColor,),
                   SizedBox(width: 10,),
-                  Text("January 15",
+                  Text("${dob}",
                     style: TextStyle(
                         fontSize: 13,
                         color: AppColors.textColor,
@@ -161,8 +186,6 @@ class _ProfileState extends State<Profile> {
             ],
           ),
         ):buildEditProfile(size),
-
-
             Padding(
               padding: EdgeInsets.all(30),
               child: Column(
@@ -298,6 +321,7 @@ class _ProfileState extends State<Profile> {
 
                         // showOnOff: true,
                         onToggle: (val) {
+                          openNotificationSettings();
                           setState(() {
                             status = val;
                           });
@@ -308,6 +332,19 @@ class _ProfileState extends State<Profile> {
                 );
   }
 
+  void openNotificationSettings() async {
+    await AwesomeNotifications().isNotificationAllowed().then(
+            (isAllow)async{
+          if(isAllow){
+            AppSettings.openNotificationSettings();
+          }
+          setState(() {
+            status = isAllow;
+          });
+        }
+    );
+
+  }
 
   Future<void> _showLogoutPopup() async {
      var size = MediaQuery.of(context).size;

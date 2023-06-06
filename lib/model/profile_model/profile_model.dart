@@ -38,7 +38,7 @@ class ProfileModel extends HiveObject{
   final String email;
 
   @HiveField(6)
-  final Uint8List profile;
+  final dynamic profile;
 
 
 }
