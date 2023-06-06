@@ -43,6 +43,9 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
   int myLikesCount = 1;
   int myDisLikesCount = 1;
 
+  List likeInputList = [''];
+  List dislikeInputList = [''];
+
 
   //image picker global variable
   final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
@@ -503,7 +506,13 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                               color: AppColors.mainColor.withOpacity(0.6),
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Center(child: Icon(IconlyLight.delete, color: Colors.grey,),),
+                            child: Center(child: InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    myLikes.removeAt(index);
+                                  });
+                                },
+                                child: Icon(IconlyLight.delete, color: Colors.grey,)),),
                           ),
                           SizedBox(width: 10,),
                           Text("${myLikes[index]}"),
@@ -513,27 +522,41 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                   }
               ),
             ),
-            TextFormField(
-              controller: my_likes, 
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Enter text here",
-                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
-                  prefixIcon: Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.blue.withOpacity(0.6),
-                    ),
-                    child: Icon(Icons.add),
+            for(var i=0; i<likeInputList.length; i++)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: TextFormField(
+                  onChanged: (val){
+                    likeInputList[i] = val;
+                    print("likeInputList === ${likeInputList}");
+                  },
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter text here",
+                      contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                      prefixIcon: InkWell(
+                        onTap:(){
+                          setState(() {
+                            likeInputList.add('');
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: AppColors.mainColor.withOpacity(0.6),
+                          ),
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
+                      )
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
+                ),
               ),
-            ),
 
             SizedBox(height: 30,),
             Text("My Dislikes",
@@ -568,7 +591,13 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                               color: AppColors.blue.withOpacity(0.5),
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Center(child: Icon(IconlyLight.delete, color: Colors.grey,),),
+                            child: Center(child: InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    myDisLikes.removeAt(index);
+                                  });
+                                },
+                                child: Icon(IconlyLight.delete, color: Colors.grey,)),),
                           ),
                           SizedBox(width: 10,),
                           Text("${myDisLikes[index]}"),
@@ -578,28 +607,41 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                   }
               ),
             ),
-            TextFormField(
-              controller: my_dislikes,
+            for(var i=0; i<dislikeInputList.length; i++)
+              Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: TextFormField(
+                  onChanged: (val){
+                    dislikeInputList[i]= val;
+                  },
+                  decoration: InputDecoration(
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: "Enter text here",
 
-              decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  hintText: "Enter text here",
-                  contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
-                  prefixIcon: Container(
-                    margin: EdgeInsets.all(3),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(5),
-                      color: AppColors.blue.withOpacity(0.6),
-                    ),
-                    child: Icon(Icons.add),
+                      contentPadding: EdgeInsets.only( right: 10, top: 15, bottom: 15),
+                      prefixIcon: InkWell(
+                        onTap:(){
+                          setState(() {
+                            dislikeInputList.add('');
+                          });
+                        },
+                        child: Container(
+                          margin: EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: AppColors.blue.withOpacity(0.6),
+                          ),
+                          child: Icon(Icons.add),
+                        ),
+                      ),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none
+                      )
                   ),
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide.none
-                  )
+                ),
               ),
-            ),
 
             SizedBox(height: 30,),
             Text("Social Media",
@@ -691,13 +733,20 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                 //id
                 //image convert
 
-                if(my_likes.text.isNotEmpty){
-                  myLikes.add(my_likes.text);
+                if(likeInputList.isNotEmpty){
+                  for(var i in likeInputList){
+                    myLikes.add(i);
+                  }
                 }
-                if(my_dislikes.text.isNotEmpty){
-                  myDisLikes.add(my_dislikes.text);
+                if(dislikeInputList.isNotEmpty){
+                  for(var i in likeInputList){
+                    myDisLikes.add(i);
+                  }
                 }
 
+
+                print("final myDisLikes === ${myDisLikes}");
+                print("final like === ${myLikes}");
 
 
 
