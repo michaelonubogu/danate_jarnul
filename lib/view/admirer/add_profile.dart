@@ -43,6 +43,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
   int myLikesCount = 1;
   int myDisLikesCount = 1;
 
+  final socialMediaFormKey = GlobalKey<FormState>();
+
 
   //image picker global variable
   final ImagePicker _picker = ImagePicker(); // this is Come from Image Picker Livery
@@ -71,7 +73,7 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
     'Facebook',
     'Instagram',
     'Twitter',
-    'Google',
+    'Tik-tok',
   ];
   String? selectedValue;
 
@@ -590,8 +592,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                                              ? "assets/icons/insta.png"
                                              : socialMediaList[index]["name"].contains("Twitter")
                                              ? "assets/icons/twitter.png"
-                                             : socialMediaList[index]["name"].contains("Google")
-                                             ? "assets/icons/fb.png"
+                                             : socialMediaList[index]["name"].contains("Tik-tok")
+                                             ? "assets/icons/tiktok.png"
                                               : "assets/icons/fb.png" ,
                                         height: 40, width: 40,),
                                       Icon(Icons.remove, color: Colors.red, size: 12,),
@@ -778,133 +780,140 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
               actionsPadding: EdgeInsets.zero,
              // contentPadding: EdgeInsets.all(10),
               content: SingleChildScrollView(
-                child: ListBody(
-                  children:  <Widget>[
-                    Text('Choose media',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 17,
-                        color: AppColors.blue
-                      ),
-                    ),
-                    SizedBox(height: 15,),
-                    Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5),
-                        border: Border.all(color: AppColors.blue, width: 1)
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          hint: Text(
-                            'Select Item',
-                            style: TextStyle(
-                              fontSize: 14,
-                              color: Theme.of(context).hintColor,
-                            ),
-                          ),
-                          items: items
-                              .map((item) => DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(
-                              item,
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
-                            ),
-                          ))
-                              .toList(),
-                          value: selectedValue,
-                          onChanged: (value) {
-                            setState(() {
-                              selectedValue = value as String;
-
-                            });
-                          },
-                          buttonStyleData: const ButtonStyleData(
-                            height: 40,
-                            width: 140,
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 30,),
-                    Text('Profile link',
-                      style: TextStyle(
+                child: Form(
+                  key: socialMediaFormKey,
+                  child: ListBody(
+                    children:  <Widget>[
+                      Text('Choose media',
+                        style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 17,
                           color: AppColors.blue
-                      ),
-                    ),
-                    SizedBox(height: 15,),
-                    TextFormField(
-                      controller: socialLink,
-                      decoration: InputDecoration(
-                          filled: true,
-                          contentPadding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-                          fillColor: Colors.white,
-                          hintText: "Choose Sign",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0),
-                              borderSide: BorderSide(
-                                  color: AppColors.blue)),
-                        focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color:
-                            AppColors.blue)),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide:  BorderSide(color:
-                          AppColors.blue),
                         ),
                       ),
-                    ),
+                      SizedBox(height: 15,),
+                      Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(5),
+                          border: Border.all(color: AppColors.blue, width: 1)
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2(
+                            hint: Text(
+                              'Select Item',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: items
+                                .map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ))
+                                .toList(),
+                            value: selectedValue,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedValue = value as String;
 
-
-                    SizedBox(height: 20,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        AppButton(
-                          onClick: ()=>Navigator.pop(context), //rout the next login pages
-                          size: size*.25,
-                          bg: Colors.grey.shade300,
-                          child: Text("Cancel",
-                            style: TextStyle(
-                                fontSize: 15, color:AppColors.textColor, fontWeight: FontWeight.w500
+                              });
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              height: 40,
+                              width: 140,
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
                             ),
                           ),
                         ),
-                        AppButton(
-                          onClick: (){
-                            socialMediaList.add(
-                              {
-                                "name" : selectedValue,
-                                "link" : socialLink.text,
-                              },
-                            );
-                            setState((){
+                      ),
+                      SizedBox(height: 30,),
+                      Text('Profile link',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 17,
+                            color: AppColors.blue
+                        ),
+                      ),
+                      SizedBox(height: 15,),
+                      TextFormField(
+                        controller: socialLink,
+                        validator: (value)=>RegExp(r"^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$").hasMatch(value!)?null:'Invalid url',
+                        decoration: InputDecoration(
+                            filled: true,
+                            contentPadding: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
+                            fillColor: Colors.white,
+                            hintText: "Choose Sign",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(0),
+                                borderSide: BorderSide(
+                                    color: AppColors.blue)),
+                          focusedBorder: OutlineInputBorder(
+                              borderSide: BorderSide(color:
+                              AppColors.blue)),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide:  BorderSide(color:
+                            AppColors.blue),
+                          ),
+                        ),
+                      ),
 
-                            });
-                            socialLink.clear();
-                            Navigator.pop(context);
-                          }, //rout the next login pages
-                          size: size*.25,
-                          child: Text("Save",
-                            style: TextStyle(
-                                fontSize: 15, color:AppColors.white, fontWeight: FontWeight.w500
+
+                      SizedBox(height: 20,),
+
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          AppButton(
+                            onClick: ()=>Navigator.pop(context), //rout the next login pages
+                            size: size*.25,
+                            bg: Colors.grey.shade300,
+                            child: Text("Cancel",
+                              style: TextStyle(
+                                  fontSize: 15, color:AppColors.textColor, fontWeight: FontWeight.w500
+                              ),
                             ),
                           ),
-                        )
-                      ],
-                    ),
+                          AppButton(
+                            onClick: (){
+                              if(socialMediaFormKey.currentState!.validate()){
+                                socialMediaList.add(
+                                  {
+                                    "name" : selectedValue,
+                                    "link" : socialLink.text,
+                                  },
+                                );
+                                setState((){
 
-                    SizedBox(height: 10,),
+                                });
+                                socialLink.clear();
+                                Navigator.pop(context);
+                              }
 
-                  ],
+                            }, //rout the next login pages
+                            size: size*.25,
+                            child: Text("Save",
+                              style: TextStyle(
+                                  fontSize: 15, color:AppColors.white, fontWeight: FontWeight.w500
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+
+                      SizedBox(height: 10,),
+
+                    ],
+                  ),
                 ),
               ),
 
