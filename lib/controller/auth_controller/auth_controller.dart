@@ -52,19 +52,20 @@ class AuthController{
   static Future editProfile(fname, lname, dob, email, image, userid, context)async{
     var res = await Boxes.getProfile;
    // await res.put("user_profile", data);//insert data
+    var _image;
+    if(image != null){
+       _image = await image.readAsBytes();
+    }else{
+       _image = null;
+    }
 
-    List<int> imageBytes = await image.readAsBytes();
-    ImageObject imageObject = ImageObject()
-      ..bytes = imageBytes;
-
-    Uint8List _image = await image.readAsBytes();
     var id = new Random().nextInt(1000);
     var data = ProfileModel(
         userId: userid.toString(),
         id: id.toString(),
         email: email,
         dob: dob,
-        profile: _image,
+        profile: image !=null ? _image : image,
         fName: fname,
         lName: lname
     );
