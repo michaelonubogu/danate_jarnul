@@ -1,5 +1,8 @@
 import 'dart:math';
 
+import 'package:dante/boxs/boxs.dart';
+import 'package:dante/view/profile/edit_profile.dart';
+
 import '../../../controller/auth_controller/auth_controller.dart';
 import '../../../database/local_database.dart';
 import '../../index.dart';
@@ -108,14 +111,14 @@ class _QuestionState extends State<Question> {
                   ),
                 ) ,
                 SizedBox(height: 3.h,),
-                Text("Why did your last relationship end?",
+                status ? SizedBox() : Text("Why did your last relationship end?",
                   style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 18, color: AppColors.textColor
                   ),
                 ),
-                SizedBox(height: 15,),
-                TextFormField(
+                status ? SizedBox() : SizedBox(height: 15,),
+                status ? SizedBox() : TextFormField(
                   controller: lRelation,
                   maxLines: 3,
                   decoration: InputDecoration(
@@ -175,7 +178,7 @@ class _QuestionState extends State<Question> {
                 SizedBox(height: 5.h,),
                 AppButton(
                   onClick: ()async{
-                    if(lookingPartnet.text.isNotEmpty && nRelation.text.isNotEmpty && lRelation.text.isNotEmpty){
+                    if(lookingPartnet.text.isNotEmpty && nRelation.text.isNotEmpty){
                       var id = new Random().nextInt(1000);
                       var data = {
                         "id": id,
@@ -187,7 +190,7 @@ class _QuestionState extends State<Question> {
                         "take_info": true,
                       };
                       AuthController.initData(data);
-                      Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context)=>Index()), (route) => false);
+                      Navigator.pushAndRemoveUntil(context,  MaterialPageRoute(builder: (context)=>EditProfile()), (route) => false);
                     }else{
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                         content: Text("Filed must not be empty!"),
