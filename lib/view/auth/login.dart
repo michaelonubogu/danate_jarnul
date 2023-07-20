@@ -24,7 +24,6 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    email.text = "nayon.coders@gmail.com";
   }
 
   @override
@@ -75,7 +74,7 @@ class _LoginState extends State<Login> {
                   decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
-                    hintText: "johan@gmail.com",
+                    hintText: "Email Address",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide: BorderSide.none
