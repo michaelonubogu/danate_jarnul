@@ -764,7 +764,8 @@ class _EditAdmirerProfileState extends State<EditAdmirerProfile> {
                     description: description.text,
                     myLikes: myLikes,
                     myDislikes: myDisLikes,
-                    socialMedia: socialMediaList
+                    socialMedia: socialMediaList,
+                    datesCount: widget.admirers.datesCount
                 );
                 var box = await Boxes.getAdmirers;
                 box.put("${widget.admirers.id}", data);

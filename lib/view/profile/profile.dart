@@ -42,17 +42,7 @@ class _ProfileState extends State<Profile> {
   //EMAIL
   var userid, dob, email, fname, lname, image, isVerify;
    showProfile()async{
-     //if is not permisson for notfication
-     await AwesomeNotifications().isNotificationAllowed().then(
-             (isAllow)async{
-           if(!isAllow){
-             await AwesomeNotifications().requestPermissionToSendNotifications();
-           }
-           setState(() {
-             status = isAllow;
-           });
-         }
-     );
+
 
 
      List userTokenList = [];
@@ -103,6 +93,7 @@ class _ProfileState extends State<Profile> {
     super.initState();
     showProfile();
     initPlatformState();
+    openNotificationSettings();
   }
 
   @override
@@ -195,7 +186,8 @@ class _ProfileState extends State<Profile> {
                     image: "assets/icons/info.png",
                     title: "Notification",
                     isTrailing: true,
-                  ),
+
+                 ),
                   buildProfileItems(
                     image: "assets/icons/baloon.png",
                     title: "Relationships Goals",
@@ -306,44 +298,55 @@ class _ProfileState extends State<Profile> {
                         color: AppColors.textColor
                       ),
                     ),
-                    trailing: isTrailing ? Container(
-                      width: 40.0,
-                      margin: EdgeInsets.only(right: 20),
-                      child: FlutterSwitch(
-                        activeColor: AppColors.blue,
-                        padding: 2,
+                    trailing: isTrailing ? InkWell(
+                      child: Container(
                         width: 40.0,
-                        height: 20.0,
-                        valueFontSize: 5.0,
-                        toggleSize: 15.0,
-                        value: status,
-                        borderRadius: 30.0,
+                        margin: EdgeInsets.only(right: 20),
+                        child: InkWell(
+                          child: FlutterSwitch(
+                            activeColor: AppColors.blue,
+                            padding: 2,
+                            width: 40.0,
+                            height: 20.0,
+                            valueFontSize: 5.0,
+                            toggleSize: 15.0,
+                            value: status,
+                            borderRadius: 30.0,
 
-                        // showOnOff: true,
-                        onToggle: (val) {
-                          openNotificationSettings();
-                          setState(() {
-                            status = val;
-                          });
-                        },
+                            // showOnOff: true,
+                            onToggle: (val) {
+                              setState(() {
+                                status = val;
+                                if(status == false){
+                                  AppSettings.openNotificationSettings();
+                                }
+                              });
+                              print("click");
+                            },
+                          ),
+                        ),
                       ),
                     ):SizedBox(),
                   ),
                 );
   }
 
+  bool isNotificationOn = false;
   void openNotificationSettings() async {
-    await AwesomeNotifications().isNotificationAllowed().then(
+     print("click notification method");
+   return await AwesomeNotifications().isNotificationAllowed().then(
             (isAllow)async{
           if(isAllow){
-            AppSettings.openNotificationSettings();
+            setState(() {
+              status = false;
+            });
+
           }
           setState(() {
-            status = isAllow;
+            status = true;
           });
         }
     );
-
   }
 
   Future<void> _showLogoutPopup() async {

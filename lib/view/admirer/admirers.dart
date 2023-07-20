@@ -163,7 +163,7 @@ class _AdmirersState extends State<Admirers> {
                                     children: [
                                       Icon(Icons.event_note_outlined, color: AppColors.blue, size: 17,),
                                       SizedBox(width: 5,),
-                                      Text("${(shortedData[k].rate/10).toStringAsFixed(0)}",
+                                      Text("${(shortedData[k].datesCount)}",
                                         style: TextStyle(
                                             fontSize: 14,
                                             color: AppColors.blue

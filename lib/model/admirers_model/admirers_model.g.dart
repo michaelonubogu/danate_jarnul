@@ -31,6 +31,7 @@ class AdmirerModelAdapter extends TypeAdapter<AdmirerModel> {
       socialMedia: (fields[11] as List)
           .map((dynamic e) => (e as Map).cast<dynamic, dynamic>())
           .toList(),
+      datesCount: fields[12] as dynamic,
     );
   }
 

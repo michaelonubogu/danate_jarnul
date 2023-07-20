@@ -17,6 +17,7 @@ class AdmirerModel extends HiveObject{
     required this.myLikes,
     required this.myDislikes,
     required this.socialMedia,
+    required this.datesCount,
   });
 
   @HiveField(0)
@@ -43,6 +44,8 @@ class AdmirerModel extends HiveObject{
   final List myDislikes;
   @HiveField(11)
   final List<Map> socialMedia;
+  @HiveField(12)
+  final dynamic datesCount;
 
 }
 

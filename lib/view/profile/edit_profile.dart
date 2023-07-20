@@ -247,7 +247,7 @@ class _EditProfileState extends State<EditProfile> {
 
             SizedBox(height: 20,),
 
-            Text("Date Of Birth",
+            Text("Zodiac",
               style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 18, color: AppColors.textColor

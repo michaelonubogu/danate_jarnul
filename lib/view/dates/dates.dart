@@ -322,7 +322,7 @@ class _DatesListState extends State<DatesList> {
                             profile: Image.memory(datesModel[index]?.admirer["profile"]!, height: 60, width: 60, fit: BoxFit.cover,),
                             name: "${datesModel[index]?.title}",
                             date: "${datesModel[index]?.date}",
-                            location: "${datesModel[index]?.location}",
+                            location: "${datesModel[index]?.location["location"]}",
                             onClick: ()=>Get.to(SingleDates(datesModel: datesModel[index],), transition: Transition.rightToLeft)
                   ):SizedBox();
                          }

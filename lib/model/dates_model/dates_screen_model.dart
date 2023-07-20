@@ -18,7 +18,7 @@ class DatesModel extends HiveObject{
     required this.outfit,
     required this.reminders,
     required this.purses,
-    required this.userProfile
+    required this.userProfile,
   });
 
 

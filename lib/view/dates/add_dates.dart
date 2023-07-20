@@ -45,6 +45,8 @@ class _AddDatesState extends State<AddDates> {
   final reminderText = TextEditingController();
   final purseCheckText = TextEditingController();
 
+  final titleFocus = FocusNode();
+  final desFocus = FocusNode();
 
   //image picker global variable
   final ImagePicker _picker = ImagePicker();
@@ -83,6 +85,8 @@ class _AddDatesState extends State<AddDates> {
 
   //show selected locatiom
   Future showSelectedLocation(BuildContext context)async{
+    titleFocus.unfocus();
+    desFocus.unfocus();
     // Navigator.push returns a Future that completes after calling
     // Navigator.pop on the Selection Screen.
     final result = await Navigator.push(
@@ -98,6 +102,19 @@ class _AddDatesState extends State<AddDates> {
      location.text = result["location"];
    });
 
+  }
+  List<AdmirerModel> shortedData = [];
+  getAdmirersProfile()async{
+    shortedData.clear();
+    //empty admirer model list
+    for(var i = 0; i<  Boxes.getAdmirers.length; i++){
+      var data =  Boxes.getAdmirers.getAt(i);
+      if(data?.userId == userToken.toString()){
+        setState(() {
+          shortedData.add(data!);
+        });
+      }
+    }
   }
 
   //user auth
@@ -153,9 +170,18 @@ class _AddDatesState extends State<AddDates> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    getAdmirersProfile();
     getLogedInUser();
     showProfile();
+
+
    // Boxes.getDates.clear();
+  }
+  @override
+  void dispose() {
+    desFocus.dispose();
+    titleFocus.dispose();
+    super.dispose();
   }
 
 
@@ -163,6 +189,15 @@ class _AddDatesState extends State<AddDates> {
 
   DateTime scheduledDateTime = DateTime(2023, 5, 20, 03, 40, 40); // Replace with your desired date and time
 
+  bool errorTitle = false;
+  bool errorDes = false;
+  bool errorAdmirer = false;
+  bool errorDate = false;
+  bool errorTime = false;
+  bool errorLocation = false;
+  bool errorOutFit = false;
+  bool errorReminder = false;
+  bool errorPurseCheck = false;
 
 
   @override
@@ -212,16 +247,18 @@ class _AddDatesState extends State<AddDates> {
               SizedBox(height: 15,),
               TextFormField(
                 controller: title,
+                focusNode: titleFocus,
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     hintText: "Choose Sign",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none
+                        borderSide: errorTitle?BorderSide(width: 1, color: Colors.red): BorderSide.none
                     )
                 ),
               ),
+              errorTitle ? errorText("Title must not be empty.") : SizedBox(),
               SizedBox(height: 30,),
               Text("Admirers",
                 style: TextStyle(
@@ -238,14 +275,15 @@ class _AddDatesState extends State<AddDates> {
                   decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(5),
-                     // border: Border.all(color: AppColors.blue, width: 1)
+                      border: errorAdmirer ? Border.all(color: Colors.red, width: 1) : Border.all(width: 0)
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       SizedBox(
                         width: size.width*0.70,
-                        child: selectedAdmirerProfiles.isNotEmpty ? buildAdmirerWidget(
+                        child: selectedAdmirerProfiles.isNotEmpty
+                            ? buildAdmirerWidget(
                           image: selectedAdmirerProfiles["profile"],
                           name: selectedAdmirerProfiles["name"],
                         ) : Padding(
@@ -262,6 +300,7 @@ class _AddDatesState extends State<AddDates> {
                   ),
                 ),
               ),
+              errorAdmirer ? errorText("Choose admirers!") : SizedBox(),
 
               SizedBox(height: 30,),
               Text("Description",
@@ -274,16 +313,19 @@ class _AddDatesState extends State<AddDates> {
               TextFormField(
                 controller: dec,
                 maxLines: 6,
+                focusNode: desFocus,
                 decoration: InputDecoration(
                     filled: true,
                     fillColor: Colors.white,
                     hintText: "Write here...",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none
+                        borderSide: errorDes ? BorderSide(width: 1, color: Colors.red): BorderSide.none
                     )
                 ),
               ),
+
+              errorDes ? errorText("Description must not be empty!") : SizedBox(),
 
               SizedBox(height: 30,),
               Text("Date & Time",
@@ -301,7 +343,7 @@ class _AddDatesState extends State<AddDates> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
-                    // border: Border.all(color: AppColors.blue, width: 1)
+                    border: errorDate? Border.all(color: Colors.red, width: 1) : Border.all(width: 0)
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -329,6 +371,8 @@ class _AddDatesState extends State<AddDates> {
                   ),
                 ),
               ),
+              errorDate ? errorText("Select Date!") : SizedBox(),
+
 
               SizedBox(height: 15,),
               InkWell(
@@ -339,7 +383,7 @@ class _AddDatesState extends State<AddDates> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
-                    // border: Border.all(color: AppColors.blue, width: 1)
+                    border: errorTime ? Border.all(color: Colors.red, width: 1) : Border.all(width: 0)
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -367,7 +411,7 @@ class _AddDatesState extends State<AddDates> {
                   ),
                 ),
               ),
-
+              errorTime ? errorText("Select Time!") : SizedBox(),
 
               //location
               SizedBox(height: 30,),
@@ -386,7 +430,7 @@ class _AddDatesState extends State<AddDates> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(5),
-                    // border: Border.all(color: AppColors.blue, width: 1)
+                    border: errorLocation ? Border.all(color: Colors.red, width: 1) : Border.all(width: 0),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -417,6 +461,7 @@ class _AddDatesState extends State<AddDates> {
                   ),
                 ),
               ),
+              errorLocation ? errorText("Location must not be empty!") : SizedBox(),
 
               //Out fit
               SizedBox(height: 30,),
@@ -475,10 +520,12 @@ class _AddDatesState extends State<AddDates> {
               padding: EdgeInsets.all(20),
               decoration: BoxDecoration(
                   color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(10)
+                  borderRadius: BorderRadius.circular(10),
+                border: errorOutFit ? Border.all(width: 1, color: Colors.red) : Border.all(width: 0)
               ),
               child: Center(child: Text("No outfit found", style: TextStyle(color: AppColors.textColor)),)),
               //add text button, its a user
+              errorOutFit ? errorText("Add Outfit!") : SizedBox(),
               AddTextButton(
                 text: "Add Outfit",
                 onClick: ()=>showOutfitPopup(),
@@ -499,7 +546,7 @@ class _AddDatesState extends State<AddDates> {
                 height: 130.00 * allReminders.length,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10)
+                    borderRadius: BorderRadius.circular(10),
                 ),
                 child: SizedBox(
                   child: ListView.builder(
@@ -606,10 +653,12 @@ class _AddDatesState extends State<AddDates> {
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                       color: Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(10)
+                      borderRadius: BorderRadius.circular(10),
+                    border: errorReminder ? Border.all(width: 1, color: Colors.red) : Border.all(width: 1)
               ),
               child: Center(child: Text("No reminder found", style: TextStyle(color: AppColors.textColor),),)),
               //add text button, its a user
+              errorReminder ? errorText("Add reminder!") : SizedBox(),
               AddTextButton(
                 text: "Add Reminders",
                 onClick: ()=>showReminderPopup(),
@@ -683,10 +732,12 @@ class _AddDatesState extends State<AddDates> {
                   padding: EdgeInsets.all(20),
                   decoration: BoxDecoration(
                       color: Colors.grey.shade400,
-                      borderRadius: BorderRadius.circular(10)
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(width: 1,color: Colors.red)
                   ),
                   child: Center(child: Text("No purse items", style: TextStyle(color: AppColors.textColor)),)),
               //add text button, its a user
+             errorPurseCheck ? errorText("AddPurse Check items!"):
               AddTextButton(
                 text: "Add More",
                 onClick: ()=>showPurseCheckPopup(),
@@ -708,8 +759,40 @@ class _AddDatesState extends State<AddDates> {
                       ),
                       onClick: ()async{
                         print("this ===== ${reminderAlarmTime}");
-                        if(title.text.isNotEmpty && selectedAdmirerProfiles.isNotEmpty && dec.text.isNotEmpty && selectedDate.isNotEmpty
-                        && _dateTime.isNotEmpty && purseCheck.isNotEmpty && outFitList.isNotEmpty && allReminders.isNotEmpty
+
+                        if(title.text.isEmpty){
+                          setState(() =>errorTitle = true);
+                        }
+                        if(dec.text.isEmpty){
+                          setState(() =>errorDes = true);
+                        }
+                        if(selectedAdmirerProfiles.isEmpty){
+                          setState(() =>errorAdmirer = true);
+                        }
+                        if(selectedDate.isEmpty){
+                          setState(() =>errorDate = true);
+                        }
+                        if(_dateTime.isEmpty){
+                          setState(() =>errorTime = true);
+                        }
+                        if(purseCheck.isEmpty){
+                          setState(() =>errorPurseCheck = true);
+                        }
+                        if(outFitList.isEmpty){
+                          setState(() =>errorOutFit = true);
+                        }
+                         if(allReminders.isEmpty){
+                          setState(() =>errorReminder = true);
+                        }
+                         if(location.text.isEmpty){
+                          setState(() =>errorLocation = true);
+                        }
+
+
+
+
+
+                        if(errorLocation != true && errorReminder!= true && errorOutFit!= true && errorPurseCheck!= true && errorAdmirer!= true && errorTitle!= true && errorDes!= true && errorDate!= true && errorTime!= true
                         ){
                           if(reminderAlarmTime!=null){
 
@@ -734,12 +817,34 @@ class _AddDatesState extends State<AddDates> {
                                 outfit: outFitList,
                                 reminders: allReminders,
                                 purses: purseCheck,
-                                userProfile: showUserProfile!
+                                userProfile: showUserProfile!,
                             );
                             var box = await Boxes.getDates;
 
                             print("schedule notification send");
+                            //dates add
                             box.put("$id", data);
+
+                            //admirers update dates count
+                            var admirerDatesUpdate = AdmirerModel(
+                                id: shortedData[selectedAdmirerProfiles['index']]!.id,
+                                admirerName: shortedData[selectedAdmirerProfiles['index']]!.admirerName,
+                                userId: shortedData[selectedAdmirerProfiles['index']]!.userId,
+                                profile: shortedData[selectedAdmirerProfiles['index']]!.profile,
+                                featureImages: shortedData[selectedAdmirerProfiles['index']]!.featureImages,
+                                dob: shortedData[selectedAdmirerProfiles['index']]!.dob,
+                                zodiacSign: shortedData[selectedAdmirerProfiles['index']]!.zodiacSign,
+                                rate: shortedData[selectedAdmirerProfiles['index']]!.rate,
+                                description: shortedData[selectedAdmirerProfiles['index']]!.description,
+                                myLikes: shortedData[selectedAdmirerProfiles['index']]!.myLikes,
+                                myDislikes: shortedData[selectedAdmirerProfiles['index']]!.myDislikes,
+                                socialMedia: shortedData[selectedAdmirerProfiles['index']]!.socialMedia,
+                                datesCount: 1
+                            );
+
+
+                            var admirerBox = Boxes.getAdmirers;
+                            admirerBox.put("${shortedData[selectedAdmirerProfiles['index']]!.id}", admirerDatesUpdate);
 
                             // NotificationServices.showNotification(
                             //     id: id,
@@ -770,8 +875,8 @@ class _AddDatesState extends State<AddDates> {
                             ));
                           }
                         }else{
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                            content: Text("Filed must not be empty. Some filed is empty."),
+                          ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
+                            content: Text("Some filed is empty."),
                             backgroundColor: Colors.red,
                             duration: Duration(milliseconds: 3000),
                           ));
@@ -795,9 +900,24 @@ class _AddDatesState extends State<AddDates> {
     );
   }
 
+  Padding errorText(text) {
+    return Padding(
+              padding:  const EdgeInsets.only(top: 5),
+              child: Text("$text",
+                style: TextStyle(
+                  fontSize: 10,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.red,
+                ),
+              ),
+            );
+  }
+
   ///TODO:
   //show reminder popup
   Future showReminderPopup() {
+    titleFocus.unfocus();
+    desFocus.unfocus();
     var size = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
@@ -818,7 +938,7 @@ class _AddDatesState extends State<AddDates> {
                       icon: Icon(Icons.close),
                     ),
                     SizedBox(width: 30,),
-                    Text('Set Reminder',
+                    const Text('Set Reminder',
                       style: TextStyle(
                           color: AppColors.blue
                       ),
@@ -905,7 +1025,17 @@ class _AddDatesState extends State<AddDates> {
                                     reminderName.clear();
                                   });
 
+
                                   setState(()=>Navigator.pop(context));
+
+                                  shoReminderTimePopup(
+                                    index: id,
+                                    name: data["reminder_name"],
+                                    text: data["reminder_text"],
+                                    id: data["reminder_id"],
+                                  );
+
+                                  setState((){});
                                 }
                             ),
                           )
@@ -929,7 +1059,7 @@ class _AddDatesState extends State<AddDates> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return StatefulBuilder(
-            builder: (context, setState) {
+            builder: (context, StateSetter setState) {
               return AlertDialog(
                 contentPadding: EdgeInsets.all(10),
                 titlePadding: EdgeInsets.only(top: 10, bottom: 0),
@@ -950,6 +1080,7 @@ class _AddDatesState extends State<AddDates> {
                     ),
                     IconButton(
                       onPressed: (){
+                        setState((){
                         var item = allReminders.firstWhere((i) => i["reminder_id"] == id); // getting the item
                         var index = allReminders.indexOf(item); // Item index
                         allReminders[index] ={
@@ -958,12 +1089,11 @@ class _AddDatesState extends State<AddDates> {
                           "reminder_text": text,
                           "reminder_time": _reminderTime,
                         }; // replace item at the index
-                        print("allReminders true");
-                        print("allReminders true ${allReminders}");
+
 
 
                        var formetedDateTime = "${reminderAlarmDate} ${reminderAlarmTime}";
-                       // var formetedDateTime = DateTime.now().toString();
+                       //var formetedDateTime = DateTime.parse("${reminderAlarmDate} ${timeR}");
                         print("this is remider date and time === ${formetedDateTime}");
 
 
@@ -971,14 +1101,12 @@ class _AddDatesState extends State<AddDates> {
                             id: int.parse(id),
                             title: "Hey! Today you have a date with ${selectedAdmirerProfiles["name"]}",
                             body: "Today you have a date with ${selectedAdmirerProfiles["name"]}\n Location: ${location.text}",
-                            interval: DateTime.parse("$formetedDateTime"));
-
+                            interval: formetedDateTime,
+                        );
                         debugPrint("this is notification times ===${formetedDateTime} ");
 
-
-
                         setState(() => Navigator.pop(context));
-
+                        });
                       },
                       icon: Icon(Icons.check, color: AppColors.blue,),
                     ),
@@ -1029,17 +1157,9 @@ class _AddDatesState extends State<AddDates> {
 
   //show admirer profiles
   Future<void> showAdmirers() async {
-
-    //empty admirer model list
-    List<AdmirerModel> shortedData = [];
-    for(var i = 0; i<  Boxes.getAdmirers.length; i++){
-      var data =  Boxes.getAdmirers.getAt(i);
-      if(data?.userId == userToken.toString()){
-        shortedData.add(data!);
-      }
-    }
-
-
+    titleFocus.unfocus();
+    desFocus.unfocus();
+    getAdmirersProfile();
 
     return showDialog<void>(
       context: context,
@@ -1079,7 +1199,7 @@ class _AddDatesState extends State<AddDates> {
                   children: [
                     Boxes.getAdmirers.length != 0? ListView.builder(
                       shrinkWrap: true,
-                      itemCount:  shortedData.length,
+                      itemCount: shortedData.length,
                       itemBuilder: (_, index){
                         return InkWell(
                           onTap: (){
@@ -1090,8 +1210,10 @@ class _AddDatesState extends State<AddDates> {
                               "id": shortedData[index]!.id,
                               "name" : shortedData[index]!.admirerName,
                               "profile" : shortedData[index]!.profile,
+                              "index" : index!,
                             });
-                            print("select admirers ${selectedAdmirerProfiles.isNotEmpty}");
+
+                            print("select admirers ${index}");
                             Navigator.pop(context);
                           });
 
@@ -1167,6 +1289,8 @@ class _AddDatesState extends State<AddDates> {
 
   //show admirer profiles
   Future<void> selectTime() async {
+    titleFocus.unfocus();
+    desFocus.unfocus();
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
@@ -1237,6 +1361,8 @@ class _AddDatesState extends State<AddDates> {
 
   //select date
   Future selectDate() async {
+    desFocus.unfocus();
+    titleFocus.unfocus();
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: DateTime.now(),
@@ -1244,6 +1370,8 @@ class _AddDatesState extends State<AddDates> {
         lastDate: DateTime(2101));
     if (picked != null && picked != selectedDate)
       setState(() {
+        desFocus.unfocus();
+        titleFocus.unfocus();
         reminderAlarmDate = DateFormat('yyyy-MM-dd').format(picked);
         selectedDate = DateFormat.yMMMd().format(picked);
         date.text = selectedDate;
@@ -1254,6 +1382,8 @@ class _AddDatesState extends State<AddDates> {
 
   //show Outfit popup
  Future showOutfitPopup() {
+   titleFocus.unfocus();
+   desFocus.unfocus();
     var size = MediaQuery.of(context).size;
    return showDialog<void>(
      context: context,
@@ -1390,6 +1520,8 @@ class _AddDatesState extends State<AddDates> {
 
   //show Outfit popup
   Future showPurseCheckPopup() {
+    titleFocus.unfocus();
+    desFocus.unfocus();
     var size = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
@@ -1485,7 +1617,6 @@ class _AddDatesState extends State<AddDates> {
                                   ),
                                 ),
                                 onClick: ()async{
-                                  Uint8List outFitImage = await outfitImage.readAsBytes();
                                   Map<String, dynamic> data = {
                                     "name" : purseCheckText.text,
                                   };

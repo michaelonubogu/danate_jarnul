@@ -45,7 +45,7 @@ class NotificationServices{
   required int id,
     required String title,
     required String body,
-    required DateTime interval,
+    required dynamic interval,
   })async{
     await AwesomeNotifications().createNotification(
         content: NotificationContent(
@@ -59,7 +59,7 @@ class NotificationServices{
 
     ),
     schedule: NotificationCalendar.fromDate(
-        date: interval,
+        date: DateTime.parse("$interval"),
     preciseAlarm: true,
     allowWhileIdle: true,
       repeats:  true

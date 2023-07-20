@@ -61,6 +61,7 @@ class _EditDatesState extends State<EditDates> {
     selectedDate = widget.datesModel.date;
     _dateTime = widget.datesModel.time;
     location.text = widget.datesModel.location["location"].toString();
+    selectLocationList = widget.datesModel.location;
     allReminders.addAll(widget.datesModel.reminders);
     outFitList.addAll(widget.datesModel.outfit);
     purseCheck.addAll(widget.datesModel.purses);
@@ -672,11 +673,9 @@ class _EditDatesState extends State<EditDates> {
                               ),
                               onClick: ()async{
                                 SharedPreferences prefs = await SharedPreferences.getInstance();
-                                var userToken = await prefs.getString("token");
-
+                                var userToken = prefs.getString("token");
                                 //id
-                                var id = new Random().nextInt(1000);
-
+                                var id = Random().nextInt(1000);
                                 var data = DatesModel(
                                     id: widget.datesModel.id,
                                     token: userToken!,
@@ -689,12 +688,12 @@ class _EditDatesState extends State<EditDates> {
                                     outfit: outFitList,
                                     reminders: allReminders,
                                     purses: purseCheck,
-                                    userProfile: widget.datesModel.userProfile!
+                                    userProfile: widget.datesModel.userProfile!,
                                 );
-                                var box = await Boxes.getDates;
+                                var box = Boxes.getDates;
                                 box.put("${widget.datesModel.id}", data);
-                                Get.to(Index(index: 0,), transition: Transition.rightToLeft);
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                Get.to(const Index(index: 0,), transition: Transition.rightToLeft);
+                                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                   content: Text("New Date Added!"),
                                   backgroundColor: Colors.green,
                                   duration: Duration(milliseconds: 3000),
@@ -702,9 +701,7 @@ class _EditDatesState extends State<EditDates> {
                                 if(kDebugMode){
                                   print("admirer added");
                                 }
-
                               }
-
                           ),
                         ),
                       )

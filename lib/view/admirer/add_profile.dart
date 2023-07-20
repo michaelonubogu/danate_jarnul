@@ -655,7 +655,8 @@ class _AddAdmirerProfileState extends State<AddAdmirerProfile> {
                     description: description.text,
                     myLikes: likeInputList,
                     myDislikes: dislikeInputList,
-                    socialMedia: socialMediaList
+                    socialMedia: socialMediaList,
+                    datesCount: 0,
                 );
                var box = await Boxes.getAdmirers;
                 box.put("$id",data);

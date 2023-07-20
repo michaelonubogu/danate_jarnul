@@ -82,6 +82,6 @@
             android:value="ca-app-pub-5493668820008873~2726237081"/>
 
         <meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAxUQH8_NmYUWZ7e7C87snjisIxFgPXg0I"/>
+            android:value="AIzaSyCS9orM8gbh3bO4nmbpkghU0th684YjPKc"/>
     </application>
 </manifest>

@@ -24,6 +24,8 @@ class AddJournals extends StatefulWidget {
 class _AddJournalsState extends State<AddJournals> {
 
   HtmlEditorController controller = HtmlEditorController();
+  FocusNode focusNode = FocusNode();
+
 
   //user auth
   //empty admirer model list
@@ -53,6 +55,14 @@ class _AddJournalsState extends State<AddJournals> {
     // TODO: implement initState
     super.initState();
     getLogedInUser();
+    this.focusNode = FocusNode();
+
+  }
+  @override
+  void dispose() {
+    this.focusNode.dispose();
+
+    super.dispose();
   }
 
 
@@ -146,6 +156,8 @@ class _AddJournalsState extends State<AddJournals> {
 
             SizedBox(height: 10,),
             TextFormField(
+
+              focusNode: focusNode,
               style: TextStyle(
                 fontSize: 28,
                 color: AppColors.blue.withOpacity(0.9),
@@ -167,7 +179,13 @@ class _AddJournalsState extends State<AddJournals> {
                 )
               ),
             ),
-            TextEditor(controller: controller, size: size, hintText: "Write your journal here...",),
+            InkWell(
+                onTap: (){
+                  focusNode.unfocus(); 
+                },
+                child: Container(
+                    width: size.width,
+                    child: TextEditor(controller: controller, size: size, hintText: "Write your journal here...",))),
           ],
         ),
       ),
@@ -216,119 +234,120 @@ class _AddJournalsState extends State<AddJournals> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return StatefulBuilder(
-            builder: (context, setState) {
-              return AlertDialog(
-                contentPadding: EdgeInsets.all(10),
-                titlePadding: EdgeInsets.only(top: 10, bottom: 0),
-                actionsPadding: EdgeInsets.zero,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(32.0))),
-                title: Row(
-                  children: [
-                    IconButton(
-                      onPressed: ()=>Navigator.pop(context),
-                      icon: Icon(Icons.close),
-                    ),
-                    Text('Choose Admirers',
-                      style: TextStyle(
-                          color: AppColors.blue
-                      ),
-                    ),
-                  ],
+        return AlertDialog(
+          contentPadding: EdgeInsets.all(10),
+          titlePadding: EdgeInsets.only(top: 10, bottom: 0),
+          actionsPadding: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(32.0))),
+          title: Row(
+            children: [
+              IconButton(
+                onPressed: ()=>Navigator.pop(context),
+                icon: Icon(Icons.close),
+              ),
+              Text('Choose Admirers',
+                style: TextStyle(
+                    color: AppColors.blue
                 ),
-                content: Container(
-                    height:300,
-                    width: 300.0,
-                    padding: EdgeInsets.only(top: 15, bottom: 0),
-                    decoration: BoxDecoration(
-                        border: Border(
-                            top: BorderSide(width: 1, color: AppColors.blue)
-                        )
-                    ),
-                    child: Stack(
-                      children: [
-                        Boxes.getAdmirers.length != 0? ListView.builder(
-                          shrinkWrap: true,
-                          itemCount:  getAdmirerList.length,
-                          itemBuilder: (_, index){
-                            var data = Boxes.getAdmirers.getAt(index);
+              ),
+            ],
+          ),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setState) {
+              return Container(
+                  height:300,
+                  width: 300.0,
+                  padding: EdgeInsets.only(top: 15, bottom: 0),
+                  decoration: BoxDecoration(
+                      border: Border(
+                          top: BorderSide(width: 1, color: AppColors.blue)
+                      )
+                  ),
+                  child: Stack(
+                    children: [
+                      Boxes.getAdmirers.length != 0? ListView.builder(
+                        shrinkWrap: true,
+                        itemCount:  getAdmirerList.length,
+                        itemBuilder: (_, index){
+                          var data = Boxes.getAdmirers.getAt(index);
+                          print("this is admirers $data");
+                          return InkWell(
+                            onTap: ()async{
+                              admirerList.clear();
+                              admirerList.assignAll({
+                                "name": getAdmirerList[index].admirerName,
+                                "profile": getAdmirerList[index].profile
+                              });
 
+                              setState((){
 
-                            print("this is admirers $data");
-                            return InkWell(
-                              onTap: ()async{
-                                admirerList.clear();
-                                admirerList.assignAll({
-                                  "name": getAdmirerList[index].admirerName,
-                                  "profile": getAdmirerList[index].profile
-                                });
-                                Navigator.pop(context, true);
-                                setState((){});
-                              },
-                              child: Container(
-                                  height: 40,
-                                  margin: EdgeInsets.only(bottom: 10),
-                                  decoration: BoxDecoration(
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      SizedBox(
-                                        width: 40,
-                                        height: 40,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(5),
-                                          child: Image.memory(getAdmirerList[index]!.profile,
-                                            fit: BoxFit.cover,
-                                          ),
+                              });
+                              Navigator.pop(context, true);
+                            },
+                            child: Container(
+                                height: 40,
+                                margin: EdgeInsets.only(bottom: 10),
+                                decoration: BoxDecoration(
+                                ),
+                                child: Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 40,
+                                      height: 40,
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.memory(getAdmirerList[index]!.profile,
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
-                                      SizedBox(width: 10,),
-                                      Text(getAdmirerList[index]!.admirerName,
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      )
-                                    ],
-                                  )),
-                            );
-                          },
-
-                        ):Center(child: Text("No Admirer Profile."),),
-
-                        Positioned(
-                          bottom: 10, right: 10,
-                          child: InkWell(
-                            onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>AddAdmirerProfile())),
-                            child: Container(
-                              width: 100,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(100),
-                                color: AppColors.mainColor,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Icon(Icons.add, color: Colors.white,),
-                                  SizedBox(width: 5,),
-                                  Text("Add",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
                                     ),
-                                  )
-                                ],
-                              ),
+                                    SizedBox(width: 10,),
+                                    Text(getAdmirerList[index]!.admirerName,
+                                      style: TextStyle(
+                                        fontSize: 17,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  ],
+                                )),
+                          );
+                        },
+
+                      ):Center(child: Text("No Admirer Profile."),),
+
+                      Positioned(
+                        bottom: 10, right: 10,
+                        child: InkWell(
+                          onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>AddAdmirerProfile())),
+                          child: Container(
+                            width: 100,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(100),
+                              color: AppColors.mainColor,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.add, color: Colors.white,),
+                                SizedBox(width: 5,),
+                                Text("Add",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              ],
                             ),
                           ),
-                        )
-                      ],
-                    )
-                ),
+                        ),
+                      )
+                    ],
+                  )
               );
             }
+          ),
         );
       },
     );
