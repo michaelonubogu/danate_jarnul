@@ -13,7 +13,7 @@
 
 
     <application
-        android:label="dante"
+        android:label="Dante"
         android:icon="@mipmap/ic_launcher"
         android:usesCleartextTraffic="true">
         <activity
