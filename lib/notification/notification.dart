@@ -30,7 +30,7 @@ class NotificationServices{
       debug: true,
 
     );
-    //if is not permisson for notfication
+    //ask for notification permission
     await AwesomeNotifications().isNotificationAllowed().then(
             (isAllow)async{
           if(!isAllow){
